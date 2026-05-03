@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSB Core - Smart System Builder | Автоматизация проектирования в nanoCAD</title>
+    <meta name="description" content="Профессиональная автоматизация проектирования систем безопасности в nanoCAD. Расчет СОУЭ, спецификации, нумерация.">
+    <meta name="keywords" content="nanoCAD, автоматизация проектирования, СОУЭ, ССПС, LISP, AutoLISP, BIM, ОПС, пожарная безопасность, С2000 Болид, Рубеж, Argus-Spektr, калькулятор SPL, спецификации, нумерация оборудования, DWG, CAD, САПР, проектирование систем безопасности, автоматизация CAD, модуль nanoCAD, плагины nanoCAD, инженерное проектирование, структурные схемы, расчет падения напряжения, калькулятор АКБ">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-primary: #0F172A;
+            --bg-secondary: #1E293B;
+            --accent-blue: #3B82F6;
+            --accent-orange: #F97316;
+            --text-primary: #F1F5F9;
+            --text-secondary: #94A3B8;
+            --text-silver: #E2E8F0;
+            --success: #22C55E;
+            --triangle-color: rgba(59, 130, 246, 0.06);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* --- BACKGROUND ANIMATION --- */
+        .bg-animation {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .triangle {
+            position: absolute;
+            background: var(--triangle-color);
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            animation: moveRight linear infinite;
+            will-change: transform, opacity;
+        }
+
+        @keyframes moveRight {
+            0% { transform: translateX(-150px) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.4; }
+            90% { opacity: 0.4; }
+            100% { transform: translateX(calc(100vw + 150px)) rotate(360deg); opacity: 0; }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed; top: 0; width: 100%;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000; padding: 1rem 5%;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .nav-container {
+            max-width: 1200px; margin: 0 auto;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem; font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-orange));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links { display: flex; gap: 2rem; align-items: center; }
+        .nav-links a { color: var(--text-primary); text-decoration: none; font-weight: 500; transition: 0.3s; }
+        .nav-links a:hover { color: var(--accent-blue); }
+
+        .btn {
+            padding: 0.85rem 1.6rem; border-radius: 8px; border: none;
+            font-weight: 600; cursor: pointer; transition: 0.3s;
+            text-decoration: none; display: inline-block;
+        }
+
+        .btn-primary { background: var(--accent-blue); color: white; }
+        .btn-primary:hover { background: #2563EB; transform: translateY(-2px); box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3); }
+        
+        .btn-secondary { background: transparent; color: var(--accent-blue); border: 2px solid var(--accent-blue); }
+        .btn-secondary:hover { background: var(--accent-blue); color: white; }
+
+        /* Hero */
+        .hero { margin-top: 80px; padding: 5rem 5% 4rem; max-width: 1200px; margin-left: auto; margin-right: auto; position: relative; }
+        .hero-content { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+        
+        .hero h1 { font-size: 3rem; margin-bottom: 0.5rem; color: white; }
+        .hero-subtitle { font-size: 1.5rem; color: var(--accent-blue); margin-bottom: 1rem; font-weight: 600; }
+        
+        .hero-desc { font-size: 1.1rem; margin-bottom: 1.5rem; color: var(--text-silver); }
+        
+        .hero-features { list-style: none; margin-bottom: 2rem; }
+        .hero-features li { 
+            padding: 0.5rem 0; padding-left: 2rem; position: relative; 
+            color: var(--text-silver); font-weight: 500; 
+        }
+        .hero-features li::before { 
+            content: "✓"; position: absolute; left: 0; 
+            color: var(--success); font-weight: 700; font-size: 1.1rem;
+        }
+
+        .hero-buttons { display: flex; gap: 1rem; margin-bottom: 2rem; }
+        .hero-badges { display: flex; gap: 1.5rem; font-size: 0.9rem; color: var(--text-secondary); }
+        
+        .hero-image {
+            background: var(--bg-secondary); border-radius: 12px; padding: 2rem;
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            position: relative; z-index: 2;
+        }
+        .hero-image-placeholder {
+            width: 100%; height: 400px; background: var(--bg-primary);
+            border-radius: 8px; display: flex; align-items: center; justify-content: center;
+            color: var(--text-secondary); border: 1px dashed var(--text-secondary);
+        }
+
+        /* Features Section with GIFs */
+        .features { padding: 4rem 5%; position: relative; z-index: 2; background: transparent; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .section-title { text-align: center; font-size: 2.5rem; margin-bottom: 1rem; color: white; }
+        .section-subtitle { text-align: center; color: var(--text-silver); margin-bottom: 3rem; font-size: 1.05rem; }
+        
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2.5rem; }
+        .feature-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(5px);
+            padding: 2rem; border-radius: 12px;
+            border: 1px solid rgba(59, 130, 246, 0.15); 
+            transition: all 0.3s ease;
+            height: 100%; display: flex; flex-direction: column;
+            text-align: center;
+        }
+        .feature-card:hover { 
+            transform: translateY(-6px) scale(1.05); 
+            box-shadow: 0 15px 30px rgba(59, 130, 246, 0.2); 
+            border-color: var(--accent-blue); 
+        }
+        .feature-card h3 { 
+            color: var(--accent-blue); 
+            margin-bottom: 1rem; 
+            font-size: 1.25rem; 
+            text-align: center;
+        }
+        .feature-card ul { list-style: none; flex-grow: 1; text-align: left; }
+        .feature-card li { padding: 0.4rem 0; color: var(--text-silver); }
+        .feature-card li::before { content: "•"; color: var(--accent-orange); margin-right: 0.5rem; }
+        
+        .feature-gif {
+            width: 100%;
+            height: 200px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgba(59, 130, 246, 0.2);
+            overflow: hidden;
+        }
+        .feature-gif img, .feature-gif video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .gif-placeholder {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        /* Libraries */
+        .libraries { padding: 4rem 5%; position: relative; z-index: 2; }
+        .libraries-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-top: 3rem; }
+        .library-card {
+            background: var(--bg-secondary); padding: 2rem; border-radius: 12px;
+            text-align: center; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s;
+            position: relative; z-index: 2;
+        }
+        .library-card:hover { border-color: var(--accent-orange); }
+        .library-card h3 { color: var(--accent-orange); font-size: 1.5rem; margin-bottom: 1rem; }
+        .library-card ul { list-style: none; text-align: left; margin: 1.5rem 0; }
+        .library-card li { padding: 0.4rem 0; color: var(--text-secondary); }
+
+        /* Pricing */
+        .pricing-section { padding: 4rem 5%; position: relative; z-index: 2; }
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 3rem; }
+        .pricing-card {
+            background: var(--bg-primary); 
+            padding: 2.5rem 2rem 2rem; 
+            border-radius: 12px;
+            border: 2px solid rgba(148, 163, 184, 0.3); 
+            position: relative;
+            display: flex; flex-direction: column; 
+            height: 100%; 
+            transition: all 0.3s ease;
+        }
+        .pricing-card:hover { transform: translateY(-6px) scale(1.05); }
+        
+        .pricing-card.starter:hover { 
+            border-color: var(--text-silver); 
+            box-shadow: 0 15px 30px rgba(226, 232, 240, 0.15); 
+        }
+        
+        .pricing-card.popular { 
+            border-color: var(--accent-blue); 
+            transform: scale(1.04); 
+            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.2); 
+        }
+        .pricing-card.popular:hover { 
+            transform: scale(1.08) translateY(-6px); 
+            box-shadow: 0 25px 50px rgba(59, 130, 246, 0.25); 
+        }
+        
+        .pricing-card.corporate { border-color: var(--accent-orange); }
+        .pricing-card.corporate:hover { 
+            box-shadow: 0 15px 30px rgba(249, 115, 22, 0.2); 
+            transform: translateY(-6px) scale(1.05);
+        }
+        
+        .pricing-header { text-align: center; margin-bottom: 1.5rem; }
+        .pricing-header h3 { font-size: 1.8rem; margin-bottom: 0.3rem; }
+        .pricing-header p { color: var(--text-silver); font-size: 0.9rem; }
+        .pricing-price { text-align: center; margin-bottom: 2rem; }
+        .pricing-price .amount { font-size: 2.5rem; font-weight: 700; color: var(--text-primary); }
+        .pricing-price .period { font-size: 1rem; color: var(--text-silver); }
+        .pricing-features { list-style: none; margin-bottom: 2rem; flex-grow: 1; }
+        .pricing-features li { 
+            padding: 0.6rem 0; 
+            color: var(--text-silver); 
+            border-bottom: 1px solid rgba(255,255,255,0.05); 
+            font-size: 0.95rem;
+        }
+        .pricing-features li strong { color: #FFFFFF; font-weight: 700; }
+        .pricing-card .btn { margin-top: auto; display: block; text-align: center; width: 100%; }
+
+        .pricing-badge {
+            position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+            padding: 0.3rem 1.2rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;
+            white-space: nowrap;
+        }
+        .badge-starter { background: var(--text-silver); color: var(--bg-primary); }
+        .badge-popular { background: var(--accent-blue); color: white; }
+        .badge-corporate { background: var(--accent-orange); color: white; }
+
+        /* Dividers */
+        .section-divider {
+            width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-blue), transparent);
+            margin: 3rem 0; opacity: 0.6;
+        }
+
+        /* FAQ */
+        .faq-section { padding: 4rem 5%; position: relative; z-index: 2; }
+        .faq-container { max-width: 800px; margin: 0 auto; }
+        .faq-item {
+            background: var(--bg-primary); border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 10px; padding: 1.5rem; margin-bottom: 1.2rem;
+            transition: 0.3s;
+        }
+        .faq-item:hover { border-color: var(--accent-blue); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .faq-question {
+            font-size: 1.2rem; font-weight: 600; color: var(--accent-blue);
+            margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem;
+        }
+        .faq-answer { color: var(--text-silver); line-height: 1.7; }
+        .faq-form {
+            background: var(--bg-primary); border: 1px solid rgba(249, 115, 22, 0.3);
+            border-radius: 12px; padding: 2rem; margin-top: 2rem; text-align: center;
+        }
+        .faq-form h3 { color: var(--accent-orange); margin-bottom: 1.5rem; }
+        .form-group { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+        .form-input {
+            width: 100%; padding: 0.8rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1);
+            background: var(--bg-secondary); color: white; font-family: inherit;
+        }
+        .form-textarea { width: 100%; padding: 0.8rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); background: var(--bg-secondary); color: white; min-height: 100px; margin-bottom: 1rem; font-family: inherit; }
+        .form-input:focus, .form-textarea:focus { outline: none; border-color: var(--accent-blue); }
+
+        /* Hashtags Section */
+        .hashtags-section {
+            padding: 3rem 5%;
+            background: rgba(15, 23, 42, 0.8);
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+        .hashtags-container {
+            max-width: 1000px;
+            margin: 2rem auto 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.8rem;
+        }
+        .hashtag {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--accent-blue);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            transition: 0.3s;
+        }
+        .hashtag:hover {
+            background: rgba(59, 130, 246, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--bg-secondary); padding: 3rem 5% 2rem; text-align: center;
+            color: var(--text-secondary); border-top: 1px solid rgba(59, 130, 246, 0.2);
+            position: relative; z-index: 2;
+        }
+        .footer-content { max-width: 600px; margin: 0 auto; }
+        .footer-logo { font-size: 1.4rem; font-weight: 700; color: white; margin-bottom: 1rem; }
+        .footer-contacts a { color: var(--accent-blue); text-decoration: none; margin: 0.3rem 0; display: block; transition: 0.3s; }
+        .footer-contacts a:hover { color: var(--accent-orange); }
+        .footer-author { margin-top: 1.5rem; font-size: 0.95rem; color: var(--text-silver); }
+        .footer-bottom { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05); font-size: 0.85rem; }
+
+        @media (max-width: 768px) {
+            .hero-content { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 2rem; }
+            .nav-links { display: none; }
+            .form-group { grid-template-columns: 1fr; }
+            .features-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background Animation -->
+    <div class="bg-animation" id="bg-animation"></div>
+
+    <!-- Navigation (УБРАНО: Тарифы) -->
+    <nav>
+    <div class="nav-container">
+        <div class="logo">SSB Core</div>
+        <div class="nav-links">
+            <a href="#features">Возможности</a>
+            <a href="#libraries">Библиотеки</a>
+            <a href="#faq">FAQ</a>
+            <a href="#contacts">Контакты</a>
+            <a href="#pricing" class="btn btn-primary">Купить</a>
+            <a href="order-project.html" class="btn btn-secondary">📋 Заказать проект</a>
+        </div>
+    </div>
+</nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>SSB Core</h1>
+                <p class="hero-subtitle">Smart System Builder</p>
+                <p class="hero-desc">Профессиональная автоматизация проектирования систем безопасности в nanoCAD.</p>
+                
+                <ul class="hero-features">
+                    <li>Автоматическая и полуавтоматическая нумерация</li>
+                    <li>Расстановка блоков для структурных схем</li>
+                    <li>Расчет СОУЭ (SPL) по СП 3.13130.2009</li>
+                    <li>Автоматическая выгрузка спецификаций</li>
+                    <li>Калькуляторы падения напряжения и АКБ</li>
+                    <li>Готовые библиотеки: Bolid, Rubezh, Argus-Spektr</li>
+                    <li>Полное соответствие нормам РФ</li>
+                </ul>
+                
+                <div class="hero-buttons">
+                    <a href="mailto:pro@ssbcore.ru?subject=Демо%20версия%20SSB%20Core" class="btn btn-primary">🚀 Попробовать бесплатно</a>
+                    <a href="#features" class="btn btn-secondary">📖 Подробнее</a>
+                </div>
+                
+                <div class="hero-badges">
+                    <span>✓ nanoCAD 2020-2026</span>
+                    <span>✓ Лицензия РФ</span>
+                    <span>✓ Поддержка</span>
+                </div>
+            </div>
+            
+            <div class="hero-image">
+                <div class="hero-image-placeholder">[Скриншот меню SSB:MENU]</div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- Features Section with GIFs -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title">Возможности SSB Core</h2>
+            <p class="section-subtitle">Все инструменты в одном пакете</p>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>🔢 Нумерация оборудования</h3>
+                    <div class="feature-gif">
+                        <div class="gif-placeholder">📹 GIF: Автоматическая нумерация<br><small>Замените на реальное GIF/видео</small></div>
+                    </div>
+                    <ul>
+                        <li>Автоматическая нумерация</li>
+                        <li>Полуавтоматический режим</li>
+                        <li>Умный подсчет и сортировка</li>
+                        <li>Гибкая настройка</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h3>🎯 Структурные схемы</h3>
+                    <div class="feature-gif">
+                        <div class="gif-placeholder">📹 GIF: Расстановка блоков<br><small>Замените на реальное GIF/видео</small></div>
+                    </div>
+                    <ul>
+                        <li>Расстановка блоков на схеме</li>
+                        <li>Быстрое черчение связей</li>
+                        <li>Стандартные символы ГОСТ</li>
+                        <li>Унифицированный вид проекта</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h3>🔊 Калькулятор СОУЭ</h3>
+                    <div class="feature-gif">
+                        <div class="gif-placeholder">📹 GIF: Расчет SPL<br><small>Замените на реальное GIF/видео</small></div>
+                    </div>
+                    <ul>
+                        <li>Расчет SPL по СП 3.13130</li>
+                        <li>Тепловые карты давления</li>
+                        <li>Учет стен, дверей, шума</li>
+                        <li>20+ типов помещений</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h3>📋 Спецификации</h3>
+                    <div class="feature-gif">
+                        <div class="gif-placeholder">📹 GIF: Выгрузка спецификации<br><small>Замените на реальное GIF/видео</small></div>
+                    </div>
+                    <ul>
+                        <li>Авто-выгрузка данных</li>
+                        <li>Экспорт в Excel/PDF</li>
+                        <li>Сбор данных со всего чертежа</li>
+                        <li>Формат по ГОСТ</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h3>⚡ Калькулятор падения напряжения</h3>
+                    <div class="feature-gif">
+                        <div class="gif-placeholder">📹 GIF: Расчет напряжения<br><small>Замените на реальное GIF/видео</small></div>
+                    </div>
+                    <ul>
+                        <li>Расчет с учетом сечения кабеля</li>
+                        <li>Проверка по нормам (до 10%)</li>
+                        <li>Учет тока потребления приборов</li>
+                        <li>Подбор оптимального кабеля</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h3>🔋 Калькулятор АКБ</h3>
+                    <div class="feature-gif">
+                        <div class="gif-placeholder">📹 GIF: Расчет АКБ<br><small>Замените на реальное GIF/видео</small></div>
+                    </div>
+                    <ul>
+                        <li>Расчет времени автономной работы</li>
+                        <li>Подбор емкости батарей</li>
+                        <li>Учет глубины разряда</li>
+                        <li>Прогноз срока службы</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- Libraries Section -->
+    <section class="libraries" id="libraries">
+        <div class="container">
+            <h2 class="section-title">Библиотеки оборудования</h2>
+            <p class="section-subtitle">Готовые DWG файлы в комплекте</p>
+            <div class="libraries-grid">
+                <div class="library-card">
+                    <h3>BOLID</h3>
+                    <ul>
+                        <li>• Приборы: С2000, Сириус, Сигнал</li>
+                        <li>• Извещатели: ДИП, ИПР, ИПДЛ</li>
+                        <li>• Оповещатели: Маяк, Молния, Рупор</li>
+                        <li>• Исполнительные: СП1, СП2, СП4</li>
+                        <li>• Питание: РИП, Блок</li>
+                    </ul>
+                    <a href="mailto:pro@ssbcore.ru?subject=Запрос%20библиотеки%20BOLID" class="btn btn-secondary" style="margin-top: 1.5rem;">Скачать</a>
+                </div>
+                <div class="library-card">
+                    <h3>RUBEZH</h3>
+                    <ul>
+                        <li>• Приборы: Рубеж-2ОП, КАУ, БИУ</li>
+                        <li>• Извещатели: ИП, ИПР, ИПДЛ</li>
+                        <li>• Оповещатели: ОПОП, Sonar</li>
+                        <li>• Модули: РМ, МПТ, МДУ</li>
+                        <li>• Исполнительные: ШУН/В</li>
+                    </ul>
+                    <a href="mailto:pro@ssbcore.ru?subject=Запрос%20библиотеки%20RUBEZH" class="btn btn-secondary" style="margin-top: 1.5rem;">Скачать</a>
+                </div>
+                <div class="library-card">
+                    <h3>ARGUS-SPEKTR</h3>
+                    <ul>
+                        <li>• Приборы: Панель-ПРО, Стрелец-ПРО</li>
+                        <li>• Извещатели: Аврора, Икар, Астра</li>
+                        <li>• Оповещатели: Табло-РР, Сирена</li>
+                        <li>• Радиорасширители: РР-ПРО</li>
+                        <li>• Управление: УДП, ШУЗ/ШУВ</li>
+                    </ul>
+                    <a href="mailto:pro@ssbcore.ru?subject=Запрос%20библиотеки%20ARGUS" class="btn btn-secondary" style="margin-top: 1.5rem;">Скачать</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- Pricing Section -->
+    <section class="pricing-section" id="pricing">
+        <div class="container">
+            <h2 class="section-title">Выберите тариф SSB Core</h2>
+            <p class="section-subtitle">Гибкие условия для разных задач и масштабов бизнеса</p>
+            
+            <div class="pricing-grid">
+                <div class="pricing-card starter">
+                    <div class="pricing-badge badge-starter">ДЛЯ ЧАСТНЫХ СПЕЦИАЛИСТОВ</div>
+                    <div class="pricing-header"><h3>СТАРТЕР</h3><p>Для частных специалистов</p></div>
+                    <div class="pricing-price"><span class="amount">2,900 ₽</span><span class="period">/мес</span><br><small style="color: var(--text-silver);">или 29,900 ₽/год (экономия 14%)</small></div>
+                    <ul class="pricing-features">
+                        <li>✓ Все модули SSB Core</li>
+                        <li>✓ Библиотеки Bolid, Rubezh, Argus</li>
+                        <li>✓ <strong>Базовая поддержка</strong> (email)</li>
+                        <li>✓ <strong>Обновления:</strong> раз в 6 месяцев</li>
+                        <li>✓ Лицензия на 1 ПК</li>
+                    </ul>
+                    <a href="mailto:pro@ssbcore.ru?subject=Покупка%20тарифа%20СТАРТЕР" class="btn btn-secondary">Выбрать тариф</a>
+                </div>
+
+                <div class="pricing-card popular">
+                    <div class="pricing-badge badge-popular">ПОПУЛЯРНЫЙ</div>
+                    <div class="pricing-header"><h3>ПРОФЕССИОНАЛ</h3><p>Для проектных организаций</p></div>
+                    <div class="pricing-price"><span class="amount">19,900 ₽</span><span class="period">/год</span><br><small style="color: var(--success);">💰 Экономия 43% vs помесячно</small></div>
+                    <ul class="pricing-features">
+                        <li>✓ Все модули SSB Core</li>
+                        <li>✓ Библиотеки Bolid, Rubezh, Argus</li>
+                        <li>✓ <strong style="color: var(--accent-orange);">Приоритетная поддержка 24/7</strong></li>
+                        <li>✓ <strong style="color: var(--accent-orange);">Квартальные обновления</strong> (каждые 3 мес)</li>
+                        <li>✓ Новые функции и улучшения</li>
+                        <li>✓ Исправления ошибок в приоритете</li>
+                        <li>✓ Лицензия на 1 ПК</li>
+                    </ul>
+                    <div style="background: rgba(34,197,94,0.1); padding: 0.6rem; border-radius: 6px; margin-bottom: 1rem; border-left: 3px solid var(--success); font-size: 0.85rem; color: var(--success);">📦 Ближайшее обновление: Q2 2026</div>
+                    <a href="mailto:pro@ssbcore.ru?subject=Покупка%20тарифа%20ПРОФЕССИОНАЛ" class="btn btn-primary">Выбрать тариф</a>
+                </div>
+
+                <div class="pricing-card corporate">
+                    <div class="pricing-badge badge-corporate">ДЛЯ БИЗНЕСА</div>
+                    <div class="pricing-header"><h3>КОРПОРАТИВНЫЙ</h3><p>Для крупных организаций</p></div>
+                    <div class="pricing-price"><span class="amount">от 50,700 ₽</span><span class="period">/год</span><br><small style="color: var(--text-silver);">3 лицензии (16,900 ₽/лицензия)</small></div>
+                    <ul class="pricing-features">
+                        <li>✓ <strong>Всё из тарифа ПРОФЕССИОНАЛ</strong></li>
+                        <li>✓ <strong style="color: var(--accent-orange);">Приоритетная поддержка 24/7</strong></li>
+                        <li>✓ <strong style="color: var(--accent-orange);">Ежемесячные обновления</strong></li>
+                        <li>✓ Ранний доступ к бета-версиям</li>
+                        <li>✓ Обучение сотрудников (онлайн)</li>
+                        <li>✓ Кастомизация под ваши задачи</li>
+                        <li>✓ Мультилицензионность (3/5/10/20+)</li>
+                    </ul>
+                    <div style="background: rgba(249,115,22,0.1); padding: 0.6rem; border-radius: 6px; margin-bottom: 1rem; border-left: 3px solid var(--accent-orange); font-size: 0.85rem; color: var(--accent-orange);">🚀 Обновления: По мере выпуска</div>
+                    <a href="mailto:pro@ssbcore.ru?subject=Запрос%20КП%20на%20корпоративный%20тариф" class="btn btn-secondary" style="border-color: var(--accent-orange); color: var(--accent-orange);">Запросить КП</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- FAQ Section -->
+    <section class="faq-section" id="faq">
+        <div class="container">
+            <h2 class="section-title">Частые вопросы</h2>
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question">❓ Как часто выходят обновления?</div>
+                    <div class="faq-answer">
+                        <strong>СТАРТЕР:</strong> 2 раза в год (январь, июль)<br>
+                        <strong>ПРОФЕССИОНАЛ:</strong> 4 раза в год (каждые 3 месяца: январь, апрель, июль, октябрь)<br>
+                        <strong>КОРПОРАТИВНЫЙ:</strong> Ежемесячно + ранний доступ к бета-версиям
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">❓ Что входит в обновления?</div>
+                    <div class="faq-answer">
+                        Новые функции, исправления ошибок, оптимизация производительности, актуализация библиотек оборудования под последние ГОСТ и СП, а также улучшение совместимости с новыми версиями nanoCAD.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">❓ Как происходит оплата и получение лицензии?</div>
+                    <div class="faq-answer">
+                        Принимаем оплату по счету для юридических лиц (с НДС) и банковскими картами для физических лиц. После оплаты вы автоматически получаете лицензионный ключ и инструкцию по активации на email.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-form">
+                <h3>💬 Остались вопросы? Напишите нам!</h3>
+                <form action="mailto:pro@ssbcore.ru" method="post" enctype="text/plain">
+                    <div class="form-group">
+                        <input type="text" name="name" placeholder="Ваше имя" class="form-input" required>
+                        <input type="email" name="email" placeholder="Ваш email" class="form-input" required>
+                    </div>
+                    <textarea name="question" placeholder="Ваш вопрос..." class="form-textarea" required></textarea>
+                    <button type="submit" class="btn btn-primary">Отправить вопрос</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hashtags Section (SEO) -->
+    <section class="hashtags-section">
+        <h2 style="color: var(--text-silver); margin-bottom: 0.5rem;">Популярные теги</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem;">По которым нас находят профессионалы</p>
+        <div class="hashtags-container">
+            <span class="hashtag">#nanoCAD</span>
+            <span class="hashtag">#автоматизация_проектирования</span>
+            <span class="hashtag">#СОУЭ</span>
+            <span class="hashtag">#ССПС</span>
+            <span class="hashtag">#LISP</span>
+            <span class="hashtag">#AutoLISP</span>
+            <span class="hashtag">#проектирование_ОПС</span>
+            <span class="hashtag">#пожарная_безопасность</span>
+            <span class="hashtag">#С2000_Болид</span>
+            <span class="hashtag">#Рубеж</span>
+            <span class="hashtag">#ArgusSpektr</span>
+            <span class="hashtag">#CAD</span>
+            <span class="hashtag">#САПР</span>
+            <span class="hashtag">#BIM</span>
+            <span class="hashtag">#DWG</span>
+            <span class="hashtag">#спецификации</span>
+            <span class="hashtag">#нумерация</span>
+            <span class="hashtag">#калькулятор_SPL</span>
+            <span class="hashtag">#структурные_схемы</span>
+            <span class="hashtag">#инженерное_проектирование</span>
+            <span class="hashtag">#плагины_nanoCAD</span>
+            <span class="hashtag">#модули_nanoCAD</span>
+            <span class="hashtag">#падение_напряжения</span>
+            <span class="hashtag">#калькулятор_АКБ</span>
+            <span class="hashtag">#ГОСТ</span>
+            <span class="hashtag">#СП</span>
+            <span class="hashtag">#нормы_РФ</span>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- Footer -->
+    <footer id="contacts">
+        <div class="footer-content">
+            <div class="footer-logo">SSB Core - Smart System Builder</div>
+            <div class="footer-contacts">
+                <a href="mailto:pro@ssbcore.ru">📧 pro@ssbcore.ru</a>
+                <a href="tel:+79187520190">📱 +7 918 752-01-90</a>
+                <a href="https://t.me/ssbcore_support" target="_blank">✈️ Telegram: @ssbcore_support</a>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem;">(Пн-Пт: 9:00-18:00)</p>
+            </div>
+            <div class="footer-author">
+                👨‍💻 Разработчик: <strong>Дмитрий Репин</strong>
+            </div>
+            <div class="footer-bottom">
+                © 2026 SSB Core. Все права защищены.<br>
+                Сделано с ❤️ для инженеров.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.feature-card, .library-card, .pricing-card, .faq-item').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+
+        const bgAnimation = document.getElementById('bg-animation');
+        const triangleCount = 50;
+
+        for (let i = 0; i < triangleCount; i++) {
+            const triangle = document.createElement('div');
+            triangle.classList.add('triangle');
+            
+            const size = Math.random() * 80 + 20;
+            triangle.style.width = `${size}px`;
+            triangle.style.height = `${size}px`;
+            
+            triangle.style.top = `${Math.random() * 100}%`;
+            
+            const duration = Math.random() * 15 + 10; 
+            triangle.style.animationDuration = `${duration}s`;
+            triangle.style.animationDelay = `-${Math.random() * 25}s`;
+            
+            bgAnimation.appendChild(triangle);
+        }
+    </script>
+</body>
+</html>

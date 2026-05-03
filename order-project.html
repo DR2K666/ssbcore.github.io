@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Заказать проект | SSB Core - Smart System Builder</title>
+    <meta name="description" content="Заказать проектирование систем безопасности: АПС, СОУЭ, АУПТ. Быстро, качественно, по ГОСТ.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-primary: #0F172A;
+            --bg-secondary: #1E293B;
+            --accent-blue: #3B82F6;
+            --accent-orange: #F97316;
+            --text-primary: #F1F5F9;
+            --text-secondary: #94A3B8;
+            --text-silver: #E2E8F0;
+            --success: #22C55E;
+            --border-color: rgba(59, 130, 246, 0.2);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Background Animation */
+        .bg-animation {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .triangle {
+            position: absolute;
+            background: rgba(59, 130, 246, 0.06);
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            animation: moveRight 20s linear infinite;
+        }
+
+        @keyframes moveRight {
+            0% { transform: translateX(-150px) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.4; }
+            90% { opacity: 0.4; }
+            100% { transform: translateX(calc(100vw + 150px)) rotate(360deg); opacity: 0; }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed; top: 0; width: 100%;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000; padding: 1rem 5%;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .nav-container {
+            max-width: 1200px; margin: 0 auto;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem; font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-orange));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        .nav-links { display: flex; gap: 2rem; align-items: center; }
+        .nav-links a { 
+            color: var(--text-primary); text-decoration: none; 
+            font-weight: 500; transition: 0.3s; 
+        }
+        .nav-links a:hover { color: var(--accent-blue); }
+
+        .btn {
+            padding: 0.85rem 1.6rem; border-radius: 8px; border: none;
+            font-weight: 600; cursor: pointer; transition: 0.3s;
+            text-decoration: none; display: inline-block;
+        }
+
+        .btn-primary { background: var(--accent-blue); color: white; }
+        .btn-primary:hover { background: #2563EB; transform: translateY(-2px); }
+        
+        .btn-secondary { background: transparent; color: var(--accent-blue); border: 2px solid var(--accent-blue); }
+        .btn-secondary:hover { background: var(--accent-blue); color: white; }
+
+        /* Main Content */
+        .order-page {
+            margin-top: 100px;
+            padding: 3rem 5%;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .page-header p {
+            color: var(--text-silver);
+            font-size: 1.1rem;
+        }
+
+        /* Form Styles */
+        .order-form {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 2.5rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .form-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            color: var(--accent-blue);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-silver);
+            font-weight: 500;
+        }
+
+        .required::after {
+            content: " *";
+            color: #EF4444;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 0.85rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: 0.3s;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* Checkbox & Radio Styles */
+        .checkbox-group,
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .checkbox-item,
+        .radio-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .checkbox-item:hover,
+        .radio-item:hover {
+            border-color: var(--accent-blue);
+            background: rgba(15, 23, 42, 0.8);
+        }
+
+        input[type="checkbox"],
+        input[type="radio"] {
+            margin-top: 0.25rem;
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent-blue);
+            cursor: pointer;
+        }
+
+        .checkbox-label,
+        .radio-label {
+            flex: 1;
+            cursor: pointer;
+            color: var(--text-silver);
+        }
+
+        .checkbox-label strong,
+        .radio-label strong {
+            color: var(--text-primary);
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .checkbox-hint,
+        .radio-hint {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Fire Class Info */
+        .fire-class-info {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 3px solid var(--accent-blue);
+            padding: 1rem;
+            border-radius: 6px;
+            margin-top: 0.5rem;
+        }
+
+        .fire-class-info h4 {
+            color: var(--accent-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .fire-class-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .fire-class-item {
+            padding: 0.4rem;
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 4px;
+        }
+
+        .fire-class-code {
+            color: var(--accent-orange);
+            font-weight: 600;
+        }
+
+        /* Submit Button */
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 3rem;
+        }
+
+        .submit-btn {
+            padding: 1rem 3rem;
+            font-size: 1.1rem;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-orange));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-silver);
+            text-decoration: none;
+            padding: 1rem 2rem;
+            transition: 0.3s;
+        }
+
+        .back-link:hover {
+            color: var(--accent-blue);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--bg-secondary);
+            padding: 2rem 5%;
+            text-align: center;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border-color);
+            margin-top: 4rem;
+        }
+
+        @media (max-width: 768px) {
+            .form-row { grid-template-columns: 1fr; }
+            .order-form { padding: 1.5rem; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation" id="bg-animation"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">SSB Core</a>
+            <div class="nav-links">
+                <a href="index.html#features">Возможности</a>
+                <a href="index.html#libraries">Библиотеки</a>
+                <a href="index.html#pricing">Тарифы</a>
+                <a href="index.html#contacts">Контакты</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="order-page">
+        <div class="page-header">
+            <h1>Заказать проектирование</h1>
+            <p>Заполните форму ниже, и мы свяжемся с вами в течение 24 часов для обсуждения деталей проекта</p>
+        </div>
+
+        <form class="order-form" action="mailto:pro@ssbcore.ru" method="post" enctype="text/plain">
+            
+            <!-- 1. Контактная информация -->
+            <div class="form-section">
+                <h2 class="section-title">📞 Контактная информация</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="required">Ваше имя</label>
+                        <input type="text" name="name" placeholder="Иванов Иван Иванович" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="required">Email</label>
+                        <input type="email" name="email" placeholder="example@mail.ru" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="required">Телефон</label>
+                        <input type="tel" name="phone" placeholder="+7 (___) ___-__-__" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Наименование организации</label>
+                        <input type="text" name="company" placeholder="ООО 'Проект'">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Информация об объекте -->
+            <div class="form-section">
+                <h2 class="section-title">🏢 Информация об объекте</h2>
+                <div class="form-group">
+                    <label class="required">Адрес объекта</label>
+                    <input type="text" name="address" placeholder="г. Москва, ул. Примерная, д. 1" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="required">Количество зданий/сооружений</label>
+                        <input type="number" name="buildings_count" min="1" value="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Этажность</label>
+                        <input type="text" name="floors" placeholder="Например: 5, или 3+тех.этаж">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="required">Общая площадь (м²) согласно планам БТИ</label>
+                    <input type="number" name="area" placeholder="1500" min="1" required>
+                </div>
+            </div>
+
+            <!-- 3. Тип системы -->
+            <div class="form-section">
+                <h2 class="section-title">🔧 Тип проектируемой системы</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.9rem;">
+                    Можно выбрать несколько вариантов
+                </p>
+                <div class="checkbox-group">
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="system_type" value="АПС">
+                        <span class="checkbox-label">
+                            <strong>АПС (Автоматическая пожарная сигнализация)</strong>
+                            <span class="checkbox-hint">Обнаружение пожара, оповещение и управление эвакуацией</span>
+                        </span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="system_type" value="СОУЭ">
+                        <span class="checkbox-label">
+                            <strong>СОУЭ (Система оповещения и управления эвакуацией)</strong>
+                            <span class="checkbox-hint">Речевое и световое оповещение при пожаре</span>
+                        </span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="system_type" value="АУПТ">
+                        <span class="checkbox-label">
+                            <strong>АУПТ (Автоматические установки пожаротушения)</strong>
+                            <span class="checkbox-hint">Автоматическое тушение пожара</span>
+                        </span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="system_type" value="ОС (Охранная сигнализация)">
+                        <span class="checkbox-label">
+                            <strong>ОС (Охранная сигнализация)</strong>
+                            <span class="checkbox-hint">Защита от несанкционированного проникновения</span>
+                        </span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="system_type" value="СОТ (Система охранного телевидения)">
+                        <span class="checkbox-label">
+                            <strong>СОТ (Видеонаблюдение)</strong>
+                            <span class="checkbox-hint">Контроль и видеозапись происходящего</span>
+                        </span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="system_type" value="ГО ЧС">
+                        <span class="checkbox-label">
+                            <strong>ГО и ЧС (Гражданская оборона и чрезвычайные ситуации)</strong>
+                            <span class="checkbox-hint">Системы оповещения ГОЧС</span>
+                        </span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- 4. Производитель оборудования -->
+            <div class="form-section">
+                <h2 class="section-title">🏭 Предпочтительный производитель оборудования</h2>
+                <div class="radio-group">
+                    <label class="radio-item">
+                        <input type="radio" name="manufacturer" value="Bolid">
+                        <span class="radio-label">
+                            <strong>Bolid (Болид)</strong>
+                            <span class="radio-hint">С2000, ДИП, Сигнал, Сириус</span>
+                        </span>
+                    </label>
+                    <label class="radio-item">
+                        <input type="radio" name="manufacturer" value="Rubezh">
+                        <span class="radio-label">
+                            <strong>Rubezh (Рубеж)</strong>
+                            <span class="radio-hint">Рубеж-2ОП, КАУ, ИП 212-64-R3</span>
+                        </span>
+                    </label>
+                    <label class="radio-item">
+                        <input type="radio" name="manufacturer" value="Argus-Spektr">
+                        <span class="radio-label">
+                            <strong>Аргус-Спектр</strong>
+                            <span class="radio-hint">Панель-ПРО, Стрелец-ПРО, Аврора</span>
+                        </span>
+                    </label>
+                    <label class="radio-item">
+                        <input type="radio" name="manufacturer" value="Other">
+                        <span class="radio-label">
+                            <strong>Иной производитель</strong>
+                            <span class="radio-hint">Укажите в комментариях</span>
+                        </span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- 5. Класс функциональной пожарной опасности -->
+            <div class="form-section">
+                <h2 class="section-title">⚠️ Класс функциональной пожарной опасности</h2>
+                <div class="form-group">
+                    <label>Выберите класс (если известен)</label>
+                    <select name="fire_class">
+                        <option value="">-- Не выбрано --</option>
+                        <option value="Ф1.1">Ф1.1 - Детские сады, больницы</option>
+                        <option value="Ф1.2">Ф1.2 - Гостиницы, общежития</option>
+                        <option value="Ф1.3">Ф1.3 - Многоквартирные дома</option>
+                        <option value="Ф1.4">Ф1.4 - Одноквартирные дома</option>
+                        <option value="Ф2.1">Ф2.1 - Театры, кинотеатры</option>
+                        <option value="Ф2.2">Ф2.2 - Музеи, выставки</option>
+                        <option value="Ф2.3">Ф2.3 - Физкультурные залы</option>
+                        <option value="Ф2.4">Ф2.4 - Бассейны</option>
+                        <option value="Ф3.1">Ф3.1 - Магазины, рынки</option>
+                        <option value="Ф3.2">Ф3.2 - Рестораны, кафе</option>
+                        <option value="Ф3.3">Ф3.3 - Вокзалы, аэропорты</option>
+                        <option value="Ф3.4">Ф3.4 - Поликлиники, амбулатории</option>
+                        <option value="Ф3.5">Ф3.5 - Библиотеки</option>
+                        <option value="Ф3.6">Ф3.6 - Спортивные комплексы</option>
+                        <option value="Ф4.1">Ф4.1 - Офисы, администрации</option>
+                        <option value="Ф4.2">Ф4.2 - Научные учреждения</option>
+                        <option value="Ф4.3">Ф4.3 - Учебные заведения</option>
+                        <option value="Ф4.4">Ф4.4 - Пожарные депо</option>
+                        <option value="Ф5.1">Ф5.1 - Производственные здания</option>
+                        <option value="Ф5.2">Ф5.2 - Склады</option>
+                        <option value="Ф5.3">Ф5.3 - Сельскохозяйственные здания</option>
+                    </select>
+                </div>
+                <div class="fire-class-info">
+                    <h4>📚 Что такое класс пожарной опасности?</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem;">
+                        Класс функциональной пожарной опасности определяется в зависимости от возраста, 
+                        физического состояния людей, возможности пребывания в состоянии сна, количества людей.
+                    </p>
+                    <div class="fire-class-grid">
+                        <div class="fire-class-item">
+                            <span class="fire-class-code">Ф1</span> - Проживание людей
+                        </div>
+                        <div class="fire-class-item">
+                            <span class="fire-class-code">Ф2</span> - Культурно-просветительские
+                        </div>
+                        <div class="fire-class-item">
+                            <span class="fire-class-code">Ф3</span> - Обслуживание населения
+                        </div>
+                        <div class="fire-class-item">
+                            <span class="fire-class-code">Ф4</span> - Административные
+                        </div>
+                        <div class="fire-class-item">
+                            <span class="fire-class-code">Ф5</span> - Производственные
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. Стадия проекта и документация -->
+            <div class="form-section">
+                <h2 class="section-title">📄 Стадия проекта и документация</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="required">Стадия проекта</label>
+                        <select name="project_stage" id="project_stage" required onchange="updateEstimateCheckbox()">
+                            <option value="">-- Выберите стадию --</option>
+                            <option value="П">П (Проектная документация)</option>
+                            <option value="Р">Р (Рабочая документация)</option>
+                            <option value="ИД">ИД (Исходные данные)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Наличие планов в DWG</label>
+                        <div style="display: flex; align-items: center; gap: 1rem; padding: 0.75rem; background: rgba(15,23,42,0.5); border-radius: 6px;">
+                            <input type="checkbox" name="dwg_available" id="dwg_available" style="width: 20px; height: 20px;">
+                            <span style="color: var(--text-silver);">
+                                <strong>Есть планы в формате DWG</strong>
+                                <br><small style="color: var(--text-secondary);">AutoCAD или nanoCAD</small>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div style="display: flex; align-items: center; gap: 1rem; padding: 0.75rem; background: rgba(15,23,42,0.5); border-radius: 6px;">
+                        <input type="checkbox" name="estimate_required" id="estimate_required" style="width: 20px; height: 20px;">
+                        <span class="checkbox-label">
+                            <strong>Требуется сметная документация</strong>
+                            <span class="checkbox-hint">
+                                Для стадии "П" (Проект) смета обязательна и выбирается автоматически
+                            </span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7. Сроки -->
+            <div class="form-section">
+                <h2 class="section-title">⏱ Сроки выполнения</h2>
+                <div class="form-group">
+                    <label class="required">Желаемый срок завершения проекта</label>
+                    <input type="date" name="deadline" required>
+                </div>
+            </div>
+
+            <!-- 8. Дополнительные комментарии -->
+            <div class="form-section">
+                <h2 class="section-title">💬 Дополнительная информация</h2>
+                <div class="form-group">
+                    <label>Комментарии к проекту (опционально)</label>
+                    <textarea name="comments" placeholder="Опишите особые требования, пожелания или дополнительную информацию о проекте..."></textarea>
+                </div>
+            </div>
+
+            <!-- Submit -->
+            <div class="form-actions">
+                <a href="index.html" class="back-link">← На главную</a>
+                <button type="submit" class="submit-btn">🚀 Отправить заявку</button>
+            </div>
+
+        </form>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2026 SSB Core - Smart System Builder. Все права защищены.</p>
+        <p style="margin-top: 0.5rem;">Сделано с ❤️ для инженеров</p>
+    </footer>
+
+    <script>
+        // Background animation
+        const bgAnimation = document.getElementById('bg-animation');
+        for (let i = 0; i < 30; i++) {
+            const triangle = document.createElement('div');
+            triangle.classList.add('triangle');
+            const size = Math.random() * 60 + 20;
+            triangle.style.width = `${size}px`;
+            triangle.style.height = `${size}px`;
+            triangle.style.top = `${Math.random() * 100}%`;
+            triangle.style.animationDuration = `${Math.random() * 15 + 10}s`;
+            triangle.style.animationDelay = `-${Math.random() * 20}s`;
+            bgAnimation.appendChild(triangle);
+        }
+
+        // Auto-check estimate for stage "П"
+        function updateEstimateCheckbox() {
+            const stage = document.getElementById('project_stage').value;
+            const estimateCheckbox = document.getElementById('estimate_required');
+            
+            if (stage === 'П') {
+                estimateCheckbox.checked = true;
+                estimateCheckbox.disabled = true;
+            } else {
+                estimateCheckbox.disabled = false;
+            }
+        }
+
+        // Initialize on page load
+        updateEstimateCheckbox();
+    </script>
+</body>
+</html>
