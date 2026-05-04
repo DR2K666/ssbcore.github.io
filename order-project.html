@@ -22,7 +22,6 @@
             --text-secondary: #94A3B8;
             --text-silver: #E2E8F0;
             --success: #22C55E;
-            --border-color: rgba(59, 130, 246, 0.2);
         }
 
         body {
@@ -62,7 +61,7 @@
             background: rgba(15, 23, 42, 0.95);
             backdrop-filter: blur(10px);
             z-index: 1000; padding: 1rem 5%;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
         }
 
         .nav-container {
@@ -91,7 +90,7 @@
         }
 
         .btn-primary { background: var(--accent-blue); color: white; }
-        .btn-primary:hover { background: #2563EB; transform: translateY(-2px); }
+        .btn-primary:hover { background: #2563EB; transform: translateY(-2px); box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3); }
         
         .btn-secondary { background: transparent; color: var(--accent-blue); border: 2px solid var(--accent-blue); }
         .btn-secondary:hover { background: var(--accent-blue); color: white; }
@@ -126,7 +125,7 @@
             background: var(--bg-secondary);
             border-radius: 12px;
             padding: 2.5rem;
-            border: 1px solid var(--border-color);
+            border: 1px solid rgba(59, 130, 246, 0.2);
         }
 
         .form-section {
@@ -138,7 +137,7 @@
             color: var(--accent-blue);
             margin-bottom: 1.5rem;
             padding-bottom: 0.5rem;
-            border-bottom: 2px solid var(--border-color);
+            border-bottom: 2px solid rgba(59, 130, 246, 0.2);
         }
 
         .form-group {
@@ -167,6 +166,7 @@
         input[type="email"],
         input[type="tel"],
         input[type="number"],
+        input[type="date"],
         select,
         textarea {
             width: 100%;
@@ -327,7 +327,7 @@
             padding: 2rem 5%;
             text-align: center;
             color: var(--text-secondary);
-            border-top: 1px solid var(--border-color);
+            border-top: 1px solid rgba(59, 130, 246, 0.2);
             margin-top: 4rem;
         }
 
@@ -361,7 +361,7 @@
             <p>Заполните форму ниже, и мы свяжемся с вами в течение 24 часов для обсуждения деталей проекта</p>
         </div>
 
-        <form class="order-form" action="mailto:pro@ssbcore.ru" method="post" enctype="text/plain">
+        <form class="order-form" id="projectForm" onsubmit="sendProjectRequest(event)">
             
             <!-- 1. Контактная информация -->
             <div class="form-section">
@@ -369,21 +369,21 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label class="required">Ваше имя</label>
-                        <input type="text" name="name" placeholder="Иванов Иван Иванович" required>
+                        <input type="text" id="pName" placeholder="Иванов Иван Иванович" required>
                     </div>
                     <div class="form-group">
                         <label class="required">Email</label>
-                        <input type="email" name="email" placeholder="example@mail.ru" required>
+                        <input type="email" id="pEmail" placeholder="example@mail.ru" required>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
                         <label class="required">Телефон</label>
-                        <input type="tel" name="phone" placeholder="+7 (___) ___-__-__" required>
+                        <input type="tel" id="pPhone" placeholder="+7 (___) ___-__-__" required>
                     </div>
                     <div class="form-group">
                         <label>Наименование организации</label>
-                        <input type="text" name="company" placeholder="ООО 'Проект'">
+                        <input type="text" id="pCompany" placeholder="ООО 'Проект'">
                     </div>
                 </div>
             </div>
@@ -393,21 +393,21 @@
                 <h2 class="section-title">🏢 Информация об объекте</h2>
                 <div class="form-group">
                     <label class="required">Адрес объекта</label>
-                    <input type="text" name="address" placeholder="г. Москва, ул. Примерная, д. 1" required>
+                    <input type="text" id="pAddress" placeholder="г. Москва, ул. Примерная, д. 1" required>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
                         <label class="required">Количество зданий/сооружений</label>
-                        <input type="number" name="buildings_count" min="1" value="1" required>
+                        <input type="number" id="pBuildings" min="1" value="1" required>
                     </div>
                     <div class="form-group">
                         <label>Этажность</label>
-                        <input type="text" name="floors" placeholder="Например: 5, или 3+тех.этаж">
+                        <input type="text" id="pFloors" placeholder="Например: 5, или 3+тех.этаж">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="required">Общая площадь (м²) согласно планам БТИ</label>
-                    <input type="number" name="area" placeholder="1500" min="1" required>
+                    <input type="number" id="pArea" placeholder="1500" min="1" required>
                 </div>
             </div>
 
@@ -503,7 +503,7 @@
                 <h2 class="section-title">⚠️ Класс функциональной пожарной опасности</h2>
                 <div class="form-group">
                     <label>Выберите класс (если известен)</label>
-                    <select name="fire_class">
+                    <select id="pFireClass">
                         <option value="">-- Не выбрано --</option>
                         <option value="Ф1.1">Ф1.1 - Детские сады, больницы</option>
                         <option value="Ф1.2">Ф1.2 - Гостиницы, общежития</option>
@@ -560,7 +560,7 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label class="required">Стадия проекта</label>
-                        <select name="project_stage" id="project_stage" required onchange="updateEstimateCheckbox()">
+                        <select id="pStage" required onchange="updateEstimateCheckbox()">
                             <option value="">-- Выберите стадию --</option>
                             <option value="П">П (Проектная документация)</option>
                             <option value="Р">Р (Рабочая документация)</option>
@@ -570,7 +570,7 @@
                     <div class="form-group">
                         <label>Наличие планов в DWG</label>
                         <div style="display: flex; align-items: center; gap: 1rem; padding: 0.75rem; background: rgba(15,23,42,0.5); border-radius: 6px;">
-                            <input type="checkbox" name="dwg_available" id="dwg_available" style="width: 20px; height: 20px;">
+                            <input type="checkbox" id="pDWG" style="width: 20px; height: 20px;">
                             <span style="color: var(--text-silver);">
                                 <strong>Есть планы в формате DWG</strong>
                                 <br><small style="color: var(--text-secondary);">AutoCAD или nanoCAD</small>
@@ -580,7 +580,7 @@
                 </div>
                 <div class="form-group">
                     <div style="display: flex; align-items: center; gap: 1rem; padding: 0.75rem; background: rgba(15,23,42,0.5); border-radius: 6px;">
-                        <input type="checkbox" name="estimate_required" id="estimate_required" style="width: 20px; height: 20px;">
+                        <input type="checkbox" id="pEstimate" style="width: 20px; height: 20px;">
                         <span class="checkbox-label">
                             <strong>Требуется сметная документация</strong>
                             <span class="checkbox-hint">
@@ -596,7 +596,7 @@
                 <h2 class="section-title">⏱ Сроки выполнения</h2>
                 <div class="form-group">
                     <label class="required">Желаемый срок завершения проекта</label>
-                    <input type="date" name="deadline" required>
+                    <input type="date" id="pDeadline" required>
                 </div>
             </div>
 
@@ -605,7 +605,7 @@
                 <h2 class="section-title">💬 Дополнительная информация</h2>
                 <div class="form-group">
                     <label>Комментарии к проекту (опционально)</label>
-                    <textarea name="comments" placeholder="Опишите особые требования, пожелания или дополнительную информацию о проекте..."></textarea>
+                    <textarea id="pComments" placeholder="Опишите особые требования, пожелания или дополнительную информацию о проекте..."></textarea>
                 </div>
             </div>
 
@@ -641,8 +641,8 @@
 
         // Auto-check estimate for stage "П"
         function updateEstimateCheckbox() {
-            const stage = document.getElementById('project_stage').value;
-            const estimateCheckbox = document.getElementById('estimate_required');
+            const stage = document.getElementById('pStage').value;
+            const estimateCheckbox = document.getElementById('pEstimate');
             
             if (stage === 'П') {
                 estimateCheckbox.checked = true;
@@ -650,6 +650,86 @@
             } else {
                 estimateCheckbox.disabled = false;
             }
+        }
+
+        // Form submit handler
+        function sendProjectRequest(e) {
+            e.preventDefault();
+            
+            // Collect form data
+            const name = document.getElementById('pName').value;
+            const email = document.getElementById('pEmail').value;
+            const phone = document.getElementById('pPhone').value;
+            const company = document.getElementById('pCompany').value;
+            const address = document.getElementById('pAddress').value;
+            const buildings = document.getElementById('pBuildings').value;
+            const floors = document.getElementById('pFloors').value;
+            const area = document.getElementById('pArea').value;
+            const fireClass = document.getElementById('pFireClass').value;
+            const stage = document.getElementById('pStage').value;
+            const dwg = document.getElementById('pDWG').checked ? 'Да' : 'Нет';
+            const estimate = document.getElementById('pEstimate').checked ? 'Да' : 'Нет';
+            const deadline = document.getElementById('pDeadline').value;
+            const comments = document.getElementById('pComments').value;
+            
+            // Collect system types
+            const systemTypes = [];
+            document.querySelectorAll('input[name="system_type"]:checked').forEach(cb => {
+                systemTypes.push(cb.value);
+            });
+            
+            // Get manufacturer
+            const manufacturer = document.querySelector('input[name="manufacturer"]:checked');
+            const manufacturerText = manufacturer ? manufacturer.value : 'Не указан';
+            
+            // Create email body
+            const subject = encodeURIComponent(`Заказ проекта SSB Core от ${name}`);
+            const body = encodeURIComponent(`
+ЗАЯВКА НА ПРОЕКТИРОВАНИЕ
+========================
+
+КОНТАКТНАЯ ИНФОРМАЦИЯ:
+Имя: ${name}
+Email: ${email}
+Телефон: ${phone}
+Организация: ${company || 'Не указана'}
+
+ИНФОРМАЦИЯ ОБ ОБЪЕКТЕ:
+Адрес: ${address}
+Количество зданий: ${buildings}
+Этажность: ${floors || 'Не указана'}
+Площадь: ${area} м²
+
+ТИП СИСТЕМЫ:
+${systemTypes.join(', ') || 'Не выбрано'}
+
+ПРОИЗВОДИТЕЛЬ ОБОРУДОВАНИЯ:
+${manufacturerText}
+
+КЛАСС ПОЖАРНОЙ ОПАСНОСТИ:
+${fireClass || 'Не указан'}
+
+СТАДИЯ ПРОЕКТА:
+${stage}
+
+ДОКУМЕНТАЦИЯ:
+Планы в DWG: ${dwg}
+Сметная документация: ${estimate}
+
+СРОКИ:
+Желаемый срок: ${deadline}
+
+ДОПОЛНИТЕЛЬНО:
+${comments || 'Нет комментариев'}
+
+========================
+Отправлено с сайта SSB Core
+            `);
+            
+            // Open email client
+            window.location.href = `mailto:pro@ssbcore.ru?subject=${subject}&body=${body}`;
+            
+            alert('✅ Почтовый клиент открыт для отправки заявки на проектирование');
         }
 
         // Initialize on page load

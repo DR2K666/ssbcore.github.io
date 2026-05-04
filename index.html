@@ -37,201 +37,159 @@
 
         /* --- BACKGROUND ANIMATION --- */
         .bg-animation {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1;
-            overflow: hidden;
-            pointer-events: none;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; overflow: hidden; pointer-events: none;
         }
-
         .triangle {
-            position: absolute;
-            background: var(--triangle-color);
+            position: absolute; background: var(--triangle-color);
             clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-            animation: moveRight linear infinite;
-            will-change: transform, opacity;
+            animation: moveRight 20s linear infinite;
         }
-
         @keyframes moveRight {
             0% { transform: translateX(-150px) rotate(0deg); opacity: 0; }
-            10% { opacity: 0.4; }
-            90% { opacity: 0.4; }
+            10% { opacity: 0.4; } 90% { opacity: 0.4; }
             100% { transform: translateX(calc(100vw + 150px)) rotate(360deg); opacity: 0; }
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+        .modal.active { display: flex; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .modal-content {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+            border: 2px solid var(--accent-blue); border-radius: 16px; padding: 2rem;
+            max-width: 500px; width: 90%; position: relative;
+            animation: slideIn 0.4s ease; box-shadow: 0 20px 60px rgba(59, 130, 246, 0.3);
+            max-height: 85vh; overflow-y: auto;
+        }
+        
+        /* Custom Scrollbar for Modals */
+        .modal-content::-webkit-scrollbar { width: 8px; }
+        .modal-content::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.3); border-radius: 4px; }
+        .modal-content::-webkit-scrollbar-thumb { background: rgba(59, 130, 246, 0.3); border-radius: 4px; }
+        .modal-content::-webkit-scrollbar-thumb:hover { background: rgba(59, 130, 246, 0.5); }
+        .modal-content { scrollbar-width: thin; scrollbar-color: rgba(59, 130, 246, 0.3) rgba(15, 23, 42, 0.3); }
+
+        @keyframes slideIn { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .modal-close {
+            position: absolute; top: 15px; right: 15px; background: none; border: none;
+            color: var(--text-secondary); font-size: 1.5rem; cursor: pointer; transition: 0.3s;
+        }
+        .modal-close:hover { color: var(--accent-orange); transform: rotate(90deg); }
+        .modal h2 { color: var(--accent-blue); margin-bottom: 1.5rem; text-align: center; }
+
+        .form-group { margin-bottom: 1.2rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; color: var(--text-silver); font-weight: 500; }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%; padding: 0.85rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(15, 23, 42, 0.8); color: var(--text-primary); font-family: inherit; transition: 0.3s;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none; border-color: var(--accent-blue); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .trial-info {
+            background: rgba(34, 197, 94, 0.1); border-left: 3px solid var(--success);
+            padding: 1rem; margin: 1.5rem 0; border-radius: 6px; text-align: center;
+        }
+        .trial-info strong { color: var(--success); }
+        .secure-badge {
+            display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+            color: var(--success); font-size: 0.85rem; margin-top: 1rem;
         }
 
         /* Navigation */
         nav {
-            position: fixed; top: 0; width: 100%;
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(10px);
-            z-index: 1000; padding: 1rem 5%;
+            position: fixed; top: 0; width: 100%; background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px); z-index: 1000; padding: 1rem 5%;
             border-bottom: 1px solid rgba(59, 130, 246, 0.2);
         }
-
-        .nav-container {
-            max-width: 1200px; margin: 0 auto;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-
+        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
         .logo {
             font-size: 1.5rem; font-weight: 700;
             background: linear-gradient(135deg, var(--accent-blue), var(--accent-orange));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none;
         }
-
         .nav-links { display: flex; gap: 2rem; align-items: center; }
         .nav-links a { color: var(--text-primary); text-decoration: none; font-weight: 500; transition: 0.3s; }
         .nav-links a:hover { color: var(--accent-blue); }
 
         .btn {
             padding: 0.85rem 1.6rem; border-radius: 8px; border: none;
-            font-weight: 600; cursor: pointer; transition: 0.3s;
-            text-decoration: none; display: inline-block;
+            font-weight: 600; cursor: pointer; transition: 0.3s; text-decoration: none; display: inline-block;
         }
-
         .btn-primary { background: var(--accent-blue); color: white; }
         .btn-primary:hover { background: #2563EB; transform: translateY(-2px); box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3); }
-        
         .btn-secondary { background: transparent; color: var(--accent-blue); border: 2px solid var(--accent-blue); }
         .btn-secondary:hover { background: var(--accent-blue); color: white; }
 
         /* Hero */
         .hero { margin-top: 80px; padding: 5rem 5% 4rem; max-width: 1200px; margin-left: auto; margin-right: auto; position: relative; }
         .hero-content { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
-        
         .hero h1 { font-size: 3rem; margin-bottom: 0.5rem; color: white; }
         .hero-subtitle { font-size: 1.5rem; color: var(--accent-blue); margin-bottom: 1rem; font-weight: 600; }
-        
         .hero-desc { font-size: 1.1rem; margin-bottom: 1.5rem; color: var(--text-silver); }
-        
         .hero-features { list-style: none; margin-bottom: 2rem; }
-        .hero-features li { 
-            padding: 0.5rem 0; padding-left: 2rem; position: relative; 
-            color: var(--text-silver); font-weight: 500; 
-        }
-        .hero-features li::before { 
-            content: "✓"; position: absolute; left: 0; 
-            color: var(--success); font-weight: 700; font-size: 1.1rem;
-        }
-
+        .hero-features li { padding: 0.5rem 0; padding-left: 2rem; position: relative; color: var(--text-silver); font-weight: 500; }
+        .hero-features li::before { content: "✓"; position: absolute; left: 0; color: var(--success); font-weight: 700; font-size: 1.1rem; }
         .hero-buttons { display: flex; gap: 1rem; margin-bottom: 2rem; }
         .hero-badges { display: flex; gap: 1.5rem; font-size: 0.9rem; color: var(--text-secondary); }
-        
         .hero-image {
             background: var(--bg-secondary); border-radius: 12px; padding: 2rem;
-            border: 2px solid rgba(59, 130, 246, 0.3);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-            position: relative; z-index: 2;
+            border: 2px solid rgba(59, 130, 246, 0.3); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3); position: relative; z-index: 2;
         }
         .hero-image-placeholder {
-            width: 100%; height: 400px; background: var(--bg-primary);
-            border-radius: 8px; display: flex; align-items: center; justify-content: center;
-            color: var(--text-secondary); border: 1px dashed var(--text-secondary);
+            width: 100%; height: 400px; background: var(--bg-primary); border-radius: 8px;
+            display: flex; align-items: center; justify-content: center; color: var(--text-secondary); border: 1px dashed var(--text-secondary);
         }
 
-        /* Features Section with GIFs */
-        .features { padding: 4rem 5%; position: relative; z-index: 2; background: transparent; }
+        /* Features & Libraries */
+        .features, .libraries, .pricing-section, .faq-section { padding: 4rem 5%; position: relative; z-index: 2; }
+        .features { background: transparent; }
         .container { max-width: 1200px; margin: 0 auto; }
         .section-title { text-align: center; font-size: 2.5rem; margin-bottom: 1rem; color: white; }
         .section-subtitle { text-align: center; color: var(--text-silver); margin-bottom: 3rem; font-size: 1.05rem; }
         
-        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2.5rem; }
-        .feature-card {
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(5px);
-            padding: 2rem; border-radius: 12px;
-            border: 1px solid rgba(59, 130, 246, 0.15); 
-            transition: all 0.3s ease;
-            height: 100%; display: flex; flex-direction: column;
-            text-align: center;
+        .features-grid, .libraries-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
+        .feature-card, .library-card {
+            background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(5px); padding: 2rem; border-radius: 12px;
+            border: 1px solid rgba(59, 130, 246, 0.15); transition: all 0.3s ease; height: 100%; display: flex; flex-direction: column; text-align: center;
         }
-        .feature-card:hover { 
-            transform: translateY(-6px) scale(1.05); 
-            box-shadow: 0 15px 30px rgba(59, 130, 246, 0.2); 
-            border-color: var(--accent-blue); 
-        }
-        .feature-card h3 { 
-            color: var(--accent-blue); 
-            margin-bottom: 1rem; 
-            font-size: 1.25rem; 
-            text-align: center;
-        }
-        .feature-card ul { list-style: none; flex-grow: 1; text-align: left; }
-        .feature-card li { padding: 0.4rem 0; color: var(--text-silver); }
+        .feature-card:hover, .library-card:hover { transform: translateY(-6px) scale(1.05); box-shadow: 0 15px 30px rgba(59, 130, 246, 0.2); border-color: var(--accent-blue); }
+        .feature-card h3, .library-card h3 { color: var(--accent-blue); margin-bottom: 1rem; font-size: 1.25rem; text-align: center; }
+        .library-card h3 { color: var(--accent-orange); }
+        .feature-card ul, .library-card ul { list-style: none; flex-grow: 1; text-align: left; }
+        .feature-card li, .library-card li { padding: 0.4rem 0; color: var(--text-silver); }
         .feature-card li::before { content: "•"; color: var(--accent-orange); margin-right: 0.5rem; }
-        
-        .feature-gif {
-            width: 100%;
-            height: 200px;
-            background: var(--bg-secondary);
-            border-radius: 8px;
-            margin: 1.5rem 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid rgba(59, 130, 246, 0.2);
-            overflow: hidden;
-        }
-        .feature-gif img, .feature-gif video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .gif-placeholder {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            text-align: center;
-            padding: 1rem;
-        }
 
-        /* Libraries */
-        .libraries { padding: 4rem 5%; position: relative; z-index: 2; }
-        .libraries-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-top: 3rem; }
-        .library-card {
-            background: var(--bg-secondary); padding: 2rem; border-radius: 12px;
-            text-align: center; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s;
-            position: relative; z-index: 2;
+        .gif-placeholder {
+            width: 100%; height: 180px; background: rgba(15, 23, 42, 0.8); border: 2px dashed rgba(59, 130, 246, 0.3);
+            border-radius: 8px; margin: 1.5rem 0 1rem 0; display: flex; align-items: center; justify-content: center;
+            flex-direction: column; color: var(--text-secondary); font-size: 0.9rem; overflow: hidden; position: relative;
         }
-        .library-card:hover { border-color: var(--accent-orange); }
-        .library-card h3 { color: var(--accent-orange); font-size: 1.5rem; margin-bottom: 1rem; }
-        .library-card ul { list-style: none; text-align: left; margin: 1.5rem 0; }
-        .library-card li { padding: 0.4rem 0; color: var(--text-secondary); }
+        .gif-placeholder::before { content: "🎬"; font-size: 2.5rem; margin-bottom: 0.5rem; opacity: 0.6; }
+        .gif-placeholder span { text-align: center; line-height: 1.4; }
+        .gif-placeholder small { color: var(--text-secondary); opacity: 0.7; margin-top: 0.3rem; }
 
         /* Pricing */
         .pricing-section { padding: 4rem 5%; position: relative; z-index: 2; }
         .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 3rem; }
         .pricing-card {
-            background: var(--bg-primary); 
-            padding: 2.5rem 2rem 2rem; 
-            border-radius: 12px;
-            border: 2px solid rgba(148, 163, 184, 0.3); 
-            position: relative;
-            display: flex; flex-direction: column; 
-            height: 100%; 
-            transition: all 0.3s ease;
+            background: var(--bg-primary); padding: 2.5rem 2rem 2rem; border-radius: 12px;
+            border: 2px solid rgba(148, 163, 184, 0.3); position: relative; display: flex; flex-direction: column; height: 100%; transition: all 0.3s ease;
         }
         .pricing-card:hover { transform: translateY(-6px) scale(1.05); }
-        
-        .pricing-card.starter:hover { 
-            border-color: var(--text-silver); 
-            box-shadow: 0 15px 30px rgba(226, 232, 240, 0.15); 
-        }
-        
-        .pricing-card.popular { 
-            border-color: var(--accent-blue); 
-            transform: scale(1.04); 
-            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.2); 
-        }
-        .pricing-card.popular:hover { 
-            transform: scale(1.08) translateY(-6px); 
-            box-shadow: 0 25px 50px rgba(59, 130, 246, 0.25); 
-        }
-        
+        .pricing-card.starter:hover { border-color: var(--text-silver); box-shadow: 0 15px 30px rgba(226, 232, 240, 0.15); }
+        .pricing-card.popular { border-color: var(--accent-blue); transform: scale(1.04); box-shadow: 0 20px 40px rgba(59, 130, 246, 0.2); }
+        .pricing-card.popular:hover { transform: scale(1.08) translateY(-6px); box-shadow: 0 25px 50px rgba(59, 130, 246, 0.25); }
         .pricing-card.corporate { border-color: var(--accent-orange); }
-        .pricing-card.corporate:hover { 
-            box-shadow: 0 15px 30px rgba(249, 115, 22, 0.2); 
-            transform: translateY(-6px) scale(1.05);
-        }
+        .pricing-card.corporate:hover { box-shadow: 0 15px 30px rgba(249, 115, 22, 0.2); transform: translateY(-6px) scale(1.05); }
         
         .pricing-header { text-align: center; margin-bottom: 1.5rem; }
         .pricing-header h3 { font-size: 1.8rem; margin-bottom: 0.3rem; }
@@ -240,129 +198,292 @@
         .pricing-price .amount { font-size: 2.5rem; font-weight: 700; color: var(--text-primary); }
         .pricing-price .period { font-size: 1rem; color: var(--text-silver); }
         .pricing-features { list-style: none; margin-bottom: 2rem; flex-grow: 1; }
-        .pricing-features li { 
-            padding: 0.6rem 0; 
-            color: var(--text-silver); 
-            border-bottom: 1px solid rgba(255,255,255,0.05); 
-            font-size: 0.95rem;
-        }
+        .pricing-features li { padding: 0.6rem 0; color: var(--text-silver); border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.95rem; }
         .pricing-features li strong { color: #FFFFFF; font-weight: 700; }
         .pricing-card .btn { margin-top: auto; display: block; text-align: center; width: 100%; }
-
         .pricing-badge {
             position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
-            padding: 0.3rem 1.2rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;
-            white-space: nowrap;
+            padding: 0.3rem 1.2rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; white-space: nowrap;
         }
         .badge-starter { background: var(--text-silver); color: var(--bg-primary); }
         .badge-popular { background: var(--accent-blue); color: white; }
         .badge-corporate { background: var(--accent-orange); color: white; }
 
         /* Dividers */
-        .section-divider {
-            width: 100%; height: 2px;
-            background: linear-gradient(90deg, transparent, var(--accent-blue), transparent);
-            margin: 3rem 0; opacity: 0.6;
-        }
+        .section-divider { width: 100%; height: 2px; background: linear-gradient(90deg, transparent, var(--accent-blue), transparent); margin: 3rem 0; opacity: 0.6; }
 
         /* FAQ */
         .faq-section { padding: 4rem 5%; position: relative; z-index: 2; }
         .faq-container { max-width: 800px; margin: 0 auto; }
+        
+        /* Improved FAQ Styling */
         .faq-item {
-            background: var(--bg-primary); border: 1px solid rgba(59, 130, 246, 0.2);
-            border-radius: 10px; padding: 1.5rem; margin-bottom: 1.2rem;
-            transition: 0.3s;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
         }
-        .faq-item:hover { border-color: var(--accent-blue); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
-        .faq-question {
-            font-size: 1.2rem; font-weight: 600; color: var(--accent-blue);
-            margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem;
-        }
-        .faq-answer { color: var(--text-silver); line-height: 1.7; }
-        .faq-form {
-            background: var(--bg-primary); border: 1px solid rgba(249, 115, 22, 0.3);
-            border-radius: 12px; padding: 2rem; margin-top: 2rem; text-align: center;
-        }
-        .faq-form h3 { color: var(--accent-orange); margin-bottom: 1.5rem; }
-        .form-group { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
-        .form-input {
-            width: 100%; padding: 0.8rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1);
-            background: var(--bg-secondary); color: white; font-family: inherit;
-        }
-        .form-textarea { width: 100%; padding: 0.8rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); background: var(--bg-secondary); color: white; min-height: 100px; margin-bottom: 1rem; font-family: inherit; }
-        .form-input:focus, .form-textarea:focus { outline: none; border-color: var(--accent-blue); }
-
-        /* Hashtags Section */
-        .hashtags-section {
-            padding: 3rem 5%;
-            background: rgba(15, 23, 42, 0.8);
-            text-align: center;
-            position: relative;
-            z-index: 2;
-        }
-        .hashtags-container {
-            max-width: 1000px;
-            margin: 2rem auto 0;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 0.8rem;
-        }
-        .hashtag {
-            background: rgba(59, 130, 246, 0.1);
-            color: var(--accent-blue);
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            transition: 0.3s;
-        }
-        .hashtag:hover {
-            background: rgba(59, 130, 246, 0.2);
+        .faq-item:hover {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3), 0 5px 15px rgba(0,0,0,0.2);
             transform: translateY(-2px);
         }
+        .faq-question {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            cursor: pointer;
+        }
+        .faq-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+        .faq-text { flex: 1; }
+        
+        .faq-answer {
+            background: rgba(30, 41, 59, 0.5);
+            border-left: 3px solid var(--accent-blue);
+            padding: 1.2rem;
+            border-radius: 8px;
+            margin-top: 0.5rem;
+        }
+        .faq-answer-content { color: var(--text-silver); line-height: 1.7; }
+        .faq-answer ul, .faq-answer ol { margin: 0.5rem 0; }
+        .faq-answer li { margin: 0.3rem 0; }
+
+        .faq-form { background: var(--bg-primary); border: 1px solid rgba(249, 115, 22, 0.3); border-radius: 12px; padding: 2rem; margin-top: 2rem; text-align: center; }
+        .faq-form h3 { color: var(--accent-orange); margin-bottom: 1.5rem; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+        .form-input { width: 100%; padding: 0.85rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(15, 23, 42, 0.8); color: var(--text-primary); font-family: inherit; transition: 0.3s; }
+        .form-input:focus { outline: none; border-color: var(--accent-blue); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+        .form-textarea { width: 100%; padding: 0.85rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(15, 23, 42, 0.8); color: var(--text-primary); min-height: 100px; margin-bottom: 1rem; font-family: inherit; transition: 0.3s; }
+        .form-textarea:focus { outline: none; border-color: var(--accent-blue); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+
+        /* Scrolling Hashtags Animation */
+        .hashtags-marquee {
+            display: flex; gap: 2rem; animation: scrollHashtags 30s linear infinite;
+            white-space: nowrap; width: max-content;
+        }
+        .hashtags-marquee span { color: var(--accent-blue); font-size: 0.9rem; font-weight: 500; }
+        @keyframes scrollHashtags { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .hashtags-marquee:hover { animation-play-state: paused; }
 
         /* Footer */
-        footer {
-            background: var(--bg-secondary); padding: 3rem 5% 2rem; text-align: center;
-            color: var(--text-secondary); border-top: 1px solid rgba(59, 130, 246, 0.2);
-            position: relative; z-index: 2;
-        }
-        .footer-content { max-width: 600px; margin: 0 auto; }
-        .footer-logo { font-size: 1.4rem; font-weight: 700; color: white; margin-bottom: 1rem; }
-        .footer-contacts a { color: var(--accent-blue); text-decoration: none; margin: 0.3rem 0; display: block; transition: 0.3s; }
-        .footer-contacts a:hover { color: var(--accent-orange); }
-        .footer-author { margin-top: 1.5rem; font-size: 0.95rem; color: var(--text-silver); }
+        footer { background: var(--bg-secondary); padding: 3rem 5% 2rem; text-align: center; color: var(--text-secondary); border-top: 1px solid rgba(59, 130, 246, 0.2); position: relative; z-index: 2; }
+        .footer-content { max-width: 800px; margin: 0 auto; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 2rem; text-align: left; }
+        .footer-col h4 { color: white; margin-bottom: 1rem; font-size: 1.1rem; }
+        .footer-col a { color: var(--accent-blue); text-decoration: none; display: block; margin-bottom: 0.5rem; transition: 0.3s; }
+        .footer-col a:hover { color: var(--accent-orange); }
+        .footer-inn { background: rgba(34, 197, 94, 0.1); border-left: 3px solid var(--success); padding: 0.8rem; border-radius: 6px; font-size: 0.9rem; }
+        .footer-inn strong { color: var(--success); }
         .footer-bottom { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05); font-size: 0.85rem; }
 
         @media (max-width: 768px) {
             .hero-content { grid-template-columns: 1fr; }
             .hero h1 { font-size: 2rem; }
             .nav-links { display: none; }
-            .form-group { grid-template-columns: 1fr; }
-            .features-grid { grid-template-columns: 1fr; }
+            .form-row { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-
-    <!-- Background Animation -->
     <div class="bg-animation" id="bg-animation"></div>
 
-    <!-- Navigation (УБРАНО: Тарифы) -->
-    <nav>
-    <div class="nav-container">
-        <div class="logo">SSB Core</div>
-        <div class="nav-links">
-            <a href="#features">Возможности</a>
-            <a href="#libraries">Библиотеки</a>
-            <a href="#faq">FAQ</a>
-            <a href="#contacts">Контакты</a>
-            <a href="#pricing" class="btn btn-primary">Купить</a>
-            <a href="order-project.html" class="btn btn-secondary">📋 Заказать проект</a>
+    <!-- Trial Modal -->
+    <div id="trialModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeTrialModal()">×</button>
+            <h2>🚀 Запросить пробную версию</h2>
+            <p style="text-align: center; color: var(--text-silver); margin-bottom: 1.5rem;">
+                Получите полный доступ ко всем функциям SSB Core
+            </p>
+            
+            <form id="trialForm" onsubmit="submitTrialRequest(event)">
+                <div class="form-group">
+                    <label for="trialFIO">👤 ФИО *</label>
+                    <input type="text" id="trialFIO" placeholder="Иванов Иван Иванович" required>
+                </div>
+                <div class="form-group">
+                    <label for="trialEmail">📧 Email *</label>
+                    <input type="email" id="trialEmail" placeholder="your@email.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="trialRole">💼 Ваша должность *</label>
+                    <select id="trialRole" required>
+                        <option value="">Выберите должность</option>
+                        <option value="engineer">Инженер-проектировщик</option>
+                        <option value="chief_engineer">Главный инженер проекта (ГИП)</option>
+                        <option value="manager">Руководитель отдела</option>
+                        <option value="director">Технический директор</option>
+                        <option value="freelance">Фрилансер</option>
+                        <option value="student">Студент/Аспирант</option>
+                        <option value="other">Другое</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="trialCompany">🏢 Организация (необязательно)</label>
+                    <input type="text" id="trialCompany" placeholder="Название компании">
+                </div>
+
+                <div class="trial-info">
+                    <strong>⏱ Пробная версия выдается на 7 дней</strong><br>
+                    <small style="color: var(--text-secondary);">После регистрации вы получите лицензионный ключ на email</small>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    🔐 Запросить пробную лицензию
+                </button>
+
+                <div class="secure-badge">
+                    <span>🔒</span>
+                    <span>Защищенное соединение. Ваши данные в безопасности</span>
+                </div>
+                
+                <p style="text-align: center; margin-top: 1rem; font-size: 0.85rem; color: var(--text-secondary);">
+                    © 2026 SSB Core. Все права защищены.
+                </p>
+            </form>
         </div>
     </div>
-</nav>
+
+    <!-- Tariff Modal -->
+    <div id="tariffModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeTariffModal()">×</button>
+            <h2>💳 Оформление заказа</h2>
+            <p id="selectedTariffName" style="text-align: center; color: var(--accent-blue); font-size: 1.2rem; margin-bottom: 1.5rem;"></p>
+            
+            <form id="tariffForm" onsubmit="submitTariffRequest(event)">
+                <div class="form-group">
+                    <label for="tariffFIO">👤 ФИО *</label>
+                    <input type="text" id="tariffFIO" placeholder="Иванов Иван Иванович" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="tariffEmail">📧 Email *</label>
+                        <input type="email" id="tariffEmail" placeholder="your@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tariffPhone">📱 Телефон *</label>
+                        <input type="tel" id="tariffPhone" placeholder="+7 (___) ___-__-__" required>
+                    </div>
+                </div>
+
+                <div class="form-group" id="tariffCompanyGroup">
+                    <label for="tariffCompany">🏢 Организация</label>
+                    <input type="text" id="tariffCompany" placeholder="Название компании">
+                </div>
+
+                <div class="trial-info">
+                    <strong>🔐 Безопасная оплата</strong><br>
+                    <small style="color: var(--text-secondary);">После оформления вы будете перенаправлены на защищенную страницу оплаты</small>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    💳 Перейти к оплате
+                </button>
+
+                <div class="secure-badge">
+                    <span>🔒</span>
+                    <span>Защищенное соединение SSL. Данные шифруются</span>
+                </div>
+                
+                <p style="text-align: center; margin-top: 1rem; font-size: 0.85rem; color: var(--text-secondary);">
+                    © 2026 SSB Core. Все права защищены.
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Corporate Modal -->
+    <div id="corporateModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeCorporateModal()">×</button>
+            <h2>📋 Запрос коммерческого предложения</h2>
+            <p style="text-align: center; color: var(--text-silver); margin-bottom: 1.5rem;">
+                Индивидуальные условия для крупных организаций
+            </p>
+            
+            <form id="corporateForm" onsubmit="submitCorporateRequest(event)">
+                <div class="form-group">
+                    <label for="corpFIO">👤 ФИО *</label>
+                    <input type="text" id="corpFIO" placeholder="Иванов Иван Иванович" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="corpEmail">📧 Email *</label>
+                        <input type="email" id="corpEmail" placeholder="your@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="corpPhone">📱 Телефон *</label>
+                        <input type="tel" id="corpPhone" placeholder="+7 (___) ___-__-__" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="corpCompany">🏢 Организация *</label>
+                    <input type="text" id="corpCompany" placeholder="Название компании" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="corpLicenses">🔑 Количество лицензий *</label>
+                    <input type="number" id="corpLicenses" placeholder="Например: 10" min="3" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="corpComments">💬 Дополнительные комментарии</label>
+                    <textarea id="corpComments" placeholder="Особые требования, сроки, интеграции..." style="min-height: 80px;"></textarea>
+                </div>
+
+                <div class="trial-info">
+                    <strong>📄 КП будет отправлено на email</strong><br>
+                    <small style="color: var(--text-secondary);">Срок подготовки: 1-2 рабочих дня</small>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; border-color: var(--accent-orange); background: var(--accent-orange);">
+                    📤 Отправить запрос на КП
+                </button>
+
+                <div class="secure-badge">
+                    <span>🔒</span>
+                    <span>Защищенное соединение. Данные передаются по HTTPS</span>
+                </div>
+                
+                <p style="text-align: center; margin-top: 1rem; font-size: 0.85rem; color: var(--text-secondary);">
+                    © 2026 SSB Core. Все права защищены.
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="#" class="logo">SSB Core</a>
+            <div class="nav-links">
+                <a href="#features">Возможности</a>
+                <a href="#libraries">Библиотеки</a>
+                <a href="#pricing">Тарифы</a>
+                <a href="#faq">FAQ</a>
+                <a href="#contacts">Контакты</a>
+                <!-- Swapped Order: Project first, Buy second -->
+				<a href="#pricing" class="btn btn-primary">Купить</a>
+                <a href="order-project.html" class="btn btn-secondary" style="margin-left: 0.5rem; padding: 0.6rem 1.2rem;">📋 Заказать проект</a>
+            </div>
+        </div>
+    </nav>
 
     <!-- Hero Section -->
     <section class="hero">
@@ -383,7 +504,7 @@
                 </ul>
                 
                 <div class="hero-buttons">
-                    <a href="mailto:pro@ssbcore.ru?subject=Демо%20версия%20SSB%20Core" class="btn btn-primary">🚀 Попробовать бесплатно</a>
+                    <button onclick="openTrialModal()" class="btn btn-primary">🚀 Попробовать бесплатно</button>
                     <a href="#features" class="btn btn-secondary">📖 Подробнее</a>
                 </div>
                 
@@ -402,7 +523,7 @@
 
     <div class="section-divider"></div>
 
-    <!-- Features Section with GIFs -->
+    <!-- Features Section -->
     <section class="features" id="features">
         <div class="container">
             <h2 class="section-title">Возможности SSB Core</h2>
@@ -410,75 +531,33 @@
             <div class="features-grid">
                 <div class="feature-card">
                     <h3>🔢 Нумерация оборудования</h3>
-                    <div class="feature-gif">
-                        <div class="gif-placeholder">📹 GIF: Автоматическая нумерация<br><small>Замените на реальное GIF/видео</small></div>
-                    </div>
-                    <ul>
-                        <li>Автоматическая нумерация</li>
-                        <li>Полуавтоматический режим</li>
-                        <li>Умный подсчет и сортировка</li>
-                        <li>Гибкая настройка</li>
-                    </ul>
+                    <div class="gif-placeholder"><span>Анимация работы модуля</span><small>Здесь будет GIF</small></div>
+                    <ul><li>Автоматическая нумерация</li><li>Полуавтоматический режим</li><li>Умный подсчет и сортировка</li><li>Гибкая настройка</li></ul>
                 </div>
                 <div class="feature-card">
                     <h3>🎯 Структурные схемы</h3>
-                    <div class="feature-gif">
-                        <div class="gif-placeholder">📹 GIF: Расстановка блоков<br><small>Замените на реальное GIF/видео</small></div>
-                    </div>
-                    <ul>
-                        <li>Расстановка блоков на схеме</li>
-                        <li>Быстрое черчение связей</li>
-                        <li>Стандартные символы ГОСТ</li>
-                        <li>Унифицированный вид проекта</li>
-                    </ul>
+                    <div class="gif-placeholder"><span>Анимация работы модуля</span><small>Здесь будет GIF</small></div>
+                    <ul><li>Расстановка блоков на схеме</li><li>Быстрое черчение связей</li><li>Стандартные символы ГОСТ</li><li>Унифицированный вид проекта</li></ul>
                 </div>
                 <div class="feature-card">
                     <h3>🔊 Калькулятор СОУЭ</h3>
-                    <div class="feature-gif">
-                        <div class="gif-placeholder">📹 GIF: Расчет SPL<br><small>Замените на реальное GIF/видео</small></div>
-                    </div>
-                    <ul>
-                        <li>Расчет SPL по СП 3.13130</li>
-                        <li>Тепловые карты давления</li>
-                        <li>Учет стен, дверей, шума</li>
-                        <li>20+ типов помещений</li>
-                    </ul>
+                    <div class="gif-placeholder"><span>Анимация работы модуля</span><small>Здесь будет GIF</small></div>
+                    <ul><li>Расчет SPL по СП 3.13130</li><li>Тепловые карты давления</li><li>Учет стен, дверей, шума</li><li>20+ типов помещений</li></ul>
                 </div>
                 <div class="feature-card">
                     <h3>📋 Спецификации</h3>
-                    <div class="feature-gif">
-                        <div class="gif-placeholder">📹 GIF: Выгрузка спецификации<br><small>Замените на реальное GIF/видео</small></div>
-                    </div>
-                    <ul>
-                        <li>Авто-выгрузка данных</li>
-                        <li>Экспорт в Excel/PDF</li>
-                        <li>Сбор данных со всего чертежа</li>
-                        <li>Формат по ГОСТ</li>
-                    </ul>
+                    <div class="gif-placeholder"><span>Анимация работы модуля</span><small>Здесь будет GIF</small></div>
+                    <ul><li>Авто-выгрузка данных</li><li>Экспорт в Excel/PDF</li><li>Сбор данных со всего чертежа</li><li>Формат по ГОСТ</li></ul>
                 </div>
                 <div class="feature-card">
                     <h3>⚡ Калькулятор падения напряжения</h3>
-                    <div class="feature-gif">
-                        <div class="gif-placeholder">📹 GIF: Расчет напряжения<br><small>Замените на реальное GIF/видео</small></div>
-                    </div>
-                    <ul>
-                        <li>Расчет с учетом сечения кабеля</li>
-                        <li>Проверка по нормам (до 10%)</li>
-                        <li>Учет тока потребления приборов</li>
-                        <li>Подбор оптимального кабеля</li>
-                    </ul>
+                    <div class="gif-placeholder"><span>Анимация работы модуля</span><small>Здесь будет GIF</small></div>
+                    <ul><li>Расчет с учетом сечения кабеля</li><li>Проверка по нормам (до 10%)</li><li>Учет тока потребления приборов</li><li>Подбор оптимального кабеля</li></ul>
                 </div>
                 <div class="feature-card">
                     <h3>🔋 Калькулятор АКБ</h3>
-                    <div class="feature-gif">
-                        <div class="gif-placeholder">📹 GIF: Расчет АКБ<br><small>Замените на реальное GIF/видео</small></div>
-                    </div>
-                    <ul>
-                        <li>Расчет времени автономной работы</li>
-                        <li>Подбор емкости батарей</li>
-                        <li>Учет глубины разряда</li>
-                        <li>Прогноз срока службы</li>
-                    </ul>
+                    <div class="gif-placeholder"><span>Анимация работы модуля</span><small>Здесь будет GIF</small></div>
+                    <ul><li>Расчет времени автономной работы</li><li>Подбор емкости батарей</li><li>Учет глубины разряда</li><li>Прогноз срока службы</li></ul>
                 </div>
             </div>
         </div>
@@ -486,7 +565,7 @@
 
     <div class="section-divider"></div>
 
-    <!-- Libraries Section -->
+    <!-- Libraries Section (Updated with PDF Data) -->
     <section class="libraries" id="libraries">
         <div class="container">
             <h2 class="section-title">Библиотеки оборудования</h2>
@@ -495,22 +574,22 @@
                 <div class="library-card">
                     <h3>BOLID</h3>
                     <ul>
-                        <li>• Приборы: С2000, Сириус, Сигнал</li>
-                        <li>• Извещатели: ДИП, ИПР, ИПДЛ</li>
-                        <li>• Оповещатели: Маяк, Молния, Рупор</li>
-                        <li>• Исполнительные: СП1, СП2, СП4</li>
-                        <li>• Питание: РИП, Блок</li>
+                        <li>• Приборы: С2000-КДЛ, Сириус, Сигнал-20П</li>
+                        <li>• Извещатели: ДИП-34А, С2000-ИП-03, ИПР</li>
+                        <li>• Оповещатели: Маяк-24, Молния-24, Рупор-300</li>
+                        <li>• Исполнительные: С2000-СП1/СП2/СП4</li>
+                        <li>• Питание: РИП-24, Блок-12/24</li>
                     </ul>
                     <a href="mailto:pro@ssbcore.ru?subject=Запрос%20библиотеки%20BOLID" class="btn btn-secondary" style="margin-top: 1.5rem;">Скачать</a>
                 </div>
                 <div class="library-card">
                     <h3>RUBEZH</h3>
                     <ul>
-                        <li>• Приборы: Рубеж-2ОП, КАУ, БИУ</li>
-                        <li>• Извещатели: ИП, ИПР, ИПДЛ</li>
-                        <li>• Оповещатели: ОПОП, Sonar</li>
-                        <li>• Модули: РМ, МПТ, МДУ</li>
-                        <li>• Исполнительные: ШУН/В</li>
+                        <li>• Приборы: Рубеж-2ОП, КАУ2, БИУ</li>
+                        <li>• Извещатели: ИП 212-64-R3, ИПР, ИПДЛ</li>
+                        <li>• Оповещатели: ОПОП 1-R3, Sonar (речевые)</li>
+                        <li>• Модули: РМ-1/4-R3, МПТ-1-R3, МДУ</li>
+                        <li>• Исполнительные: ШУН/В-R3</li>
                     </ul>
                     <a href="mailto:pro@ssbcore.ru?subject=Запрос%20библиотеки%20RUBEZH" class="btn btn-secondary" style="margin-top: 1.5rem;">Скачать</a>
                 </div>
@@ -518,10 +597,10 @@
                     <h3>ARGUS-SPEKTR</h3>
                     <ul>
                         <li>• Приборы: Панель-ПРО, Стрелец-ПРО</li>
-                        <li>• Извещатели: Аврора, Икар, Астра</li>
-                        <li>• Оповещатели: Табло-РР, Сирена</li>
-                        <li>• Радиорасширители: РР-ПРО</li>
-                        <li>• Управление: УДП, ШУЗ/ШУВ</li>
+                        <li>• Извещатели: Аврора (пож), Икар (охр), Астра</li>
+                        <li>• Оповещатели: Табло-РР-ПРО, Сирена-ПРО</li>
+                        <li>• Радиорасширители: РР-ПРО (все исп.)</li>
+                        <li>• Управление: УДП-ПРО, ШУЗ/ШУВ/ШУПН</li>
                     </ul>
                     <a href="mailto:pro@ssbcore.ru?subject=Запрос%20библиотеки%20ARGUS" class="btn btn-secondary" style="margin-top: 1.5rem;">Скачать</a>
                 </div>
@@ -539,7 +618,7 @@
             
             <div class="pricing-grid">
                 <div class="pricing-card starter">
-                    <div class="pricing-badge badge-starter">ДЛЯ ЧАСТНЫХ СПЕЦИАЛИСТОВ</div>
+                    <div class="pricing-badge badge-starter">СТАРТ</div>
                     <div class="pricing-header"><h3>СТАРТЕР</h3><p>Для частных специалистов</p></div>
                     <div class="pricing-price"><span class="amount">2,900 ₽</span><span class="period">/мес</span><br><small style="color: var(--text-silver);">или 29,900 ₽/год (экономия 14%)</small></div>
                     <ul class="pricing-features">
@@ -549,7 +628,7 @@
                         <li>✓ <strong>Обновления:</strong> раз в 6 месяцев</li>
                         <li>✓ Лицензия на 1 ПК</li>
                     </ul>
-                    <a href="mailto:pro@ssbcore.ru?subject=Покупка%20тарифа%20СТАРТЕР" class="btn btn-secondary">Выбрать тариф</a>
+                    <button onclick="openTariffModal('СТАРТЕР')" class="btn btn-secondary">Выбрать тариф</button>
                 </div>
 
                 <div class="pricing-card popular">
@@ -565,8 +644,8 @@
                         <li>✓ Исправления ошибок в приоритете</li>
                         <li>✓ Лицензия на 1 ПК</li>
                     </ul>
-                    <div style="background: rgba(34,197,94,0.1); padding: 0.6rem; border-radius: 6px; margin-bottom: 1rem; border-left: 3px solid var(--success); font-size: 0.85rem; color: var(--success);">📦 Ближайшее обновление: Q2 2026</div>
-                    <a href="mailto:pro@ssbcore.ru?subject=Покупка%20тарифа%20ПРОФЕССИОНАЛ" class="btn btn-primary">Выбрать тариф</a>
+                    <div style="background: rgba(34,197,94,0.1); padding: 0.6rem; border-radius: 6px; margin-bottom: 1rem; border-left: 3px solid var(--success); font-size: 0.85rem; color: var(--success);">📦 Ближайшее обновление: Q2 2026 (апрель-июнь)</div>
+                    <button onclick="openTariffModal('ПРОФЕССИОНАЛ')" class="btn btn-primary">Выбрать тариф</button>
                 </div>
 
                 <div class="pricing-card corporate">
@@ -583,7 +662,7 @@
                         <li>✓ Мультилицензионность (3/5/10/20+)</li>
                     </ul>
                     <div style="background: rgba(249,115,22,0.1); padding: 0.6rem; border-radius: 6px; margin-bottom: 1rem; border-left: 3px solid var(--accent-orange); font-size: 0.85rem; color: var(--accent-orange);">🚀 Обновления: По мере выпуска</div>
-                    <a href="mailto:pro@ssbcore.ru?subject=Запрос%20КП%20на%20корпоративный%20тариф" class="btn btn-secondary" style="border-color: var(--accent-orange); color: var(--accent-orange);">Запросить КП</a>
+                    <button onclick="openCorporateModal()" class="btn btn-secondary" style="border-color: var(--accent-orange); color: var(--accent-orange);">Запросить КП</button>
                 </div>
             </div>
         </div>
@@ -591,96 +670,142 @@
 
     <div class="section-divider"></div>
 
-    <!-- FAQ Section -->
+    <!-- FAQ Section (Improved Design) -->
     <section class="faq-section" id="faq">
         <div class="container">
             <h2 class="section-title">Частые вопросы</h2>
+            <p class="section-subtitle">Ответы на популярные вопросы о SSB Core</p>
+            
             <div class="faq-container">
                 <div class="faq-item">
-                    <div class="faq-question">❓ Как часто выходят обновления?</div>
+                    <div class="faq-question">
+                        <span class="faq-icon">❓</span>
+                        <span class="faq-text">Как часто выходят обновления?</span>
+                    </div>
                     <div class="faq-answer">
-                        <strong>СТАРТЕР:</strong> 2 раза в год (январь, июль)<br>
-                        <strong>ПРОФЕССИОНАЛ:</strong> 4 раза в год (каждые 3 месяца: январь, апрель, июль, октябрь)<br>
-                        <strong>КОРПОРАТИВНЫЙ:</strong> Ежемесячно + ранний доступ к бета-версиям
+                        <div class="faq-answer-content">
+                            <strong style="color: var(--accent-blue); display: block; margin-bottom: 0.5rem;">ГРАФИК ОБНОВЛЕНИЙ:</strong>
+                            <div style="display: grid; gap: 0.5rem;">
+                                <div><strong style="color: var(--text-silver);">СТАРТЕР:</strong> 2 раза в год (январь, июль)</div>
+                                <div><strong style="color: var(--text-silver);">ПРОФЕССИОНАЛ:</strong> 4 раза в год (каждые 3 месяца: январь, апрель, июль, октябрь)</div>
+                                <div><strong style="color: var(--text-silver);">КОРПОРАТИВНЫЙ:</strong> Ежемесячно + ранний доступ к бета-версиям</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                
                 <div class="faq-item">
-                    <div class="faq-question">❓ Что входит в обновления?</div>
+                    <div class="faq-question">
+                        <span class="faq-icon">📦</span>
+                        <span class="faq-text">Что входит в обновления?</span>
+                    </div>
                     <div class="faq-answer">
-                        Новые функции, исправления ошибок, оптимизация производительности, актуализация библиотек оборудования под последние ГОСТ и СП, а также улучшение совместимости с новыми версиями nanoCAD.
+                        <div class="faq-answer-content">
+                            <strong style="color: var(--accent-blue); display: block; margin-bottom: 0.5rem;">СОДЕРЖАНИЕ ОБНОВЛЕНИЙ:</strong>
+                            <ul style="list-style: none; padding: 0; display: grid; gap: 0.3rem;">
+                                <li>✅ Новые функции и улучшения интерфейса</li>
+                                <li>✅ Исправления ошибок и оптимизация производительности</li>
+                                <li>✅ Актуализация библиотек оборудования под последние ГОСТ и СП</li>
+                                <li>✅ Улучшение совместимости с новыми версиями nanoCAD</li>
+                                <li>✅ Расширение калькуляторов (падение напряжения, АКБ)</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
+                
                 <div class="faq-item">
-                    <div class="faq-question">❓ Как происходит оплата и получение лицензии?</div>
+                    <div class="faq-question">
+                        <span class="faq-icon">💳</span>
+                        <span class="faq-text">Как происходит оплата и получение лицензии?</span>
+                    </div>
                     <div class="faq-answer">
-                        Принимаем оплату по счету для юридических лиц (с НДС) и банковскими картами для физических лиц. После оплаты вы автоматически получаете лицензионный ключ и инструкцию по активации на email.
+                        <div class="faq-answer-content">
+                            <strong style="color: var(--accent-blue); display: block; margin-bottom: 0.5rem;">ПРОЦЕСС ПОКУПКИ:</strong>
+                            <ol style="padding-left: 1.2rem; display: grid; gap: 0.3rem; margin: 0;">
+                                <li>Выбираете подходящий тариф или оставляете заявку</li>
+                                <li>Если Вы - юрлицо - Мы выставляем счёт.</li>
+                                <li>После оплаты вы получаете:</li>
+                                <ul style="list-style: none; padding-left: 1.5rem; margin-top: 0.3rem;">
+                                    <li>• Лицензионный ключ на email</li>
+                                    <li>• Инструкцию по активации</li>
+                                    <li>• Доступ к обновлениям</li>
+                                </ul>
+                                <li>Активируете модуль в nanoCAD за 2 минуты</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span class="faq-icon">🔧</span>
+                        <span class="faq-text">Отличия в технической поддержке?</span>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <strong style="color: var(--accent-blue); display: block; margin-bottom: 0.5rem;">УРОВНИ ПОДДЕРЖКИ:</strong>
+                            <div style="display: grid; gap: 0.5rem;">
+                                <div><strong style="color: var(--text-silver);">СТАРТЕР:</strong> Email-поддержка (ответ в течение 48 часов)</div>
+                                <div><strong style="color: var(--text-silver);">ПРОФЕССИОНАЛ:</strong> Приоритетная поддержка 24/7 (ответ в течение 12 часов)</div>
+                                <div><strong style="color: var(--text-silver);">КОРПОРАТИВНЫЙ:</strong> Персональный менеджер + телефонная поддержка (ответ в течение 2 часов)</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="faq-form">
-                <h3>💬 Остались вопросы? Напишите нам!</h3>
-                <form action="mailto:pro@ssbcore.ru" method="post" enctype="text/plain">
-                    <div class="form-group">
-                        <input type="text" name="name" placeholder="Ваше имя" class="form-input" required>
-                        <input type="email" name="email" placeholder="Ваш email" class="form-input" required>
+            <!-- Форма вопроса -->
+            <div class="faq-form" id="questionFormSection">
+                <h3>💬 Не нашли ответ? Задайте вопрос!</h3>
+                <form id="contactForm" onsubmit="sendQuestion(event)">
+                    <div class="form-row">
+                        <input type="text" id="qName" placeholder="Ваше имя" class="form-input" required>
+                        <input type="email" id="qEmail" placeholder="Ваш email" class="form-input" required>
                     </div>
-                    <textarea name="question" placeholder="Ваш вопрос..." class="form-textarea" required></textarea>
-                    <button type="submit" class="btn btn-primary">Отправить вопрос</button>
+                    <textarea id="qText" placeholder="Ваш вопрос..." class="form-textarea" required></textarea>
+                    <button type="submit" class="btn btn-primary">📩 Отправить вопрос</button>
                 </form>
             </div>
         </div>
     </section>
 
-    <!-- Hashtags Section (SEO) -->
-    <section class="hashtags-section">
-        <h2 style="color: var(--text-silver); margin-bottom: 0.5rem;">Популярные теги</h2>
-        <p style="color: var(--text-secondary); margin-bottom: 2rem;">По которым нас находят профессионалы</p>
-        <div class="hashtags-container">
-            <span class="hashtag">#nanoCAD</span>
-            <span class="hashtag">#автоматизация_проектирования</span>
-            <span class="hashtag">#СОУЭ</span>
-            <span class="hashtag">#ССПС</span>
-            <span class="hashtag">#LISP</span>
-            <span class="hashtag">#AutoLISP</span>
-            <span class="hashtag">#проектирование_ОПС</span>
-            <span class="hashtag">#пожарная_безопасность</span>
-            <span class="hashtag">#С2000_Болид</span>
-            <span class="hashtag">#Рубеж</span>
-            <span class="hashtag">#ArgusSpektr</span>
-            <span class="hashtag">#CAD</span>
-            <span class="hashtag">#САПР</span>
-            <span class="hashtag">#BIM</span>
-            <span class="hashtag">#DWG</span>
-            <span class="hashtag">#спецификации</span>
-            <span class="hashtag">#нумерация</span>
-            <span class="hashtag">#калькулятор_SPL</span>
-            <span class="hashtag">#структурные_схемы</span>
-            <span class="hashtag">#инженерное_проектирование</span>
-            <span class="hashtag">#плагины_nanoCAD</span>
-            <span class="hashtag">#модули_nanoCAD</span>
-            <span class="hashtag">#падение_напряжения</span>
-            <span class="hashtag">#калькулятор_АКБ</span>
-            <span class="hashtag">#ГОСТ</span>
-            <span class="hashtag">#СП</span>
-            <span class="hashtag">#нормы_РФ</span>
+    <!-- Scrolling Hashtags Section -->
+    <div style="overflow: hidden; background: rgba(59, 130, 246, 0.05); padding: 1rem 0; border-radius: 8px;">
+        <div class="hashtags-marquee">
+            <span>#nanoCAD</span><span>#автоматизация_проектирования</span><span>#СОУЭ</span><span>#ССПС</span><span>#LISP</span><span>#AutoLISP</span><span>#проектирование_ОПС</span><span>#пожарная_безопасность</span><span>#С2000_Болид</span><span>#Рубеж</span><span>#ArgusSpektr</span><span>#CAD</span><span>#САПР</span><span>#BIM</span><span>#DWG</span><span>#спецификации</span><span>#нумерация</span><span>#калькулятор_SPL</span><span>#структурные_схемы</span><span>#инженерное_проектирование</span><span>#плагины_nanoCAD</span><span>#модули_nanoCAD</span><span>#падение_напряжения</span><span>#калькулятор_АКБ</span><span>#ГОСТ</span><span>#СП</span><span>#нормы_РФ</span>
+            <span>#nanoCAD</span><span>#автоматизация_проектирования</span><span>#СОУЭ</span><span>#ССПС</span><span>#LISP</span><span>#AutoLISP</span><span>#проектирование_ОПС</span><span>#пожарная_безопасность</span><span>#С2000_Болид</span><span>#Рубеж</span><span>#ArgusSpektr</span><span>#CAD</span><span>#САПР</span><span>#BIM</span><span>#DWG</span><span>#спецификации</span><span>#нумерация</span><span>#калькулятор_SPL</span><span>#структурные_схемы</span><span>#инженерное_проектирование</span><span>#плагины_nanoCAD</span><span>#модули_nanoCAD</span><span>#падение_напряжения</span><span>#калькулятор_АКБ</span><span>#ГОСТ</span><span>#СП</span><span>#нормы_РФ</span>
         </div>
-    </section>
+    </div>
 
     <div class="section-divider"></div>
 
     <!-- Footer -->
     <footer id="contacts">
         <div class="footer-content">
-            <div class="footer-logo">SSB Core - Smart System Builder</div>
-            <div class="footer-contacts">
-                <a href="mailto:pro@ssbcore.ru">📧 pro@ssbcore.ru</a>
-                <a href="tel:+79187520190">📱 +7 918 752-01-90</a>
-                <a href="https://t.me/ssbcore_support" target="_blank">✈️ Telegram: @ssbcore_support</a>
-                <p style="margin-top: 0.5rem; font-size: 0.9rem;">(Пн-Пт: 9:00-18:00)</p>
-            </div>
-            <div class="footer-author">
-                👨‍💻 Разработчик: <strong>Дмитрий Репин</strong>
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>📞 Контакты</h4>
+                    <a href="mailto:pro@ssbcore.ru">📧 pro@ssbcore.ru</a>
+                    <a href="tel:+79187520190">📱 +7 918 752-01-90</a>
+                    <a href="https://t.me/ssbcore_support" target="_blank">✈️ Telegram: @ssbcore_support</a>
+                    <p style="margin-top: 0.5rem; font-size: 0.9rem;">🕐 (Пн-Пт: 9:00-18:00)</p>
+                </div>
+                <div class="footer-col">
+                    <h4>👨‍💻 Разработчик</h4>
+                    <p>👤 Дмитрий Репин</p>
+                    <div class="footer-inn" style="margin-top: 1rem;">
+                        <strong>💼 ИНН самозанятого:</strong><br>
+                        <span style="font-size: 1.1rem; color: var(--success); font-weight: 700;">261304992000</span><br>
+                        <small> Работаю по НПД. Чеки предоставляются автоматически.</small>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>🔗 Навигация</h4>
+                    <a href="#features">✨ Возможности</a>
+                    <a href="#pricing">💰 Тарифы</a>
+                    <a href="order-project.html">📋 Заказать проект</a>
+                    <a href="#faq">❓ FAQ</a>
+                </div>
             </div>
             <div class="footer-bottom">
                 © 2026 SSB Core. Все права защищены.<br>
@@ -689,8 +814,22 @@
         </div>
     </footer>
 
-    <!-- Scripts -->
     <script>
+        // Background animation
+        const bgAnimation = document.getElementById('bg-animation');
+        for (let i = 0; i < 30; i++) {
+            const triangle = document.createElement('div');
+            triangle.classList.add('triangle');
+            const size = Math.random() * 60 + 20;
+            triangle.style.width = `${size}px`;
+            triangle.style.height = `${size}px`;
+            triangle.style.top = `${Math.random() * 100}%`;
+            triangle.style.animationDuration = `${Math.random() * 15 + 10}s`;
+            triangle.style.animationDelay = `-${Math.random() * 20}s`;
+            bgAnimation.appendChild(triangle);
+        }
+
+        // Smooth scroll
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -699,6 +838,7 @@
             });
         });
 
+        // Scroll animation
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -715,24 +855,105 @@
             observer.observe(el);
         });
 
-        const bgAnimation = document.getElementById('bg-animation');
-        const triangleCount = 50;
+        // Modal Functions
+        function openTrialModal() { document.getElementById('trialModal').classList.add('active'); document.body.style.overflow = 'hidden'; }
+        function closeTrialModal() { document.getElementById('trialModal').classList.remove('active'); document.body.style.overflow = 'auto'; }
+        
+        function openTariffModal(tariffName) {
+            document.getElementById('selectedTariffName').textContent = `Тариф: ${tariffName}`;
+            
+            // Show/Hide Organization field based on tariff
+            const companyGroup = document.getElementById('tariffCompanyGroup');
+            if (tariffName === 'СТАРТЕР') {
+                companyGroup.style.display = 'none';
+            } else {
+                companyGroup.style.display = 'block';
+            }
+            
+            document.getElementById('tariffModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeTariffModal() { document.getElementById('tariffModal').classList.remove('active'); document.body.style.overflow = 'auto'; }
+        
+        function openCorporateModal() { document.getElementById('corporateModal').classList.add('active'); document.body.style.overflow = 'hidden'; }
+        function closeCorporateModal() { document.getElementById('corporateModal').classList.remove('active'); document.body.style.overflow = 'auto'; }
 
-        for (let i = 0; i < triangleCount; i++) {
-            const triangle = document.createElement('div');
-            triangle.classList.add('triangle');
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        // Trial Form Submit
+        function submitTrialRequest(e) {
+            e.preventDefault();
+            const fio = document.getElementById('trialFIO').value;
+            const email = document.getElementById('trialEmail').value;
+            const role = document.getElementById('trialRole').value;
+            const company = document.getElementById('trialCompany').value;
             
-            const size = Math.random() * 80 + 20;
-            triangle.style.width = `${size}px`;
-            triangle.style.height = `${size}px`;
+            const roleText = {'engineer':'Инженер-проектировщик','chief_engineer':'ГИП','manager':'Руководитель отдела','director':'Тех. директор','freelance':'Фрилансер','student':'Студент/Аспирант','other':'Другое'}[role];
+
+            const subject = encodeURIComponent(`Запрос пробной версии SSB Core от ${fio}`);
+            const body = encodeURIComponent(`Запрос на пробную версию (7 дней)\n\nФИО: ${fio}\nEmail: ${email}\nДолжность: ${roleText}\nОрганизация: ${company || 'Не указана'}\n\nПрошу выдать пробную лицензию.`);
             
-            triangle.style.top = `${Math.random() * 100}%`;
+            window.location.href = `mailto:pro@ssbcore.ru?subject=${subject}&body=${body}`;
+            alert('✅ Почтовый клиент открыт для отправки запроса');
+            closeTrialModal(); document.getElementById('trialForm').reset();
+        }
+
+        // Tariff Form Submit
+        function submitTariffRequest(e) {
+            e.preventDefault();
+            const fio = document.getElementById('tariffFIO').value;
+            const email = document.getElementById('tariffEmail').value;
+            const phone = document.getElementById('tariffPhone').value;
+            const tariffName = document.getElementById('selectedTariffName').textContent.replace('Тариф: ', '');
             
-            const duration = Math.random() * 15 + 10; 
-            triangle.style.animationDuration = `${duration}s`;
-            triangle.style.animationDelay = `-${Math.random() * 25}s`;
+            // Check if organization field is visible
+            const companyGroup = document.getElementById('tariffCompanyGroup');
+            const company = companyGroup.style.display !== 'none' ? document.getElementById('tariffCompany').value : 'Не требуется';
             
-            bgAnimation.appendChild(triangle);
+            const subject = encodeURIComponent(`Покупка тарифа ${tariffName} - ${fio}`);
+            const body = encodeURIComponent(`Заказ лицензии SSB Core\n\nФИО: ${fio}\nEmail: ${email}\nТелефон: ${phone}\nОрганизация: ${company}\nТариф: ${tariffName}\n\nПрошу выставить счет.`);
+            
+            window.location.href = `mailto:pro@ssbcore.ru?subject=${subject}&body=${body}`;
+            alert('✅ Почтовый клиент открыт для оформления заказа');
+            closeTariffModal(); document.getElementById('tariffForm').reset();
+        }
+
+        // Corporate Form Submit
+        function submitCorporateRequest(e) {
+            e.preventDefault();
+            const fio = document.getElementById('corpFIO').value;
+            const email = document.getElementById('corpEmail').value;
+            const phone = document.getElementById('corpPhone').value;
+            const company = document.getElementById('corpCompany').value;
+            const licenses = document.getElementById('corpLicenses').value;
+            const comments = document.getElementById('corpComments').value;
+            
+            const subject = encodeURIComponent(`Запрос КП (Корпоративный) - ${company}`);
+            const body = encodeURIComponent(`Запрос коммерческого предложения\n\nФИО: ${fio}\nEmail: ${email}\nТелефон: ${phone}\nОрганизация: ${company}\nКоличество лицензий: ${licenses}\n\nКомментарии:\n${comments || 'Нет'}`);
+            
+            window.location.href = `mailto:pro@ssbcore.ru?subject=${subject}&body=${body}`;
+            alert('✅ Запрос на КП отправлен! Ожидайте ответ на email.');
+            closeCorporateModal(); document.getElementById('corporateForm').reset();
+        }
+
+        // Contact Form Submit
+        function sendQuestion(e) {
+            e.preventDefault();
+            const name = document.getElementById('qName').value;
+            const email = document.getElementById('qEmail').value;
+            const text = document.getElementById('qText').value;
+            
+            const subject = encodeURIComponent(`Вопрос с сайта SSB Core от ${name}`);
+            const body = encodeURIComponent(`Имя: ${name}\nEmail: ${email}\n\nВопрос:\n${text}`);
+            
+            window.location.href = `mailto:pro@ssbcore.ru?subject=${subject}&body=${body}`;
+            alert('✅ Почтовый клиент открыт для отправки вопроса');
+            document.getElementById('contactForm').reset();
         }
     </script>
 </body>
