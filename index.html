@@ -96,8 +96,8 @@
             background: linear-gradient(135deg, var(--accent-blue), var(--accent-orange));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none;
         }
-        .nav-links { display: flex; gap: 2rem; align-items: center; }
-        .nav-links a { color: var(--text-primary); text-decoration: none; font-weight: 500; transition: 0.3s; }
+        .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+        .nav-links a { color: var(--text-primary); text-decoration: none; font-weight: 500; transition: 0.3s; font-size: 0.95rem; }
         .nav-links a:hover { color: var(--accent-blue); }
         .btn {
             padding: 0.85rem 1.6rem; border-radius: 8px; border: none;
@@ -179,16 +179,28 @@
         .badge-popular { background: var(--accent-blue); color: white; }
         .badge-corporate { background: var(--accent-orange); color: white; }
         .section-divider { width: 100%; height: 2px; background: linear-gradient(90deg, transparent, var(--accent-blue), transparent); margin: 3rem 0; opacity: 0.6; }
+        
+        /* --- FAQ STYLES (UPDATED) --- */
         .faq-section { padding: 4rem 5%; position: relative; z-index: 2; }
-        .faq-container { max-width: 800px; margin: 0 auto; }
+        .faq-container { max-width: 1000px; margin: 0 auto; }
+        .faq-grid { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 2rem; 
+            justify-content: center; 
+        }
+        @media (max-width: 768px) { .faq-grid { grid-template-columns: 1fr; } }
+        
         .faq-item {
             background: rgba(15, 23, 42, 0.6);
             border: 1px solid rgba(59, 130, 246, 0.2);
             border-radius: 12px;
             padding: 1.5rem;
-            margin-bottom: 1.5rem;
             transition: all 0.3s ease;
             backdrop-filter: blur(5px);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
         }
         .faq-item:hover {
             border-color: var(--accent-blue);
@@ -196,27 +208,18 @@
             transform: translateY(-2px);
         }
         .faq-question {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 1rem;
-            cursor: pointer;
+            display: flex; align-items: center; gap: 0.8rem;
+            font-size: 1.1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 1rem;
         }
-        .faq-icon { font-size: 1.5rem; flex-shrink: 0; }
-        .faq-text { flex: 1; }
+        .faq-icon { font-size: 1.3rem; flex-shrink: 0; }
         .faq-answer {
-            background: rgba(30, 41, 59, 0.5);
-            border-left: 3px solid var(--accent-blue);
-            padding: 1.2rem;
-            border-radius: 8px;
-            margin-top: 0.5rem;
+            background: rgba(30, 41, 59, 0.5); border-left: 3px solid var(--accent-blue);
+            padding: 1rem; border-radius: 8px; margin-top: auto;
         }
-        .faq-answer-content { color: var(--text-silver); line-height: 1.7; }
+        .faq-answer-content { color: var(--text-silver); line-height: 1.6; font-size: 0.95rem; }
         .faq-answer ul, .faq-answer ol { margin: 0.5rem 0; }
         .faq-answer li { margin: 0.3rem 0; }
+        
         .faq-form { background: var(--bg-primary); border: 1px solid rgba(249, 115, 22, 0.3); border-radius: 12px; padding: 2rem; margin-top: 2rem; text-align: center; }
         .faq-form h3 { color: var(--accent-orange); margin-bottom: 1.5rem; }
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
@@ -224,6 +227,7 @@
         .form-input:focus { outline: none; border-color: var(--accent-blue); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
         .form-textarea { width: 100%; padding: 0.85rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(15, 23, 42, 0.8); color: var(--text-primary); min-height: 100px; margin-bottom: 1rem; font-family: inherit; transition: 0.3s; }
         .form-textarea:focus { outline: none; border-color: var(--accent-blue); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+        
         .hashtags-marquee {
             display: flex; gap: 2rem; animation: scrollHashtags 30s linear infinite;
             white-space: nowrap; width: max-content;
@@ -231,6 +235,7 @@
         .hashtags-marquee span { color: var(--accent-blue); font-size: 0.9rem; font-weight: 500; }
         @keyframes scrollHashtags { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
         .hashtags-marquee:hover { animation-play-state: paused; }
+        
         footer { background: var(--bg-secondary); padding: 3rem 5% 2rem; text-align: center; color: var(--text-secondary); border-top: 1px solid rgba(59, 130, 246, 0.2); position: relative; z-index: 2; }
         .footer-content { max-width: 800px; margin: 0 auto; }
         .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 2rem; text-align: left; }
@@ -240,6 +245,20 @@
         .footer-inn { background: rgba(34, 197, 94, 0.1); border-left: 3px solid var(--success); padding: 0.8rem; border-radius: 6px; font-size: 0.9rem; }
         .footer-inn strong { color: var(--success); }
         .footer-bottom { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05); font-size: 0.85rem; }
+
+        /* --- WHY SECTION STYLES (UPDATED) --- */
+        .why-card {
+            background: rgba(15, 23, 42, 0.6); padding: 2rem; border-radius: 12px;
+            border: 1px solid rgba(59, 130, 246, 0.2); text-align: center; height: 100%;
+            transition: all 0.3s ease;
+        }
+        .why-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.25);
+            border-color: var(--accent-blue);
+            background: rgba(30, 41, 59, 0.8);
+        }
+
         @media (max-width: 768px) {
             .hero-content { grid-template-columns: 1fr; }
             .hero h1 { font-size: 2rem; }
@@ -251,155 +270,6 @@
 <body>
     <div class="bg-animation" id="bg-animation"></div>
 
-    <!-- Trial Modal -->
-    <div id="trialModal" class="modal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeTrialModal()">×</button>
-            <h2>🚀 Запросить пробную версию</h2>
-            <p style="text-align: center; color: var(--text-silver); margin-bottom: 1.5rem;">
-                Получите полный доступ ко всем функциям SSB Core
-            </p>
-            <form id="trialForm" onsubmit="submitTrialForm(event)">
-                <div class="form-group">
-                    <label for="trialFIO">👤 ФИО *</label>
-                    <input type="text" id="trialFIO" name="name" placeholder="Иванов Иван Иванович" required>
-                </div>
-                <div class="form-group">
-                    <label for="trialEmail">📧 Email *</label>
-                    <input type="email" id="trialEmail" name="email" placeholder="your@email.com" required>
-                </div>
-                <div class="form-group">
-                    <label for="trialRole">💼 Ваша должность *</label>
-                    <select id="trialRole" name="role" required>
-                        <option value="">Выберите должность</option>
-                        <option value="engineer">Инженер-проектировщик</option>
-                        <option value="chief_engineer">Главный инженер проекта (ГИП)</option>
-                        <option value="manager">Руководитель отдела</option>
-                        <option value="director">Технический директор</option>
-                        <option value="freelance">Фрилансер</option>
-                        <option value="student">Студент/Аспирант</option>
-                        <option value="other">Другое</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="trialCompany">🏢 Организация (необязательно)</label>
-                    <input type="text" id="trialCompany" name="company" placeholder="Название компании">
-                </div>
-                <div class="trial-info">
-                    <strong>⏱ Пробная версия выдается на 7 дней</strong><br>
-                    <small style="color: var(--text-secondary);">После регистрации вы получите лицензионный ключ на email</small>
-                </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%;">
-                    🔐 Запросить пробную лицензию
-                </button>
-                <div class="secure-badge">
-                    <span>🔒</span>
-                    <span>Защищенное соединение. Ваши данные в безопасности</span>
-                </div>
-                <p style="text-align: center; margin-top: 1rem; font-size: 0.85rem; color: var(--text-secondary);">
-                    © 2026 SSB Core. Все права защищены.
-                </p>
-            </form>
-        </div>
-    </div>
-
-    <!-- Tariff Modal -->
-    <div id="tariffModal" class="modal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeTariffModal()">×</button>
-            <h2>💳 Оформление заказа</h2>
-            <p id="selectedTariffName" style="text-align: center; color: var(--accent-blue); font-size: 1.2rem; margin-bottom: 1.5rem;"></p>
-            <form id="tariffForm" onsubmit="submitTariffForm(event)">
-                <input type="hidden" id="tariffNameInput" name="tariff">
-                <div class="form-group">
-                    <label for="tariffFIO">👤 ФИО *</label>
-                    <input type="text" id="tariffFIO" name="name" placeholder="Иванов Иван Иванович" required>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="tariffEmail">📧 Email *</label>
-                        <input type="email" id="tariffEmail" name="email" placeholder="your@email.com" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="tariffPhone">📱 Телефон *</label>
-                        <input type="tel" id="tariffPhone" name="phone" placeholder="+7 (___) ___-__-__" required>
-                    </div>
-                </div>
-                <div class="form-group" id="tariffCompanyGroup">
-                    <label for="tariffCompany">🏢 Организация</label>
-                    <input type="text" id="tariffCompany" name="company" placeholder="Название компании">
-                </div>
-                <div class="trial-info">
-                    <strong>🔐 Безопасная оплата</strong><br>
-                    <small style="color: var(--text-secondary);">После оформления вы будете перенаправлены на защищенную страницу оплаты</small>
-                </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%;">
-                    💳 Перейти к оплате
-                </button>
-                <div class="secure-badge">
-                    <span>🔒</span>
-                    <span>Защищенное соединение SSL. Данные шифруются</span>
-                </div>
-                <p style="text-align: center; margin-top: 1rem; font-size: 0.85rem; color: var(--text-secondary);">
-                    © 2026 SSB Core. Все права защищены.
-                </p>
-            </form>
-        </div>
-    </div>
-
-    <!-- Corporate Modal -->
-    <div id="corporateModal" class="modal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeCorporateModal()">×</button>
-            <h2>📋 Запрос коммерческого предложения</h2>
-            <p style="text-align: center; color: var(--text-silver); margin-bottom: 1.5rem;">
-                Индивидуальные условия для крупных организаций
-            </p>
-            <form id="corporateForm" onsubmit="submitCorporateForm(event)">
-                <div class="form-group">
-                    <label for="corpFIO">👤 ФИО *</label>
-                    <input type="text" id="corpFIO" name="name" placeholder="Иванов Иван Иванович" required>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="corpEmail">📧 Email *</label>
-                        <input type="email" id="corpEmail" name="email" placeholder="your@email.com" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="corpPhone">📱 Телефон *</label>
-                        <input type="tel" id="corpPhone" name="phone" placeholder="+7 (___) ___-__-__" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="corpCompany">🏢 Организация *</label>
-                    <input type="text" id="corpCompany" name="company" placeholder="Название компании" required>
-                </div>
-                <div class="form-group">
-                    <label for="corpLicenses">🔑 Количество лицензий *</label>
-                    <input type="number" id="corpLicenses" name="licenses" placeholder="Например: 10" min="3" required>
-                </div>
-                <div class="form-group">
-                    <label for="corpComments">💬 Дополнительные комментарии</label>
-                    <textarea id="corpComments" name="comments" placeholder="Особые требования, сроки, интеграции..." style="min-height: 80px;"></textarea>
-                </div>
-                <div class="trial-info">
-                    <strong>📄 КП будет отправлено на email</strong><br>
-                    <small style="color: var(--text-secondary);">Срок подготовки: 1-2 рабочих дня</small>
-                </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%; border-color: var(--accent-orange); background: var(--accent-orange);">
-                    📤 Отправить запрос на КП
-                </button>
-                <div class="secure-badge">
-                    <span>🔒</span>
-                    <span>Защищенное соединение. Данные передаются по HTTPS</span>
-                </div>
-                <p style="text-align: center; margin-top: 1rem; font-size: 0.85rem; color: var(--text-secondary);">
-                    © 2026 SSB Core. Все права защищены.
-                </p>
-            </form>
-        </div>
-    </div>
-
     <!-- Navigation -->
     <nav>
         <div class="nav-container">
@@ -410,8 +280,9 @@
                 <a href="#pricing">Тарифы</a>
                 <a href="#faq">FAQ</a>
                 <a href="#contacts">Контакты</a>
-                <a href="order-project.html" class="btn btn-secondary" style="margin-left: 0.5rem; padding: 0.6rem 1.2rem;">📋 Заказать проект</a>
+                <a href="auth.html" class="btn btn-secondary" style="padding: 0.6rem 1rem;">👤 Войти</a>
                 <a href="#pricing" class="btn btn-primary">Купить</a>
+                <a href="order-project.html" class="btn btn-secondary" style="margin-left: 0.5rem; padding: 0.6rem 1.2rem;">📋 Заказать проект</a>
             </div>
         </div>
     </nav>
@@ -444,6 +315,48 @@
             </div>
             <div class="hero-image">
                 <div class="hero-image-placeholder">[Скриншот меню SSB:MENU]</div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- Why SSB Core Section -->
+    <section class="why-section" style="padding: 4rem 5%; background: transparent;">
+        <div class="container">
+            <h2 class="section-title">Почему инженеры выбирают SSB Core?</h2>
+            <p class="section-subtitle">Реальная экономия времени и нервов в каждом проекте</p>
+            <div class="why-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 3rem;">
+                <div class="why-card">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">⏱️</div>
+                    <h3 style="color: var(--accent-blue); margin-bottom: 1rem; font-size: 1.1rem;">Экономия 8-10 часов на проект</h3>
+                    <p style="color: var(--text-silver); font-size: 0.9rem;">Автоматизация рутинных операций позволяет сосредоточиться на важных задачах</p>
+                </div>
+                <div class="why-card">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">✅</div>
+                    <h3 style="color: var(--accent-blue); margin-bottom: 1rem; font-size: 1.1rem;">100% соответствие ГОСТ и СП</h3>
+                    <p style="color: var(--text-silver); font-size: 0.9rem;">Все расчеты и библиотеки актуализированы под действующие нормы РФ</p>
+                </div>
+                <div class="why-card">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">💰</div>
+                    <h3 style="color: var(--accent-blue); margin-bottom: 1rem; font-size: 1.1rem;">Окупается за 1 проект</h3>
+                    <p style="color: var(--text-silver); font-size: 0.9rem;">Стоимость подписки возвращается экономией времени уже с первого заказа</p>
+                </div>
+                <div class="why-card">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">📚</div>
+                    <h3 style="color: var(--accent-blue); margin-bottom: 1rem; font-size: 1.1rem;">Готовые библиотеки</h3>
+                    <p style="color: var(--text-silver); font-size: 0.9rem;">Bolid, Rubezh, Argus-Spektr — все популярные производители в комплекте</p>
+                </div>
+                <div class="why-card">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">💻</div>
+                    <h3 style="color: var(--accent-blue); margin-bottom: 1rem; font-size: 1.1rem;">Работает в nanoCAD 2020-2026</h3>
+                    <p style="color: var(--text-silver); font-size: 0.9rem;">Совместимость со всеми актуальными версиями российской САПР</p>
+                </div>
+                <div class="why-card">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">🎓</div>
+                    <h3 style="color: var(--accent-blue); margin-bottom: 1rem; font-size: 1.1rem;">Простое освоение</h3>
+                    <p style="color: var(--text-silver); font-size: 0.9rem;">Интуитивный интерфейс и документация — начнете работать за 15 минут</p>
+                </div>
             </div>
         </div>
     </section>
@@ -600,76 +513,42 @@
             <h2 class="section-title">Частые вопросы</h2>
             <p class="section-subtitle">Ответы на популярные вопросы о SSB Core</p>
             <div class="faq-container">
-                <div class="faq-item">
-                    <div class="faq-question">
-                        <span class="faq-icon">❓</span>
-                        <span class="faq-text">Как часто выходят обновления?</span>
+                <div class="faq-grid">
+                    <div class="faq-item">
+                        <div class="faq-question"><span class="faq-icon">❓</span><span>Как часто выходят обновления?</span></div>
+                        <div class="faq-answer"><div class="faq-answer-content">
+                            <strong style="color: var(--accent-blue);">ГРАФИК ОБНОВЛЕНИЙ:</strong><br>
+                            <strong>СТАРТЕР:</strong> 2 раза в год (январь, июль)<br>
+                            <strong>ПРОФЕССИОНАЛ:</strong> 4 раза в год (каждые 3 мес)<br>
+                            <strong>КОРПОРАТИВНЫЙ:</strong> Ежемесячно + бета-доступ
+                        </div></div>
                     </div>
-                    <div class="faq-answer">
-                        <div class="faq-answer-content">
-                            <strong style="color: var(--accent-blue); display: block; margin-bottom: 0.5rem;">ГРАФИК ОБНОВЛЕНИЙ:</strong>
-                            <div style="display: grid; gap: 0.5rem;">
-                                <div><strong style="color: var(--text-silver);">СТАРТЕР:</strong> 2 раза в год (январь, июль)</div>
-                                <div><strong style="color: var(--text-silver);">ПРОФЕССИОНАЛ:</strong> 4 раза в год (каждые 3 месяца: январь, апрель, июль, октябрь)</div>
-                                <div><strong style="color: var(--text-silver);">КОРПОРАТИВНЫЙ:</strong> Ежемесячно + ранний доступ к бета-версиям</div>
-                            </div>
-                        </div>
+                    <div class="faq-item">
+                        <div class="faq-question"><span class="faq-icon">📦</span><span>Что входит в обновления?</span></div>
+                        <div class="faq-answer"><div class="faq-answer-content">
+                            ✅ Новые функции и улучшения интерфейса<br>
+                            ✅ Исправления ошибок и оптимизация<br>
+                            ✅ Актуализация библиотек под ГОСТ/СП<br>
+                            ✅ Совместимость с новыми nanoCAD<br>
+                            ✅ Расширение калькуляторов
+                        </div></div>
                     </div>
-                </div>
-                <div class="faq-item">
-                    <div class="faq-question">
-                        <span class="faq-icon">📦</span>
-                        <span class="faq-text">Что входит в обновления?</span>
+                    <div class="faq-item">
+                        <div class="faq-question"><span class="faq-icon">💳</span><span>Как происходит оплата?</span></div>
+                        <div class="faq-answer"><div class="faq-answer-content">
+                            1. Выбираете тариф и оставляете заявку<br>
+                            2. Выставляем счёт (юрлица с НДС / физлица)<br>
+                            3. После оплаты получаете ключ на email<br>
+                            4. Активируете в nanoCAD за 2 минуты
+                        </div></div>
                     </div>
-                    <div class="faq-answer">
-                        <div class="faq-answer-content">
-                            <strong style="color: var(--accent-blue); display: block; margin-bottom: 0.5rem;">СОДЕРЖАНИЕ ОБНОВЛЕНИЙ:</strong>
-                            <ul style="list-style: none; padding: 0; display: grid; gap: 0.3rem;">
-                                <li>✅ Новые функции и улучшения интерфейса</li>
-                                <li>✅ Исправления ошибок и оптимизация производительности</li>
-                                <li>✅ Актуализация библиотек оборудования под последние ГОСТ и СП</li>
-                                <li>✅ Улучшение совместимости с новыми версиями nanoCAD</li>
-                                <li>✅ Расширение калькуляторов (падение напряжения, АКБ)</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="faq-item">
-                    <div class="faq-question">
-                        <span class="faq-icon">💳</span>
-                        <span class="faq-text">Как происходит оплата и получение лицензии?</span>
-                    </div>
-                    <div class="faq-answer">
-                        <div class="faq-answer-content">
-                            <strong style="color: var(--accent-blue); display: block; margin-bottom: 0.5rem;">ПРОЦЕСС ПОКУПКИ:</strong>
-                            <ol style="padding-left: 1.2rem; display: grid; gap: 0.3rem; margin: 0;">
-                                <li>Выбираете подходящий тариф и оставляете заявку</li>
-                                <li>Мы выставляем счёт (для юрлиц с НДС или для физлиц)</li>
-                                <li>После оплаты вы автоматически получаете:</li>
-                                <ul style="list-style: none; padding-left: 1.5rem; margin-top: 0.3rem;">
-                                    <li>• Лицензионный ключ на email</li>
-                                    <li>• Инструкцию по активации</li>
-                                    <li>• Доступ к обновлениям</li>
-                                </ul>
-                                <li>Активируете модуль в nanoCAD за 2 минуты</li>
-                            </ol>
-                        </div>
-                    </div>
-                </div>
-                <div class="faq-item">
-                    <div class="faq-question">
-                        <span class="faq-icon">🔧</span>
-                        <span class="faq-text">Нужна ли техническая поддержка?</span>
-                    </div>
-                    <div class="faq-answer">
-                        <div class="faq-answer-content">
-                            <strong style="color: var(--accent-blue); display: block; margin-bottom: 0.5rem;">УРОВНИ ПОДДЕРЖКИ:</strong>
-                            <div style="display: grid; gap: 0.5rem;">
-                                <div><strong style="color: var(--text-silver);">СТАРТЕР:</strong> Email-поддержка (ответ в течение 48 часов)</div>
-                                <div><strong style="color: var(--text-silver);">ПРОФЕССИОНАЛ:</strong> Приоритетная поддержка 24/7 (ответ в течение 12 часов)</div>
-                                <div><strong style="color: var(--text-silver);">КОРПОРАТИВНЫЙ:</strong> Персональный менеджер + телефонная поддержка (ответ в течение 2 часов)</div>
-                            </div>
-                        </div>
+                    <div class="faq-item">
+                        <div class="faq-question"><span class="faq-icon">🔧</span><span>Уровни техподдержки?</span></div>
+                        <div class="faq-answer"><div class="faq-answer-content">
+                            <strong>СТАРТЕР:</strong> Email (до 48 ч)<br>
+                            <strong>ПРОФЕССИОНАЛ:</strong> Приоритет 24/7 (до 12 ч)<br>
+                            <strong>КОРПОРАТИВНЫЙ:</strong> Персональный менеджер + телефон (до 2 ч)
+                        </div></div>
                     </div>
                 </div>
             </div>
@@ -687,7 +566,9 @@
         </div>
     </section>
 
-    <!-- Scrolling Hashtags Section -->
+    <div class="section-divider"></div>
+
+    <!-- Scrolling Hashtags -->
     <div style="overflow: hidden; background: rgba(59, 130, 246, 0.05); padding: 1rem 0; border-radius: 8px;">
         <div class="hashtags-marquee">
             <span>#nanoCAD</span><span>#автоматизация_проектирования</span><span>#СОУЭ</span><span>#ССПС</span><span>#LISP</span><span>#AutoLISP</span><span>#проектирование_ОПС</span><span>#пожарная_безопасность</span><span>#С2000_Болид</span><span>#Рубеж</span><span>#ArgusSpektr</span><span>#CAD</span><span>#САПР</span><span>#BIM</span><span>#DWG</span><span>#спецификации</span><span>#нумерация</span><span>#калькулятор_SPL</span><span>#структурные_схемы</span><span>#инженерное_проектирование</span><span>#плагины_nanoCAD</span><span>#модули_nanoCAD</span><span>#падение_напряжения</span><span>#калькулятор_АКБ</span><span>#ГОСТ</span><span>#СП</span><span>#нормы_РФ</span>
@@ -714,7 +595,7 @@
                     <div class="footer-inn" style="margin-top: 1rem;">
                         <strong>💼 ИНН самозанятого:</strong><br>
                         <span style="font-size: 1.1rem; color: var(--success); font-weight: 700;">261304992000</span><br>
-                        <small> Работаю по НПД. Чеки предоставляются автоматически.</small>
+                        <small>Работаю по НПД. Чеки автоматически.</small>
                     </div>
                 </div>
                 <div class="footer-col">
@@ -722,7 +603,8 @@
                     <a href="#features">✨ Возможности</a>
                     <a href="#pricing">💰 Тарифы</a>
                     <a href="order-project.html">📋 Заказать проект</a>
-                    <a href="#faq">❓ FAQ</a>
+                    <a href="dashboard.html">👤 Личный кабинет</a>
+                    <a href="privacy-policy.html">📜 Политика</a>
                 </div>
             </div>
             <div class="footer-bottom">
@@ -732,10 +614,79 @@
         </div>
     </footer>
 
-    <script>
-        // Google Apps Script URL - ТВОЙ URL
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbysQ3J0Xi9nmPKlstPnjY1oed_tm7qwWgG7YajQ8sNZhoiWRbCHIVe5IUxRkn3bUieG/exec';
+    <!-- Modals -->
+    <div id="trialModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeTrialModal()">×</button>
+            <h2>🚀 Запросить пробную версию</h2>
+            <form id="trialForm" onsubmit="submitTrialForm(event)">
+                <div class="form-group"><label>👤 ФИО *</label><input type="text" id="trialFIO" name="name" required></div>
+                <div class="form-group"><label>📧 Email *</label><input type="email" id="trialEmail" name="email" required></div>
+                <div class="form-group"><label>💼 Должность *</label><select id="trialRole" name="role" required>
+                    <option value="">Выберите</option>
+                    <option value="engineer">Инженер-проектировщик</option>
+                    <option value="chief">ГИП</option>
+                    <option value="manager">Руководитель</option>
+                    <option value="director">Директор</option>
+                    <option value="other">Другое</option>
+                </select></div>
+                <div class="trial-info"><strong>⏱ Пробная версия на 7 дней</strong><br><small>Ключ придет на email</small></div>
+                <button type="submit" class="btn btn-primary" style="width:100%">🔐 Запросить</button>
+            </form>
+        </div>
+    </div>
+    
+    <div id="tariffModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeTariffModal()">×</button>
+            <h2>💳 Оформление заказа</h2>
+            <p id="selectedTariffName" style="text-align:center; color:var(--accent-blue); margin-bottom:1.5rem;"></p>
+            <form id="tariffForm" onsubmit="submitTariffForm(event)">
+                <input type="hidden" id="tariffNameInput" name="tariff">
+                <div class="form-group"><label>👤 ФИО *</label><input type="text" id="tariffFIO" name="name" required></div>
+                <div class="form-row">
+                    <div class="form-group"><label>📧 Email *</label><input type="email" id="tariffEmail" name="email" required></div>
+                    <div class="form-group"><label>📱 Телефон *</label><input type="tel" id="tariffPhone" name="phone" required></div>
+                </div>
+                <div class="form-group" id="tariffCompanyGroup"><label>🏢 Организация</label><input type="text" id="tariffCompany" name="company"></div>
+                <div class="trial-info"><strong>🔐 Безопасная оплата</strong></div>
+                <button type="submit" class="btn btn-primary" style="width:100%">💳 Перейти к оплате</button>
+            </form>
+        </div>
+    </div>
 
+    <div id="corporateModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeCorporateModal()">×</button>
+            <h2>📋 Запрос КП</h2>
+            <form id="corporateForm" onsubmit="submitCorporateForm(event)">
+                <div class="form-group"><label>👤 ФИО *</label><input type="text" id="corpFIO" name="name" required></div>
+                <div class="form-row">
+                    <div class="form-group"><label>📧 Email *</label><input type="email" id="corpEmail" name="email" required></div>
+                    <div class="form-group"><label>📱 Телефон *</label><input type="tel" id="corpPhone" name="phone" required></div>
+                </div>
+                <div class="form-group"><label>🏢 Организация *</label><input type="text" id="corpCompany" name="company" required></div>
+                <div class="form-group"><label>🔑 Кол-во лицензий *</label><input type="number" id="corpLicenses" name="licenses" min="3" required></div>
+                <div class="form-group"><label>💬 Комментарии</label><textarea id="corpComments" name="comments"></textarea></div>
+                <button type="submit" class="btn btn-primary" style="width:100%; background:var(--accent-orange); border-color:var(--accent-orange);">📤 Отправить запрос</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Cookie Consent -->
+    <div id="cookieConsent" class="cookie-consent" style="display:none; position:fixed; bottom:0; left:0; right:0; background:rgba(15,23,42,0.98); border-top:2px solid var(--accent-blue); padding:1.5rem; z-index:9999;">
+        <div style="max-width:1200px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:2rem; flex-wrap:wrap;">
+            <div style="flex:1; color:var(--text-silver);"><p style="margin:0;">🍪 Мы используем cookie для улучшения работы сайта. Продолжая использовать сайт, вы соглашаетесь с <a href="privacy-policy.html" style="color:var(--accent-blue);">Политикой конфиденциальности</a>.</p></div>
+            <div style="display:flex; gap:1rem;">
+                <button onclick="acceptCookies()" style="padding:0.85rem 1.6rem; background:var(--accent-blue); color:white; border:none; border-radius:8px; cursor:pointer;">Принять</button>
+                <button onclick="declineCookies()" style="padding:0.85rem 1.6rem; background:transparent; color:var(--text-silver); border:1px solid var(--text-silver); border-radius:8px; cursor:pointer;">Отклонить</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbysQ3J0Xi9nmPKlstPnjY1oed_tm7qwWgG7YajQ8sNZhoiWRbCHIVe5IUxRkn3bUieG/exec';
+        
         // Background animation
         const bgAnimation = document.getElementById('bg-animation');
         for (let i = 0; i < 30; i++) {
@@ -750,7 +701,6 @@
             bgAnimation.appendChild(triangle);
         }
 
-        // Smooth scroll
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -759,168 +709,50 @@
             });
         });
 
-        // Scroll animation
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
+                if (entry.isIntersecting) { entry.target.style.opacity = '1'; entry.target.style.transform = 'translateY(0)'; }
             });
         }, { threshold: 0.1 });
-
         document.querySelectorAll('.feature-card, .library-card, .pricing-card, .faq-item').forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(20px)';
-            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            el.style.opacity = '0'; el.style.transform = 'translateY(20px)'; el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
             observer.observe(el);
         });
 
         // Modal Functions
         function openTrialModal() { document.getElementById('trialModal').classList.add('active'); document.body.style.overflow = 'hidden'; }
         function closeTrialModal() { document.getElementById('trialModal').classList.remove('active'); document.body.style.overflow = 'auto'; }
-        
         function openTariffModal(tariffName) {
             document.getElementById('selectedTariffName').textContent = `Тариф: ${tariffName}`;
             document.getElementById('tariffNameInput').value = tariffName;
-            
-            const companyGroup = document.getElementById('tariffCompanyGroup');
-            if (tariffName === 'СТАРТЕР') {
-                companyGroup.style.display = 'none';
-            } else {
-                companyGroup.style.display = 'block';
-            }
-            
+            document.getElementById('tariffCompanyGroup').style.display = tariffName === 'СТАРТЕР' ? 'none' : 'block';
             document.getElementById('tariffModal').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
         function closeTariffModal() { document.getElementById('tariffModal').classList.remove('active'); document.body.style.overflow = 'auto'; }
-        
         function openCorporateModal() { document.getElementById('corporateModal').classList.add('active'); document.body.style.overflow = 'hidden'; }
         function closeCorporateModal() { document.getElementById('corporateModal').classList.remove('active'); document.body.style.overflow = 'auto'; }
-
         window.onclick = function(event) {
-            if (event.target.classList.contains('modal')) {
-                event.target.classList.remove('active');
-                document.body.style.overflow = 'auto';
-            }
+            if (event.target.classList.contains('modal')) { event.target.classList.remove('active'); document.body.style.overflow = 'auto'; }
         }
 
-        // Form Submission Functions
-        function submitTrialForm(e) {
-            e.preventDefault();
-            
-            const formData = {
-                type: 'Пробная версия',
-                name: document.getElementById('trialFIO').value,
-                email: document.getElementById('trialEmail').value,
-                role: document.getElementById('trialRole').value,
-                company: document.getElementById('trialCompany').value,
-                message: `Должность: ${document.getElementById('trialRole').options[document.getElementById('trialRole').selectedIndex].text}`
-            };
-            
-            fetch(GOOGLE_SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
-            })
-            .then(() => {
-                alert('✅ Заявка на пробную версию отправлена! Мы свяжемся с вами.');
-                closeTrialModal();
-                document.getElementById('trialForm').reset();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('❌ Ошибка отправки. Попробуйте позже.');
-            });
+        // Form Submissions
+        function submitTrialForm(e) { e.preventDefault(); sendToGoogle({type:'Пробная версия', name:document.getElementById('trialFIO').value, email:document.getElementById('trialEmail').value, role:document.getElementById('trialRole').value, company:document.getElementById('trialCompany').value, message:''}); closeTrialModal(); document.getElementById('trialForm').reset(); }
+        function submitTariffForm(e) { e.preventDefault(); sendToGoogle({type:'Заказ тарифа', name:document.getElementById('tariffFIO').value, email:document.getElementById('tariffEmail').value, phone:document.getElementById('tariffPhone').value, company:document.getElementById('tariffCompany').value, tariff:document.getElementById('tariffNameInput').value, message:''}); closeTariffModal(); document.getElementById('tariffForm').reset(); }
+        function submitCorporateForm(e) { e.preventDefault(); sendToGoogle({type:'Корпоративный запрос', name:document.getElementById('corpFIO').value, email:document.getElementById('corpEmail').value, phone:document.getElementById('corpPhone').value, company:document.getElementById('corpCompany').value, licenses:document.getElementById('corpLicenses').value, comments:document.getElementById('corpComments').value, message:''}); closeCorporateModal(); document.getElementById('corporateForm').reset(); }
+        function submitContactForm(e) { e.preventDefault(); sendToGoogle({type:'Вопрос с сайта', name:document.getElementById('qName').value, email:document.getElementById('qEmail').value, message:document.getElementById('qText').value}); document.getElementById('contactForm').reset(); }
+
+        function sendToGoogle(formData) {
+            fetch(GOOGLE_SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(formData) })
+            .then(() => alert('✅ Заявка успешно отправлена!'))
+            .catch(() => alert('❌ Ошибка отправки. Попробуйте позже.'));
         }
 
-        function submitTariffForm(e) {
-            e.preventDefault();
-            
-            const formData = {
-                type: 'Заказ тарифа',
-                name: document.getElementById('tariffFIO').value,
-                email: document.getElementById('tariffEmail').value,
-                phone: document.getElementById('tariffPhone').value,
-                company: document.getElementById('tariffCompany').value,
-                tariff: document.getElementById('tariffNameInput').value,
-                message: `Тариф: ${document.getElementById('tariffNameInput').value}`
-            };
-            
-            fetch(GOOGLE_SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
-            })
-            .then(() => {
-                alert('✅ Заявка на покупку отправлена! Мы свяжемся с вами для оплаты.');
-                closeTariffModal();
-                document.getElementById('tariffForm').reset();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('❌ Ошибка отправки. Попробуйте позже.');
-            });
-        }
-
-        function submitCorporateForm(e) {
-            e.preventDefault();
-            
-            const formData = {
-                type: 'Корпоративный запрос',
-                name: document.getElementById('corpFIO').value,
-                email: document.getElementById('corpEmail').value,
-                phone: document.getElementById('corpPhone').value,
-                company: document.getElementById('corpCompany').value,
-                licenses: document.getElementById('corpLicenses').value,
-                message: `Количество лицензий: ${document.getElementById('corpLicenses').value}\nКомментарии: ${document.getElementById('corpComments').value}`
-            };
-            
-            fetch(GOOGLE_SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
-            })
-            .then(() => {
-                alert('✅ Запрос на КП отправлен! Ожидайте ответ на email.');
-                closeCorporateModal();
-                document.getElementById('corporateForm').reset();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('❌ Ошибка отправки. Попробуйте позже.');
-            });
-        }
-
-        function submitContactForm(e) {
-            e.preventDefault();
-            
-            const formData = {
-                type: 'Вопрос с сайта',
-                name: document.getElementById('qName').value,
-                email: document.getElementById('qEmail').value,
-                message: document.getElementById('qText').value
-            };
-            
-            fetch(GOOGLE_SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
-            })
-            .then(() => {
-                alert('✅ Вопрос отправлен! Мы ответим вам на email.');
-                document.getElementById('contactForm').reset();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('❌ Ошибка отправки. Попробуйте позже.');
-            });
-        }
+        // Cookie Consent
+        function checkCookieConsent() { if (!localStorage.getItem('cookieConsent')) setTimeout(() => document.getElementById('cookieConsent').style.display = 'block', 2000); }
+        function acceptCookies() { localStorage.setItem('cookieConsent', 'accepted'); document.getElementById('cookieConsent').style.display = 'none'; }
+        function declineCookies() { localStorage.setItem('cookieConsent', 'declined'); document.getElementById('cookieConsent').style.display = 'none'; }
+        window.addEventListener('load', checkCookieConsent);
     </script>
 </body>
 </html>

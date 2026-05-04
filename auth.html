@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход в личный кабинет | SSB Core</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-primary: #0F172A;
+            --bg-secondary: #1E293B;
+            --accent-blue: #3B82F6;
+            --accent-orange: #F97316;
+            --text-primary: #F1F5F9;
+            --text-secondary: #94A3B8;
+            --success: #22C55E;
+            --error: #EF4444;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, #1e293b 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .bg-animation {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; overflow: hidden; pointer-events: none;
+        }
+        .triangle {
+            position: absolute; background: rgba(59, 130, 246, 0.06);
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            animation: moveRight 20s linear infinite;
+        }
+        @keyframes moveRight {
+            0% { transform: translateX(-150px) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.4; } 90% { opacity: 0.4; }
+            100% { transform: translateX(calc(100vw + 150px)) rotate(360deg); opacity: 0; }
+        }
+        .auth-container {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 20px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.5s ease;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .logo {
+            text-align: center; margin-bottom: 2rem;
+        }
+        .logo h1 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-orange));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        .logo p { color: var(--text-secondary); font-size: 0.9rem; }
+        .tabs {
+            display: flex; gap: 1rem; margin-bottom: 2rem;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+        }
+        .tab {
+            flex: 1; padding: 1rem; background: none; border: none;
+            color: var(--text-secondary); font-size: 1rem; font-weight: 600;
+            cursor: pointer; transition: 0.3s; border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+        }
+        .tab.active {
+            color: var(--accent-blue);
+            border-bottom-color: var(--accent-blue);
+        }
+        .tab:hover { color: var(--accent-blue); }
+        .form-container { display: none; }
+        .form-container.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label {
+            display: block; margin-bottom: 0.5rem; color: var(--text-primary);
+            font-weight: 500; font-size: 0.95rem;
+        }
+        .form-group input {
+            width: 100%; padding: 0.9rem; border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(15, 23, 42, 0.6);
+            color: var(--text-primary); font-size: 0.95rem;
+            transition: 0.3s;
+        }
+        .form-group input:focus {
+            outline: none; border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        .btn {
+            width: 100%; padding: 1rem; border-radius: 10px; border: none;
+            font-weight: 600; font-size: 1rem; cursor: pointer; transition: 0.3s;
+            margin-top: 1rem;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-blue), #2563EB);
+            color: white;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+        }
+        .btn-primary:disabled {
+            opacity: 0.6; cursor: not-allowed; transform: none;
+        }
+        .btn-secondary {
+            background: transparent; border: 2px solid var(--accent-blue);
+            color: var(--accent-blue);
+        }
+        .btn-secondary:hover { background: var(--accent-blue); color: white; }
+        .alert {
+            padding: 1rem; border-radius: 8px; margin-bottom: 1rem;
+            font-size: 0.9rem; display: none;
+        }
+        .alert-success {
+            background: rgba(34, 197, 94, 0.1);
+            border-left: 3px solid var(--success);
+            color: var(--success);
+        }
+        .alert-error {
+            background: rgba(239, 68, 68, 0.1);
+            border-left: 3px solid var(--error);
+            color: var(--error);
+        }
+        .back-link {
+            text-align: center; margin-top: 1.5rem;
+        }
+        .back-link a {
+            color: var(--text-secondary); text-decoration: none;
+            font-size: 0.9rem; transition: 0.3s;
+        }
+        .back-link a:hover { color: var(--accent-blue); }
+        .password-strength {
+            margin-top: 0.5rem; height: 4px; border-radius: 2px;
+            background: rgba(255,255,255,0.1); overflow: hidden;
+        }
+        .password-strength-bar {
+            height: 100%; width: 0; transition: 0.3s;
+        }
+        .strength-weak { background: var(--error); width: 33%; }
+        .strength-medium { background: #F59E0B; width: 66%; }
+        .strength-strong { background: var(--success); width: 100%; }
+        .loading {
+            display: inline-block; width: 20px; height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%; border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 0.5rem;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @media (max-width: 480px) {
+            .auth-container { padding: 2rem 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation" id="bgAnimation"></div>
+    
+    <div class="auth-container">
+        <div class="logo">
+            <h1>SSB Core</h1>
+            <p>Smart System Builder | Личный кабинет</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('login')">Вход</button>
+            <button class="tab" onclick="switchTab('register')">Регистрация</button>
+        </div>
+
+        <div id="alertBox" class="alert"></div>
+
+        <!-- Login Form -->
+        <div id="loginForm" class="form-container active">
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="loginEmail">📧 Email</label>
+                    <input type="email" id="loginEmail" placeholder="your@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">🔒 Пароль</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-primary" id="loginBtn">
+                    🔐 Войти в кабинет
+                </button>
+            </form>
+            <button class="btn btn-secondary" onclick="showRecovery()">📩 Восстановить пароль</button>
+        </div>
+
+        <!-- Register Form -->
+        <div id="registerForm" class="form-container">
+            <form onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label for="regName">👤 ФИО</label>
+                    <input type="text" id="regName" placeholder="Иванов Иван Иванович" required>
+                </div>
+                <div class="form-group">
+                    <label for="regEmail">📧 Email</label>
+                    <input type="email" id="regEmail" placeholder="your@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="regPassword">🔒 Пароль</label>
+                    <input type="password" id="regPassword" placeholder="Минимум 8 символов" required oninput="checkPasswordStrength(this.value)">
+                    <div class="password-strength">
+                        <div id="strengthBar" class="password-strength-bar"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="regPasswordConfirm">🔒 Подтвердите пароль</label>
+                    <input type="password" id="regPasswordConfirm" placeholder="Повторите пароль" required>
+                </div>
+                <button type="submit" class="btn btn-primary" id="registerBtn">
+                    📧 Зарегистрироваться
+                </button>
+            </form>
+        </div>
+
+        <div class="back-link">
+            <a href="index.html">← Вернуться на сайт</a>
+        </div>
+    </div>
+
+    <!-- Firebase SDK (Module Type) -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, updateProfile, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { getFirestore, doc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        // 🔥 ТВОИ Firebase конфиги
+        const firebaseConfig = {
+            apiKey: "AIzaSyB9awVrLPm45wjLwOz-zJEYk-CFTj7jc1w",
+            authDomain: "ssb-core.firebaseapp.com",
+            projectId: "ssb-core",
+            storageBucket: "ssb-core.firebasestorage.app",
+            messagingSenderId: "581773977710",
+            appId: "1:581773977710:web:96a4f39b5e2d2d81f01e7f",
+            measurementId: "G-FXEFB1YZKH"
+        };
+
+        // Инициализация Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Делаем функции доступными глобально
+        window.switchTab = switchTab;
+        window.handleLogin = handleLogin;
+        window.handleRegister = handleRegister;
+        window.showRecovery = showRecovery;
+        window.checkPasswordStrength = checkPasswordStrength;
+        window.logout = logout;
+
+        // Background animation
+        const bgAnimation = document.getElementById('bgAnimation');
+        for (let i = 0; i < 20; i++) {
+            const triangle = document.createElement('div');
+            triangle.classList.add('triangle');
+            const size = Math.random() * 60 + 20;
+            triangle.style.width = `${size}px`;
+            triangle.style.height = `${size}px`;
+            triangle.style.top = `${Math.random() * 100}%`;
+            triangle.style.animationDuration = `${Math.random() * 15 + 10}s`;
+            triangle.style.animationDelay = `-${Math.random() * 20}s`;
+            bgAnimation.appendChild(triangle);
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.form-container').forEach(f => f.classList.remove('active'));
+            
+            if (tab === 'login') {
+                document.querySelector('.tab:first-child').classList.add('active');
+                document.getElementById('loginForm').classList.add('active');
+            } else {
+                document.querySelector('.tab:last-child').classList.add('active');
+                document.getElementById('registerForm').classList.add('active');
+            }
+            hideAlert();
+        }
+
+        function showAlert(message, type) {
+            const alert = document.getElementById('alertBox');
+            alert.textContent = message;
+            alert.className = `alert alert-${type}`;
+            alert.style.display = 'block';
+            setTimeout(() => hideAlert(), 5000);
+        }
+
+        function hideAlert() {
+            document.getElementById('alertBox').style.display = 'none';
+        }
+
+        function checkPasswordStrength(password) {
+            const bar = document.getElementById('strengthBar');
+            let strength = 0;
+            
+            if (password.length >= 8) strength++;
+            if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength++;
+            if (password.match(/[0-9]/) || password.match(/[^a-zA-Z0-9]/)) strength++;
+            
+            bar.className = 'password-strength-bar';
+            if (strength === 1) bar.classList.add('strength-weak');
+            else if (strength === 2) bar.classList.add('strength-medium');
+            else if (strength === 3) bar.classList.add('strength-strong');
+        }
+
+        async function handleRegister(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+            const passwordConfirm = document.getElementById('regPasswordConfirm').value;
+            const btn = document.getElementById('registerBtn');
+            
+            if (password !== passwordConfirm) {
+                showAlert('❌ Пароли не совпадают!', 'error');
+                return;
+            }
+            
+            if (password.length < 8) {
+                showAlert('❌ Пароль должен быть не менее 8 символов!', 'error');
+                return;
+            }
+            
+            try {
+                btn.disabled = true;
+                btn.innerHTML = '<span class="loading"></span> Регистрация...';
+                
+                // Создаём пользователя в Firebase Auth
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                
+                // Обновляем профиль (имя)
+                await updateProfile(user, { displayName: name });
+                
+                // Сохраняем дополнительные данные в Firestore
+                await setDoc(doc(db, "users", user.uid), {
+                    name: name,
+                    email: email,
+                    createdAt: new Date().toISOString(),
+                    verified: false,
+                    licenseType: null,
+                    licenseKey: null,
+                    licenseExpiry: null,
+                    organization: '',
+                    phone: ''
+                });
+                
+                // Отправляем email на подтверждение
+                await user.sendEmailVerification();
+                
+                showAlert('✅ Регистрация успешна! Проверьте email для подтверждения.', 'success');
+                
+                setTimeout(() => {
+                    switchTab('login');
+                }, 3000);
+                
+            } catch (error) {
+                console.error('Registration error:', error);
+                showAlert('❌ ' + getErrorMessage(error.code), 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '📧 Зарегистрироваться';
+            }
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const btn = document.getElementById('loginBtn');
+            
+            try {
+                btn.disabled = true;
+                btn.innerHTML = '<span class="loading"></span> Вход...';
+                
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                
+                if (!user.emailVerified) {
+                    showAlert('⚠️ Подтвердите email перед входом! Проверьте спам.', 'error');
+                    await signOut(auth);
+                    return;
+                }
+                
+                showAlert('✅ Вход выполнен! Перенаправление...', 'success');
+                
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1500);
+                
+            } catch (error) {
+                console.error('Login error:', error);
+                showAlert('❌ ' + getErrorMessage(error.code), 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '🔐 Войти в кабинет';
+            }
+        }
+
+        async function showRecovery() {
+            const email = prompt('Введите ваш email для восстановления пароля:');
+            if (!email) return;
+            
+            try {
+                await sendPasswordResetEmail(auth, email);
+                showAlert('📧 Инструкция по сбросу пароля отправлена на ' + email, 'success');
+            } catch (error) {
+                showAlert('❌ ' + getErrorMessage(error.code), 'error');
+            }
+        }
+
+        function getErrorMessage(errorCode) {
+            const errors = {
+                'auth/email-already-in-use': 'Этот email уже зарегистрирован',
+                'auth/invalid-email': 'Неверный формат email',
+                'auth/operation-not-allowed': 'Регистрация отключена',
+                'auth/weak-password': 'Слишком слабый пароль',
+                'auth/user-disabled': 'Аккаунт заблокирован',
+                'auth/user-not-found': 'Пользователь не найден',
+                'auth/wrong-password': 'Неверный пароль',
+                'auth/too-many-requests': 'Слишком много попыток. Попробуйте позже'
+            };
+            return errors[errorCode] || 'Произошла ошибка. Попробуйте снова';
+        }
+
+        function logout() {
+            signOut(auth).then(() => {
+                window.location.href = 'index.html';
+            });
+        }
+
+        // Проверка авторизации при загрузке
+        onAuthStateChanged(auth, (user) => {
+            if (user && user.emailVerified && window.location.pathname.includes('auth.html')) {
+                window.location.href = 'dashboard.html';
+            }
+        });
+    </script>
+</body>
+</html>
