@@ -23,22 +23,6 @@
             min-height: 100vh;
             color: var(--text-primary);
         }
-        .bg-animation {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1; overflow: hidden; pointer-events: none;
-        }
-        .triangle {
-            position: absolute; background: rgba(59, 130, 246, 0.06);
-            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-            animation: moveRight 20s linear infinite;
-        }
-        @keyframes moveRight {
-            0% { transform: translateX(-150px) rotate(0deg); opacity: 0; }
-            10% { opacity: 0.4; } 90% { opacity: 0.4; }
-            100% { transform: translateX(calc(100vw + 150px)) rotate(360deg); opacity: 0; }
-        }
-        
-        /* Header */
         .header {
             background: rgba(15, 23, 42, 0.95);
             backdrop-filter: blur(10px);
@@ -68,9 +52,6 @@
             align-items: center;
             gap: 1.5rem;
         }
-        .user-info {
-            text-align: right;
-        }
         .user-name {
             font-weight: 600;
             color: var(--text-primary);
@@ -93,8 +74,6 @@
             background: var(--accent-orange);
             color: white;
         }
-        
-        /* Main Content */
         .dashboard-container {
             max-width: 1200px;
             margin: 2rem auto;
@@ -107,7 +86,6 @@
             padding: 2.5rem;
             margin-bottom: 2rem;
             text-align: center;
-            backdrop-filter: blur(10px);
         }
         .welcome-banner h1 {
             font-size: 2rem;
@@ -116,10 +94,6 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        .welcome-banner p {
-            color: var(--text-secondary);
-        }
-        
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -128,26 +102,15 @@
         }
         .card {
             background: rgba(30, 41, 59, 0.6);
-            backdrop-filter: blur(10px);
             padding: 2rem;
             border-radius: 16px;
             border: 1px solid rgba(59, 130, 246, 0.2);
-            transition: 0.3s;
-        }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-            border-color: var(--accent-blue);
         }
         .card h3 {
             color: var(--accent-blue);
             margin-bottom: 1.5rem;
             font-size: 1.2rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
         }
-        
         .license-status {
             display: flex;
             align-items: center;
@@ -165,79 +128,6 @@
             font-size: 0.85rem;
             font-weight: 600;
         }
-        .status-badge.expired {
-            background: var(--warning);
-        }
-        .key-display {
-            background: rgba(15, 23, 42, 0.8);
-            padding: 1rem;
-            border-radius: 8px;
-            font-family: 'Courier New', monospace;
-            word-break: break-all;
-            border: 1px solid rgba(255,255,255,0.1);
-            margin: 1rem 0;
-            color: var(--accent-blue);
-            font-size: 0.9rem;
-        }
-        .btn-copy {
-            padding: 0.6rem 1.2rem;
-            background: var(--accent-blue);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: 0.3s;
-            margin-right: 0.5rem;
-        }
-        .btn-copy:hover {
-            background: #2563EB;
-            transform: translateY(-2px);
-        }
-        .btn-secondary {
-            padding: 0.6rem 1.2rem;
-            background: transparent;
-            border: 1px solid var(--text-secondary);
-            color: var(--text-secondary);
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: 0.3s;
-        }
-        .btn-secondary:hover {
-            border-color: var(--accent-blue);
-            color: var(--accent-blue);
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 1rem;
-        }
-        th, td {
-            text-align: left;
-            padding: 1rem;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-        th {
-            color: var(--text-secondary);
-            font-weight: 500;
-            font-size: 0.9rem;
-        }
-        tr:hover {
-            background: rgba(59, 130, 246, 0.05);
-        }
-        .download-link {
-            color: var(--accent-blue);
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: 0.3s;
-        }
-        .download-link:hover {
-            text-decoration: underline;
-            color: var(--accent-orange);
-        }
-        
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -260,32 +150,117 @@
             color: var(--text-secondary);
             margin-top: 0.3rem;
         }
-        
-        .placeholder-box {
-            text-align: center;
-            padding: 3rem;
+        .key-display {
+            background: rgba(15, 23, 42, 0.8);
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            border: 1px solid rgba(255,255,255,0.1);
+            margin: 1rem 0;
+            color: var(--accent-blue);
+            font-size: 0.9rem;
+            word-break: break-all;
+        }
+        .key-masked {
+            filter: blur(5px);
+            user-select: none;
+        }
+        .btn-copy, .btn-toggle, .btn-secondary, .btn-save {
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+            border: none;
+            margin-right: 0.5rem;
+        }
+        .btn-copy {
+            background: var(--accent-blue);
+            color: white;
+        }
+        .btn-toggle, .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--text-secondary);
             color: var(--text-secondary);
-            border: 2px dashed rgba(59, 130, 246, 0.3);
-            border-radius: 12px;
-            margin-top: 2rem;
         }
-        .placeholder-box h3 {
-            color: var(--text-silver);
+        .btn-toggle:hover, .btn-secondary:hover {
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+        }
+        .btn-save {
+            background: var(--success);
+            color: white;
+        }
+        .profile-field {
+            margin-bottom: 1rem;
+        }
+        .profile-field label {
+            display: block;
             margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
         }
-        
-        @media (max-width: 768px) {
-            .header-content { flex-direction: column; gap: 1rem; text-align: center; }
-            .user-menu { flex-direction: column; gap: 1rem; }
-            .user-info { text-align: center; }
-            .grid { grid-template-columns: 1fr; }
-            .stats-grid { grid-template-columns: 1fr; }
+        .profile-field-value {
+            font-weight: 600;
+            color: var(--text-primary);
+            padding: 0.5rem;
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 6px;
+        }
+        .profile-field input {
+            width: 100%;
+            padding: 0.6rem;
+            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(15, 23, 42, 0.8);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            display: none;
+        }
+        .profile-field.editing input {
+            display: block;
+        }
+        .profile-field.editing .profile-field-value {
+            display: none;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        th, td {
+            text-align: left;
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        th {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        tr:hover {
+            background: rgba(59, 130, 246, 0.05);
+        }
+        .download-link {
+            color: var(--accent-blue);
+            text-decoration: none;
+        }
+        .download-link:hover {
+            text-decoration: underline;
+        }
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+        .alert-success {
+            background: rgba(34, 197, 94, 0.1);
+            border-left: 3px solid var(--success);
+            color: var(--success);
         }
     </style>
 </head>
 <body>
-    <div class="bg-animation" id="bgAnimation"></div>
-    
     <header class="header">
         <div class="header-content">
             <a href="index.html" class="logo">SSB Core</a>
@@ -311,44 +286,49 @@
                 <h3>🔑 Ваша лицензия</h3>
                 <div class="license-status">
                     <span class="status-badge" id="licenseStatus">✅ Активна</span>
-                    <span style="color: var(--text-secondary);" id="licenseType">Тариф: ПРОФЕССИОНАЛ</span>
+                    <span style="color: var(--text-secondary);" id="licenseType">Тариф: Загрузка...</span>
                 </div>
                 <div class="stats-grid">
                     <div class="stat-item">
-                        <div class="stat-value" id="daysLeft">245</div>
+                        <div class="stat-value" id="daysLeft">-</div>
                         <div class="stat-label">дней осталось</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-value" id="expiryDate">15.11.2026</div>
+                        <div class="stat-value" id="expiryDate">-</div>
                         <div class="stat-label">действует до</div>
                     </div>
                 </div>
                 <p style="margin-bottom: 0.5rem; font-size: 0.9rem; color: var(--text-secondary);">Лицензионный ключ:</p>
-                <div class="key-display" id="licenseKey">SSB-PRO-2026-XXXX-XXXX</div>
-                <button class="btn-copy" onclick="copyLicenseKey()">📋 Скопировать ключ</button>
-                <button class="btn-secondary" onclick="extendLicense()">🔄 Продлить</button>
+                <div class="key-display key-masked" id="licenseKey">Загрузка...</div>
+                <button class="btn-toggle" onclick="toggleKey()">👁️ Показать</button>
+                <button class="btn-copy" onclick="copyLicenseKey()">📋 Скопировать</button>
             </div>
 
             <!-- Profile Card -->
             <div class="card">
                 <h3>👤 Профиль пользователя</h3>
-                <div style="margin-bottom: 1rem;">
-                    <p style="margin-bottom: 0.5rem; color: var(--text-secondary); font-size: 0.9rem;">Имя:</p>
-                    <p style="font-weight: 600;" id="profileName">Загрузка...</p>
+                <div id="profileAlert" class="alert alert-success"></div>
+                <div class="profile-field" id="field-name">
+                    <label>Имя:</label>
+                    <div class="profile-field-value" id="profileName">Загрузка...</div>
+                    <input type="text" id="input-name" placeholder="Ваше имя">
                 </div>
-                <div style="margin-bottom: 1rem;">
-                    <p style="margin-bottom: 0.5rem; color: var(--text-secondary); font-size: 0.9rem;">Email:</p>
-                    <p style="font-weight: 600;" id="profileEmail">Загрузка...</p>
+                <div class="profile-field" id="field-email">
+                    <label>Email:</label>
+                    <div class="profile-field-value" id="profileEmail">Загрузка...</div>
                 </div>
-                <div style="margin-bottom: 1rem;">
-                    <p style="margin-bottom: 0.5rem; color: var(--text-secondary); font-size: 0.9rem;">Организация:</p>
-                    <p style="font-weight: 600;" id="profileOrg">Не указана</p>
+                <div class="profile-field" id="field-organization">
+                    <label>Организация:</label>
+                    <div class="profile-field-value" id="profileOrg">Не указана</div>
+                    <input type="text" id="input-organization" placeholder="Название организации">
                 </div>
-                <div style="margin-bottom: 1rem;">
-                    <p style="margin-bottom: 0.5rem; color: var(--text-secondary); font-size: 0.9rem;">Телефон:</p>
-                    <p style="font-weight: 600;" id="profilePhone">Не указан</p>
+                <div class="profile-field" id="field-phone">
+                    <label>Телефон:</label>
+                    <div class="profile-field-value" id="profilePhone">Не указан</div>
+                    <input type="tel" id="input-phone" placeholder="+7 (___) ___-__-__">
                 </div>
-                <button class="btn-secondary" onclick="editProfile()" style="width: 100%;">✏️ Редактировать профиль</button>
+                <button class="btn-secondary" id="editBtn" onclick="editProfile()">✏️ Редактировать</button>
+                <button class="btn-save" id="saveBtn" onclick="saveProfile()" style="display: none;">💾 Сохранить</button>
             </div>
         </div>
 
@@ -371,29 +351,17 @@
                         <td>Лицензия ПРОФЕССИОНАЛ (1 год)</td>
                         <td>19 900 ₽</td>
                         <td><span class="status-badge">✅ Оплачено</span></td>
-                        <td><a href="#" class="download-link" onclick="downloadCheck(event)">📄 Скачать чек</a></td>
-                    </tr>
-                    <tr>
-                        <td>15.01.2026</td>
-                        <td>Лицензия СТАРТЕР (1 мес)</td>
-                        <td>2 900 ₽</td>
-                        <td><span class="status-badge">✅ Оплачено</span></td>
-                        <td><a href="#" class="download-link" onclick="downloadCheck(event)">📄 Скачать чек</a></td>
+                        <td><a href="#" class="download-link">📄 Скачать чек</a></td>
                     </tr>
                 </tbody>
             </table>
-        </div>
-
-        <div class="placeholder-box">
-            <h3>🚧 Скоро здесь появится</h3>
-            <p>Управление подпиской, настройка модулей, история обновлений и интеграции</p>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
         import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-        import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { getFirestore, doc, getDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
         const firebaseConfig = {
             apiKey: "AIzaSyB9awVrLPm45wjLwOz-zJEYk-CFTj7jc1w",
@@ -409,80 +377,131 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Background animation
-        const bgAnimation = document.getElementById('bgAnimation');
-        for (let i = 0; i < 20; i++) {
-            const triangle = document.createElement('div');
-            triangle.classList.add('triangle');
-            const size = Math.random() * 60 + 20;
-            triangle.style.width = `${size}px`;
-            triangle.style.height = `${size}px`;
-            triangle.style.top = `${Math.random() * 100}%`;
-            triangle.style.animationDuration = `${Math.random() * 15 + 10}s`;
-            triangle.style.animationDelay = `-${Math.random() * 20}s`;
-            bgAnimation.appendChild(triangle);
-        }
+        let isEditing = false;
+        let currentUser = null;
 
-        // Проверка авторизации
         onAuthStateChanged(auth, async (user) => {
             if (!user || !user.emailVerified) {
                 window.location.href = 'auth.html';
                 return;
             }
             
-            // Загрузка данных пользователя
+            currentUser = user;
+            document.getElementById('userName').textContent = user.displayName || 'Пользователь';
+            document.getElementById('userEmail').textContent = user.email;
+            
+            await loadUserData();
+        });
+
+        async function loadUserData() {
             try {
-                const userDoc = await getDoc(doc(db, "users", user.uid));
+                const userDoc = await getDoc(doc(db, "users", currentUser.uid));
                 if (userDoc.exists()) {
-                    const userData = userDoc.data();
+                    const data = userDoc.data();
                     
-                    // Заполняем профиль
-                    document.getElementById('userName').textContent = userData.name || user.displayName;
-                    document.getElementById('userEmail').textContent = user.email;
-                    document.getElementById('profileName').textContent = userData.name || 'Не указано';
-                    document.getElementById('profileEmail').textContent = user.email;
-                    document.getElementById('profileOrg').textContent = userData.organization || 'Не указана';
-                    document.getElementById('profilePhone').textContent = userData.phone || 'Не указан';
+                    // Profile
+                    document.getElementById('profileName').textContent = data.name || currentUser.displayName || 'Не указано';
+                    document.getElementById('profileEmail').textContent = currentUser.email;
+                    document.getElementById('profileOrg').textContent = data.organization || 'Не указана';
+                    document.getElementById('profilePhone').textContent = data.phone || 'Не указан';
                     
-                    // Генерируем лицензионный ключ (в реальном проекте — из базы)
-                    const licenseKey = `SSB-${userData.licenseType || 'PRO'}-${new Date().getFullYear()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
-                    document.getElementById('licenseKey').textContent = licenseKey;
+                    // License
+                    document.getElementById('licenseType').textContent = `Тариф: ${data.licenseType || 'Не активирован'}`;
+                    document.getElementById('licenseKey').textContent = data.licenseKey || 'Ключ не выдан. Обратитесь в поддержку.';
                     
-                    // Рассчитываем дни до истечения
-                    const expiryDate = new Date();
-                    expiryDate.setFullYear(expiryDate.getFullYear() + 1);
-                    const daysLeft = Math.floor((expiryDate - new Date()) / (1000 * 60 * 60 * 24));
-                    document.getElementById('daysLeft').textContent = daysLeft;
-                    document.getElementById('expiryDate').textContent = expiryDate.toLocaleDateString('ru-RU');
+                    if (data.licenseExpiry) {
+                        const expiryDate = new Date(data.licenseExpiry);
+                        const daysLeft = Math.floor((expiryDate - new Date()) / (1000 * 60 * 60 * 24));
+                        document.getElementById('daysLeft').textContent = daysLeft > 0 ? daysLeft : 0;
+                        document.getElementById('expiryDate').textContent = expiryDate.toLocaleDateString('ru-RU');
+                        
+                        if (daysLeft <= 0) {
+                            document.getElementById('licenseStatus').textContent = '❌ Истекла';
+                            document.getElementById('licenseStatus').style.background = '#EF4444';
+                        }
+                    }
                 }
             } catch (error) {
-                console.error('Error loading user data:', error);
+                console.error('Error loading user ', error);
             }
-        });
+        }
+
+        window.toggleKey = () => {
+            const keyElement = document.getElementById('licenseKey');
+            const btn = event.target;
+            
+            if (keyElement.classList.contains('key-masked')) {
+                keyElement.classList.remove('key-masked');
+                btn.textContent = '🙈 Скрыть';
+            } else {
+                keyElement.classList.add('key-masked');
+                btn.textContent = '👁️ Показать';
+            }
+        };
 
         window.copyLicenseKey = () => {
             const key = document.getElementById('licenseKey').textContent;
+            if (key.includes('Загрузка') || key.includes('не выдан')) {
+                alert('❌ Лицензионный ключ ещё не выдан. Обратитесь в поддержку.');
+                return;
+            }
             navigator.clipboard.writeText(key).then(() => {
                 alert('✅ Лицензионный ключ скопирован!');
             });
         };
 
-        window.extendLicense = () => {
-            alert('🔄 Функция продления лицензии будет доступна скоро!\n\nВ ближайшее время вы сможете:\n• Выбрать новый тариф\n• Оплатить онлайн\n• Автоматически продлить лицензию');
+        window.editProfile = () => {
+            isEditing = true;
+            document.querySelectorAll('.profile-field').forEach(field => {
+                if (field.id !== 'field-email') {
+                    field.classList.add('editing');
+                    const inputId = field.querySelector('input').id;
+                    const valueId = field.querySelector('.profile-field-value').id;
+                    const value = document.getElementById(valueId).textContent;
+                    document.getElementById(inputId).value = value === 'Не указана' || value === 'Не указан' ? '' : value;
+                }
+            });
+            document.getElementById('editBtn').style.display = 'none';
+            document.getElementById('saveBtn').style.display = 'inline-block';
         };
 
-        window.editProfile = () => {
-            const newName = prompt('Введите новое имя:', document.getElementById('profileName').textContent);
-            if (newName && newName.trim() !== '') {
-                // Здесь будет обновление в Firebase
-                alert('✏️ Функция редактирования профиля будет доступна скоро!');
+        window.saveProfile = async () => {
+            if (!currentUser) return;
+            
+            const organization = document.getElementById('input-organization').value;
+            const phone = document.getElementById('input-phone').value;
+            
+            try {
+                await updateDoc(doc(db, "users", currentUser.uid), {
+                    organization: organization,
+                    phone: phone
+                });
+                
+                document.getElementById('profileOrg').textContent = organization || 'Не указана';
+                document.getElementById('profilePhone').textContent = phone || 'Не указан';
+                
+                showAlert('✅ Профиль успешно обновлён!');
+                
+                isEditing = false;
+                document.querySelectorAll('.profile-field').forEach(field => {
+                    field.classList.remove('editing');
+                });
+                document.getElementById('editBtn').style.display = 'inline-block';
+                document.getElementById('saveBtn').style.display = 'none';
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                showAlert('❌ Ошибка при сохранении профиля');
             }
         };
 
-        window.downloadCheck = (e) => {
-            e.preventDefault();
-            alert('📄 Чек будет сформирован и отправлен на ваш email в течение 5 минут.');
-        };
+        function showAlert(message) {
+            const alert = document.getElementById('profileAlert');
+            alert.textContent = message;
+            alert.style.display = 'block';
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 3000);
+        }
 
         window.logout = () => {
             signOut(auth).then(() => {
