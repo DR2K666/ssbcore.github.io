@@ -280,7 +280,8 @@
                 <a href="#pricing">Тарифы</a>
                 <a href="#faq">FAQ</a>
                 <a href="#contacts">Контакты</a>
-                <a href="auth.html" class="btn btn-secondary" style="padding: 0.6rem 1rem;">👤 Войти</a>
+                <a href="auth.html" id="navLoginBtn" class="btn btn-secondary" style="padding: 0.6rem 1rem;">👤 Войти</a>
+                <a href="dashboard.html" id="navProfileBtn" class="btn btn-secondary" style="padding: 0.6rem 1rem; display: none;">👤 Кабинет</a>
                 <a href="#pricing" class="btn btn-primary">Купить</a>
                 <a href="order-project.html" class="btn btn-secondary" style="margin-left: 0.5rem; padding: 0.6rem 1.2rem;">📋 Заказать проект</a>
             </div>
@@ -753,6 +754,37 @@
         function acceptCookies() { localStorage.setItem('cookieConsent', 'accepted'); document.getElementById('cookieConsent').style.display = 'none'; }
         function declineCookies() { localStorage.setItem('cookieConsent', 'declined'); document.getElementById('cookieConsent').style.display = 'none'; }
         window.addEventListener('load', checkCookieConsent);
-    </script>
+    
+</script>
+<script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyB9awVrLPm45wjLwOz-zJEYk-CFTj7jc1w",
+        authDomain: "ssb-core.firebaseapp.com",
+        projectId: "ssb-core",
+        storageBucket: "ssb-core.firebasestorage.app",
+        messagingSenderId: "581773977710",
+        appId: "1:581773977710:web:96a4f39b5e2d2d81f01e7f",
+        measurementId: "G-FXEFB1YZKH"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    onAuthStateChanged(auth, (user) => {
+        const loginBtn = document.getElementById('navLoginBtn');
+        const profileBtn = document.getElementById('navProfileBtn');
+        
+        if (user && user.emailVerified) {
+            if(loginBtn) loginBtn.style.display = 'none';
+            if(profileBtn) profileBtn.style.display = 'inline-block';
+        } else {
+            if(loginBtn) loginBtn.style.display = 'inline-block';
+            if(profileBtn) profileBtn.style.display = 'none';
+        }
+    });
+</script>
 </body>
 </html>
