@@ -4,15 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Заказать проект | SSB Core - Smart System Builder</title>
-    <meta name="description" content="Заказать проектирование систем безопасности: АПС, СОУЭ, АУПТ. Быстро, качественно, по ГОСТ.">
-    
+    <meta name="description" content="Заказать проектирование систем безопасности: АПС, СОУЭ, АУПТ.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
         :root {
             --bg-primary: #0F172A;
             --bg-secondary: #1E293B;
@@ -23,7 +20,6 @@
             --text-silver: #E2E8F0;
             --success: #22C55E;
         }
-
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-primary);
@@ -31,306 +27,105 @@
             line-height: 1.6;
             min-height: 100vh;
         }
-
-        /* Background Animation */
         .bg-animation {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1;
-            overflow: hidden;
-            pointer-events: none;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; overflow: hidden; pointer-events: none;
         }
-
         .triangle {
-            position: absolute;
-            background: rgba(59, 130, 246, 0.06);
+            position: absolute; background: rgba(59, 130, 246, 0.06);
             clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
             animation: moveRight 20s linear infinite;
         }
-
         @keyframes moveRight {
             0% { transform: translateX(-150px) rotate(0deg); opacity: 0; }
-            10% { opacity: 0.4; }
-            90% { opacity: 0.4; }
+            10% { opacity: 0.4; } 90% { opacity: 0.4; }
             100% { transform: translateX(calc(100vw + 150px)) rotate(360deg); opacity: 0; }
         }
-
-        /* Navigation */
         nav {
-            position: fixed; top: 0; width: 100%;
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(10px);
-            z-index: 1000; padding: 1rem 5%;
+            position: fixed; top: 0; width: 100%; background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px); z-index: 1000; padding: 1rem 5%;
             border-bottom: 1px solid rgba(59, 130, 246, 0.2);
         }
-
-        .nav-container {
-            max-width: 1200px; margin: 0 auto;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-
+        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
         .logo {
             font-size: 1.5rem; font-weight: 700;
             background: linear-gradient(135deg, var(--accent-blue), var(--accent-orange));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            text-decoration: none;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none;
         }
-
         .nav-links { display: flex; gap: 2rem; align-items: center; }
-        .nav-links a { 
-            color: var(--text-primary); text-decoration: none; 
-            font-weight: 500; transition: 0.3s; 
-        }
+        .nav-links a { color: var(--text-primary); text-decoration: none; font-weight: 500; transition: 0.3s; }
         .nav-links a:hover { color: var(--accent-blue); }
-
         .btn {
             padding: 0.85rem 1.6rem; border-radius: 8px; border: none;
-            font-weight: 600; cursor: pointer; transition: 0.3s;
-            text-decoration: none; display: inline-block;
+            font-weight: 600; cursor: pointer; transition: 0.3s; text-decoration: none; display: inline-block;
         }
-
         .btn-primary { background: var(--accent-blue); color: white; }
         .btn-primary:hover { background: #2563EB; transform: translateY(-2px); box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3); }
-        
         .btn-secondary { background: transparent; color: var(--accent-blue); border: 2px solid var(--accent-blue); }
         .btn-secondary:hover { background: var(--accent-blue); color: white; }
-
-        /* Main Content */
         .order-page {
-            margin-top: 100px;
-            padding: 3rem 5%;
-            max-width: 1000px;
-            margin-left: auto;
-            margin-right: auto;
+            margin-top: 100px; padding: 3rem 5%; max-width: 1000px; margin-left: auto; margin-right: auto;
         }
-
-        .page-header {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        .page-header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            color: white;
-        }
-
-        .page-header p {
-            color: var(--text-silver);
-            font-size: 1.1rem;
-        }
-
-        /* Form Styles */
+        .page-header { text-align: center; margin-bottom: 3rem; }
+        .page-header h1 { font-size: 2.5rem; margin-bottom: 1rem; color: white; }
+        .page-header p { color: var(--text-silver); font-size: 1.1rem; }
         .order-form {
-            background: var(--bg-secondary);
-            border-radius: 12px;
-            padding: 2.5rem;
+            background: var(--bg-secondary); border-radius: 12px; padding: 2.5rem;
             border: 1px solid rgba(59, 130, 246, 0.2);
         }
-
-        .form-section {
-            margin-bottom: 2.5rem;
-        }
-
+        .form-section { margin-bottom: 2.5rem; }
         .section-title {
-            font-size: 1.4rem;
-            color: var(--accent-blue);
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid rgba(59, 130, 246, 0.2);
+            font-size: 1.4rem; color: var(--accent-blue); margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem; border-bottom: 2px solid rgba(59, 130, 246, 0.2);
         }
-
-        .form-group {
-            margin-bottom: 1.5rem;
+        .form-group { margin-bottom: 1.5rem; }
+        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+        label { display: block; margin-bottom: 0.5rem; color: var(--text-silver); font-weight: 500; }
+        .required::after { content: " *"; color: #EF4444; }
+        input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="date"], select, textarea {
+            width: 100%; padding: 0.85rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);
+            background: var(--bg-primary); color: var(--text-primary); font-family: inherit; font-size: 0.95rem; transition: 0.3s;
         }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
+        input:focus, select:focus, textarea:focus {
+            outline: none; border-color: var(--accent-blue); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
-
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: var(--text-silver);
-            font-weight: 500;
+        textarea { min-height: 100px; resize: vertical; }
+        .checkbox-group, .radio-group { display: flex; flex-direction: column; gap: 0.75rem; }
+        .checkbox-item, .radio-item {
+            display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.75rem;
+            background: rgba(15, 23, 42, 0.5); border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);
+            transition: 0.3s; cursor: pointer;
         }
-
-        .required::after {
-            content: " *";
-            color: #EF4444;
+        .checkbox-item:hover, .radio-item:hover { border-color: var(--accent-blue); background: rgba(15, 23, 42, 0.8); }
+        input[type="checkbox"], input[type="radio"] {
+            margin-top: 0.25rem; width: 18px; height: 18px; accent-color: var(--accent-blue); cursor: pointer;
         }
-
-        input[type="text"],
-        input[type="email"],
-        input[type="tel"],
-        input[type="number"],
-        input[type="date"],
-        select,
-        textarea {
-            width: 100%;
-            padding: 0.85rem;
-            border-radius: 8px;
-            border: 1px solid rgba(255,255,255,0.1);
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            font-family: inherit;
-            font-size: 0.95rem;
-            transition: 0.3s;
-        }
-
-        input:focus,
-        select:focus,
-        textarea:focus {
-            outline: none;
-            border-color: var(--accent-blue);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        }
-
-        textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
-
-        /* Checkbox & Radio Styles */
-        .checkbox-group,
-        .radio-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .checkbox-item,
-        .radio-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 0.75rem;
-            padding: 0.75rem;
-            background: rgba(15, 23, 42, 0.5);
-            border-radius: 6px;
-            border: 1px solid rgba(255,255,255,0.05);
-            transition: 0.3s;
-            cursor: pointer;
-        }
-
-        .checkbox-item:hover,
-        .radio-item:hover {
-            border-color: var(--accent-blue);
-            background: rgba(15, 23, 42, 0.8);
-        }
-
-        input[type="checkbox"],
-        input[type="radio"] {
-            margin-top: 0.25rem;
-            width: 18px;
-            height: 18px;
-            accent-color: var(--accent-blue);
-            cursor: pointer;
-        }
-
-        .checkbox-label,
-        .radio-label {
-            flex: 1;
-            cursor: pointer;
-            color: var(--text-silver);
-        }
-
-        .checkbox-label strong,
-        .radio-label strong {
-            color: var(--text-primary);
-            display: block;
-            margin-bottom: 0.25rem;
-        }
-
-        .checkbox-hint,
-        .radio-hint {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-
-        /* Fire Class Info */
+        .checkbox-label, .radio-label { flex: 1; cursor: pointer; color: var(--text-silver); }
+        .checkbox-label strong, .radio-label strong { color: var(--text-primary); display: block; margin-bottom: 0.25rem; }
+        .checkbox-hint, .radio-hint { font-size: 0.85rem; color: var(--text-secondary); }
         .fire-class-info {
-            background: rgba(59, 130, 246, 0.1);
-            border-left: 3px solid var(--accent-blue);
-            padding: 1rem;
-            border-radius: 6px;
-            margin-top: 0.5rem;
+            background: rgba(59, 130, 246, 0.1); border-left: 3px solid var(--accent-blue);
+            padding: 1rem; border-radius: 6px; margin-top: 0.5rem;
         }
-
-        .fire-class-info h4 {
-            color: var(--accent-blue);
-            margin-bottom: 0.5rem;
-        }
-
-        .fire-class-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 0.5rem;
-            margin-top: 0.5rem;
-            font-size: 0.85rem;
-        }
-
-        .fire-class-item {
-            padding: 0.4rem;
-            background: rgba(15, 23, 42, 0.5);
-            border-radius: 4px;
-        }
-
-        .fire-class-code {
-            color: var(--accent-orange);
-            font-weight: 600;
-        }
-
-        /* Submit Button */
-        .form-actions {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin-top: 3rem;
-        }
-
+        .fire-class-info h4 { color: var(--accent-blue); margin-bottom: 0.5rem; }
+        .fire-class-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.5rem; margin-top: 0.5rem; font-size: 0.85rem; }
+        .fire-class-item { padding: 0.4rem; background: rgba(15, 23, 42, 0.5); border-radius: 4px; }
+        .fire-class-code { color: var(--accent-orange); font-weight: 600; }
+        .form-actions { display: flex; gap: 1rem; justify-content: center; margin-top: 3rem; }
         .submit-btn {
-            padding: 1rem 3rem;
-            font-size: 1.1rem;
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-orange));
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.3s;
+            padding: 1rem 3rem; font-size: 1.1rem; background: linear-gradient(135deg, var(--accent-blue), var(--accent-orange));
+            color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.3s;
         }
-
-        .submit-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
-        }
-
+        .submit-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4); }
         .back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--text-silver);
-            text-decoration: none;
-            padding: 1rem 2rem;
-            transition: 0.3s;
+            display: inline-flex; align-items: center; gap: 0.5rem; color: var(--text-silver);
+            text-decoration: none; padding: 1rem 2rem; transition: 0.3s;
         }
-
-        .back-link:hover {
-            color: var(--accent-blue);
-        }
-
-        /* Footer */
+        .back-link:hover { color: var(--accent-blue); }
         footer {
-            background: var(--bg-secondary);
-            padding: 2rem 5%;
-            text-align: center;
-            color: var(--text-secondary);
-            border-top: 1px solid rgba(59, 130, 246, 0.2);
-            margin-top: 4rem;
+            background: var(--bg-secondary); padding: 2rem 5%; text-align: center;
+            color: var(--text-secondary); border-top: 1px solid rgba(59, 130, 246, 0.2); margin-top: 4rem;
         }
-
         @media (max-width: 768px) {
             .form-row { grid-template-columns: 1fr; }
             .order-form { padding: 1.5rem; }
@@ -340,8 +135,6 @@
 </head>
 <body>
     <div class="bg-animation" id="bg-animation"></div>
-
-    <!-- Navigation -->
     <nav>
         <div class="nav-container">
             <a href="index.html" class="logo">SSB Core</a>
@@ -353,17 +146,12 @@
             </div>
         </div>
     </nav>
-
-    <!-- Main Content -->
     <div class="order-page">
         <div class="page-header">
             <h1>Заказать проектирование</h1>
             <p>Заполните форму ниже, и мы свяжемся с вами в течение 24 часов для обсуждения деталей проекта</p>
         </div>
-
         <form class="order-form" id="projectForm" onsubmit="submitProjectForm(event)">
-            
-            <!-- 1. Контактная информация -->
             <div class="form-section">
                 <h2 class="section-title">📞 Контактная информация</h2>
                 <div class="form-row">
@@ -387,8 +175,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- 2. Информация об объекте -->
             <div class="form-section">
                 <h2 class="section-title">🏢 Информация об объекте</h2>
                 <div class="form-group">
@@ -410,13 +196,9 @@
                     <input type="number" id="pArea" name="area" placeholder="1500" min="1" required>
                 </div>
             </div>
-
-            <!-- 3. Тип системы -->
             <div class="form-section">
                 <h2 class="section-title">🔧 Тип проектируемой системы</h2>
-                <p style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.9rem;">
-                    Можно выбрать несколько вариантов
-                </p>
+                <p style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.9rem;">Можно выбрать несколько вариантов</p>
                 <div class="checkbox-group">
                     <label class="checkbox-item">
                         <input type="checkbox" name="system_type" value="АПС">
@@ -462,8 +244,6 @@
                     </label>
                 </div>
             </div>
-
-            <!-- 4. Производитель оборудования -->
             <div class="form-section">
                 <h2 class="section-title">🏭 Предпочтительный производитель оборудования</h2>
                 <div class="radio-group">
@@ -497,8 +277,6 @@
                     </label>
                 </div>
             </div>
-
-            <!-- 5. Класс функциональной пожарной опасности -->
             <div class="form-section">
                 <h2 class="section-title">⚠️ Класс функциональной пожарной опасности</h2>
                 <div class="form-group">
@@ -535,26 +313,14 @@
                         физического состояния людей, возможности пребывания в состоянии сна, количества людей.
                     </p>
                     <div class="fire-class-grid">
-                        <div class="fire-class-item">
-                            <span class="fire-class-code">Ф1</span> - Проживание людей
-                        </div>
-                        <div class="fire-class-item">
-                            <span class="fire-class-code">Ф2</span> - Культурно-просветительские
-                        </div>
-                        <div class="fire-class-item">
-                            <span class="fire-class-code">Ф3</span> - Обслуживание населения
-                        </div>
-                        <div class="fire-class-item">
-                            <span class="fire-class-code">Ф4</span> - Административные
-                        </div>
-                        <div class="fire-class-item">
-                            <span class="fire-class-code">Ф5</span> - Производственные
-                        </div>
+                        <div class="fire-class-item"><span class="fire-class-code">Ф1</span> - Проживание людей</div>
+                        <div class="fire-class-item"><span class="fire-class-code">Ф2</span> - Культурно-просветительские</div>
+                        <div class="fire-class-item"><span class="fire-class-code">Ф3</span> - Обслуживание населения</div>
+                        <div class="fire-class-item"><span class="fire-class-code">Ф4</span> - Административные</div>
+                        <div class="fire-class-item"><span class="fire-class-code">Ф5</span> - Производственные</div>
                     </div>
                 </div>
             </div>
-
-            <!-- 6. Стадия проекта и документация -->
             <div class="form-section">
                 <h2 class="section-title">📄 Стадия проекта и документация</h2>
                 <div class="form-row">
@@ -583,15 +349,11 @@
                         <input type="checkbox" id="pEstimate" name="estimate" style="width: 20px; height: 20px;">
                         <span class="checkbox-label">
                             <strong>Требуется сметная документация</strong>
-                            <span class="checkbox-hint">
-                                Для стадии "П" (Проект) смета обязательна и выбирается автоматически
-                            </span>
+                            <span class="checkbox-hint">Для стадии "П" (Проект) смета обязательна и выбирается автоматически</span>
                         </span>
                     </div>
                 </div>
             </div>
-
-            <!-- 7. Сроки -->
             <div class="form-section">
                 <h2 class="section-title">⏱ Сроки выполнения</h2>
                 <div class="form-group">
@@ -599,8 +361,6 @@
                     <input type="date" id="pDeadline" name="deadline" required>
                 </div>
             </div>
-
-            <!-- 8. Дополнительные комментарии -->
             <div class="form-section">
                 <h2 class="section-title">💬 Дополнительная информация</h2>
                 <div class="form-group">
@@ -608,24 +368,18 @@
                     <textarea id="pComments" name="comments" placeholder="Опишите особые требования, пожелания или дополнительную информацию о проекте..."></textarea>
                 </div>
             </div>
-
-            <!-- Submit -->
             <div class="form-actions">
                 <a href="index.html" class="back-link">← На главную</a>
                 <button type="submit" class="submit-btn">🚀 Отправить заявку</button>
             </div>
-
         </form>
     </div>
-
-    <!-- Footer -->
     <footer>
         <p>© 2026 SSB Core - Smart System Builder. Все права защищены.</p>
         <p style="margin-top: 0.5rem;">Сделано с ❤️ для инженеров</p>
     </footer>
-
     <script>
-        // Google Apps Script URL
+        // Google Apps Script URL - ТВОЙ URL
         const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbysQ3J0Xi9nmPKlstPnjY1oed_tm7qwWgG7YajQ8sNZhoiWRbCHIVe5IUxRkn3bUieG/exec';
 
         // Background animation
@@ -646,7 +400,6 @@
         function updateEstimateCheckbox() {
             const stage = document.getElementById('pStage').value;
             const estimateCheckbox = document.getElementById('pEstimate');
-            
             if (stage === 'П') {
                 estimateCheckbox.checked = true;
                 estimateCheckbox.disabled = true;
@@ -659,13 +412,11 @@
         function submitProjectForm(e) {
             e.preventDefault();
             
-            // Collect system types
             const systemTypes = [];
             document.querySelectorAll('input[name="system_type"]:checked').forEach(cb => {
                 systemTypes.push(cb.value);
             });
             
-            // Get manufacturer
             const manufacturerRadio = document.querySelector('input[name="manufacturer"]:checked');
             const manufacturer = manufacturerRadio ? manufacturerRadio.value : 'Не указан';
             

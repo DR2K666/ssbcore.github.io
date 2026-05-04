@@ -4,16 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SSB Core - Smart System Builder | Автоматизация проектирования в nanoCAD</title>
-    <meta name="description" content="Профессиональная автоматизация проектирования систем безопасности в nanoCAD. Расчет СОУЭ, спецификации, нумерация.">
-    <meta name="keywords" content="nanoCAD, автоматизация проектирования, СОУЭ, ССПС, LISP, AutoLISP, BIM, ОПС, пожарная безопасность, С2000 Болид, Рубеж, Argus-Spektr, калькулятор SPL, спецификации, нумерация оборудования, DWG, CAD, САПР, проектирование систем безопасности, автоматизация CAD, модуль nanoCAD, плагины nanoCAD, инженерное проектирование, структурные схемы, расчет падения напряжения, калькулятор АКБ">
-    
+    <meta name="description" content="Профессиональная автоматизация проектирования систем безопасности в nanoCAD.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
         :root {
             --bg-primary: #0F172A;
             --bg-secondary: #1E293B;
@@ -25,7 +21,6 @@
             --success: #22C55E;
             --triangle-color: rgba(59, 130, 246, 0.06);
         }
-
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-primary);
@@ -34,8 +29,6 @@
             overflow-x: hidden;
             position: relative;
         }
-
-        /* --- BACKGROUND ANIMATION --- */
         .bg-animation {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1; overflow: hidden; pointer-events: none;
@@ -50,8 +43,6 @@
             10% { opacity: 0.4; } 90% { opacity: 0.4; }
             100% { transform: translateX(calc(100vw + 150px)) rotate(360deg); opacity: 0; }
         }
-
-        /* Modal Styles */
         .modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center;
@@ -59,7 +50,6 @@
         }
         .modal.active { display: flex; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
         .modal-content {
             background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
             border: 2px solid var(--accent-blue); border-radius: 16px; padding: 2rem;
@@ -67,23 +57,16 @@
             animation: slideIn 0.4s ease; box-shadow: 0 20px 60px rgba(59, 130, 246, 0.3);
             max-height: 85vh; overflow-y: auto;
         }
-        
-        /* Custom Scrollbar for Modals */
         .modal-content::-webkit-scrollbar { width: 8px; }
         .modal-content::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.3); border-radius: 4px; }
         .modal-content::-webkit-scrollbar-thumb { background: rgba(59, 130, 246, 0.3); border-radius: 4px; }
-        .modal-content::-webkit-scrollbar-thumb:hover { background: rgba(59, 130, 246, 0.5); }
-        .modal-content { scrollbar-width: thin; scrollbar-color: rgba(59, 130, 246, 0.3) rgba(15, 23, 42, 0.3); }
-
         @keyframes slideIn { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
         .modal-close {
             position: absolute; top: 15px; right: 15px; background: none; border: none;
             color: var(--text-secondary); font-size: 1.5rem; cursor: pointer; transition: 0.3s;
         }
         .modal-close:hover { color: var(--accent-orange); transform: rotate(90deg); }
         .modal h2 { color: var(--accent-blue); margin-bottom: 1.5rem; text-align: center; }
-
         .form-group { margin-bottom: 1.2rem; }
         .form-group label { display: block; margin-bottom: 0.5rem; color: var(--text-silver); font-weight: 500; }
         .form-group input, .form-group select, .form-group textarea {
@@ -93,7 +76,6 @@
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
             outline: none; border-color: var(--accent-blue); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
-
         .trial-info {
             background: rgba(34, 197, 94, 0.1); border-left: 3px solid var(--success);
             padding: 1rem; margin: 1.5rem 0; border-radius: 6px; text-align: center;
@@ -103,8 +85,6 @@
             display: flex; align-items: center; justify-content: center; gap: 0.5rem;
             color: var(--success); font-size: 0.85rem; margin-top: 1rem;
         }
-
-        /* Navigation */
         nav {
             position: fixed; top: 0; width: 100%; background: rgba(15, 23, 42, 0.95);
             backdrop-filter: blur(10px); z-index: 1000; padding: 1rem 5%;
@@ -119,7 +99,6 @@
         .nav-links { display: flex; gap: 2rem; align-items: center; }
         .nav-links a { color: var(--text-primary); text-decoration: none; font-weight: 500; transition: 0.3s; }
         .nav-links a:hover { color: var(--accent-blue); }
-
         .btn {
             padding: 0.85rem 1.6rem; border-radius: 8px; border: none;
             font-weight: 600; cursor: pointer; transition: 0.3s; text-decoration: none; display: inline-block;
@@ -128,8 +107,6 @@
         .btn-primary:hover { background: #2563EB; transform: translateY(-2px); box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3); }
         .btn-secondary { background: transparent; color: var(--accent-blue); border: 2px solid var(--accent-blue); }
         .btn-secondary:hover { background: var(--accent-blue); color: white; }
-
-        /* Hero */
         .hero { margin-top: 80px; padding: 5rem 5% 4rem; max-width: 1200px; margin-left: auto; margin-right: auto; position: relative; }
         .hero-content { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
         .hero h1 { font-size: 3rem; margin-bottom: 0.5rem; color: white; }
@@ -148,14 +125,11 @@
             width: 100%; height: 400px; background: var(--bg-primary); border-radius: 8px;
             display: flex; align-items: center; justify-content: center; color: var(--text-secondary); border: 1px dashed var(--text-secondary);
         }
-
-        /* Features & Libraries */
         .features, .libraries, .pricing-section, .faq-section { padding: 4rem 5%; position: relative; z-index: 2; }
         .features { background: transparent; }
         .container { max-width: 1200px; margin: 0 auto; }
         .section-title { text-align: center; font-size: 2.5rem; margin-bottom: 1rem; color: white; }
         .section-subtitle { text-align: center; color: var(--text-silver); margin-bottom: 3rem; font-size: 1.05rem; }
-        
         .features-grid, .libraries-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
         .feature-card, .library-card {
             background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(5px); padding: 2rem; border-radius: 12px;
@@ -167,7 +141,6 @@
         .feature-card ul, .library-card ul { list-style: none; flex-grow: 1; text-align: left; }
         .feature-card li, .library-card li { padding: 0.4rem 0; color: var(--text-silver); }
         .feature-card li::before { content: "•"; color: var(--accent-orange); margin-right: 0.5rem; }
-
         .gif-placeholder {
             width: 100%; height: 180px; background: rgba(15, 23, 42, 0.8); border: 2px dashed rgba(59, 130, 246, 0.3);
             border-radius: 8px; margin: 1.5rem 0 1rem 0; display: flex; align-items: center; justify-content: center;
@@ -176,8 +149,6 @@
         .gif-placeholder::before { content: "🎬"; font-size: 2.5rem; margin-bottom: 0.5rem; opacity: 0.6; }
         .gif-placeholder span { text-align: center; line-height: 1.4; }
         .gif-placeholder small { color: var(--text-secondary); opacity: 0.7; margin-top: 0.3rem; }
-
-        /* Pricing */
         .pricing-section { padding: 4rem 5%; position: relative; z-index: 2; }
         .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 3rem; }
         .pricing-card {
@@ -190,7 +161,6 @@
         .pricing-card.popular:hover { transform: scale(1.08) translateY(-6px); box-shadow: 0 25px 50px rgba(59, 130, 246, 0.25); }
         .pricing-card.corporate { border-color: var(--accent-orange); }
         .pricing-card.corporate:hover { box-shadow: 0 15px 30px rgba(249, 115, 22, 0.2); transform: translateY(-6px) scale(1.05); }
-        
         .pricing-header { text-align: center; margin-bottom: 1.5rem; }
         .pricing-header h3 { font-size: 1.8rem; margin-bottom: 0.3rem; }
         .pricing-header p { color: var(--text-silver); font-size: 0.9rem; }
@@ -208,15 +178,9 @@
         .badge-starter { background: var(--text-silver); color: var(--bg-primary); }
         .badge-popular { background: var(--accent-blue); color: white; }
         .badge-corporate { background: var(--accent-orange); color: white; }
-
-        /* Dividers */
         .section-divider { width: 100%; height: 2px; background: linear-gradient(90deg, transparent, var(--accent-blue), transparent); margin: 3rem 0; opacity: 0.6; }
-
-        /* FAQ */
         .faq-section { padding: 4rem 5%; position: relative; z-index: 2; }
         .faq-container { max-width: 800px; margin: 0 auto; }
-        
-        /* Improved FAQ Styling */
         .faq-item {
             background: rgba(15, 23, 42, 0.6);
             border: 1px solid rgba(59, 130, 246, 0.2);
@@ -241,12 +205,8 @@
             margin-bottom: 1rem;
             cursor: pointer;
         }
-        .faq-icon {
-            font-size: 1.5rem;
-            flex-shrink: 0;
-        }
+        .faq-icon { font-size: 1.5rem; flex-shrink: 0; }
         .faq-text { flex: 1; }
-        
         .faq-answer {
             background: rgba(30, 41, 59, 0.5);
             border-left: 3px solid var(--accent-blue);
@@ -257,7 +217,6 @@
         .faq-answer-content { color: var(--text-silver); line-height: 1.7; }
         .faq-answer ul, .faq-answer ol { margin: 0.5rem 0; }
         .faq-answer li { margin: 0.3rem 0; }
-
         .faq-form { background: var(--bg-primary); border: 1px solid rgba(249, 115, 22, 0.3); border-radius: 12px; padding: 2rem; margin-top: 2rem; text-align: center; }
         .faq-form h3 { color: var(--accent-orange); margin-bottom: 1.5rem; }
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
@@ -265,8 +224,6 @@
         .form-input:focus { outline: none; border-color: var(--accent-blue); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
         .form-textarea { width: 100%; padding: 0.85rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(15, 23, 42, 0.8); color: var(--text-primary); min-height: 100px; margin-bottom: 1rem; font-family: inherit; transition: 0.3s; }
         .form-textarea:focus { outline: none; border-color: var(--accent-blue); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
-
-        /* Scrolling Hashtags Animation */
         .hashtags-marquee {
             display: flex; gap: 2rem; animation: scrollHashtags 30s linear infinite;
             white-space: nowrap; width: max-content;
@@ -274,8 +231,6 @@
         .hashtags-marquee span { color: var(--accent-blue); font-size: 0.9rem; font-weight: 500; }
         @keyframes scrollHashtags { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
         .hashtags-marquee:hover { animation-play-state: paused; }
-
-        /* Footer */
         footer { background: var(--bg-secondary); padding: 3rem 5% 2rem; text-align: center; color: var(--text-secondary); border-top: 1px solid rgba(59, 130, 246, 0.2); position: relative; z-index: 2; }
         .footer-content { max-width: 800px; margin: 0 auto; }
         .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 2rem; text-align: left; }
@@ -285,7 +240,6 @@
         .footer-inn { background: rgba(34, 197, 94, 0.1); border-left: 3px solid var(--success); padding: 0.8rem; border-radius: 6px; font-size: 0.9rem; }
         .footer-inn strong { color: var(--success); }
         .footer-bottom { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05); font-size: 0.85rem; }
-
         @media (max-width: 768px) {
             .hero-content { grid-template-columns: 1fr; }
             .hero h1 { font-size: 2rem; }
@@ -305,7 +259,6 @@
             <p style="text-align: center; color: var(--text-silver); margin-bottom: 1.5rem;">
                 Получите полный доступ ко всем функциям SSB Core
             </p>
-            
             <form id="trialForm" onsubmit="submitTrialForm(event)">
                 <div class="form-group">
                     <label for="trialFIO">👤 ФИО *</label>
@@ -315,7 +268,6 @@
                     <label for="trialEmail">📧 Email *</label>
                     <input type="email" id="trialEmail" name="email" placeholder="your@email.com" required>
                 </div>
-                
                 <div class="form-group">
                     <label for="trialRole">💼 Ваша должность *</label>
                     <select id="trialRole" name="role" required>
@@ -329,26 +281,21 @@
                         <option value="other">Другое</option>
                     </select>
                 </div>
-
                 <div class="form-group">
                     <label for="trialCompany">🏢 Организация (необязательно)</label>
                     <input type="text" id="trialCompany" name="company" placeholder="Название компании">
                 </div>
-
                 <div class="trial-info">
                     <strong>⏱ Пробная версия выдается на 7 дней</strong><br>
                     <small style="color: var(--text-secondary);">После регистрации вы получите лицензионный ключ на email</small>
                 </div>
-
                 <button type="submit" class="btn btn-primary" style="width: 100%;">
                     🔐 Запросить пробную лицензию
                 </button>
-
                 <div class="secure-badge">
                     <span>🔒</span>
                     <span>Защищенное соединение. Ваши данные в безопасности</span>
                 </div>
-                
                 <p style="text-align: center; margin-top: 1rem; font-size: 0.85rem; color: var(--text-secondary);">
                     © 2026 SSB Core. Все права защищены.
                 </p>
@@ -362,15 +309,12 @@
             <button class="modal-close" onclick="closeTariffModal()">×</button>
             <h2>💳 Оформление заказа</h2>
             <p id="selectedTariffName" style="text-align: center; color: var(--accent-blue); font-size: 1.2rem; margin-bottom: 1.5rem;"></p>
-            
             <form id="tariffForm" onsubmit="submitTariffForm(event)">
                 <input type="hidden" id="tariffNameInput" name="tariff">
-                
                 <div class="form-group">
                     <label for="tariffFIO">👤 ФИО *</label>
                     <input type="text" id="tariffFIO" name="name" placeholder="Иванов Иван Иванович" required>
                 </div>
-                
                 <div class="form-row">
                     <div class="form-group">
                         <label for="tariffEmail">📧 Email *</label>
@@ -381,26 +325,21 @@
                         <input type="tel" id="tariffPhone" name="phone" placeholder="+7 (___) ___-__-__" required>
                     </div>
                 </div>
-
                 <div class="form-group" id="tariffCompanyGroup">
                     <label for="tariffCompany">🏢 Организация</label>
                     <input type="text" id="tariffCompany" name="company" placeholder="Название компании">
                 </div>
-
                 <div class="trial-info">
                     <strong>🔐 Безопасная оплата</strong><br>
                     <small style="color: var(--text-secondary);">После оформления вы будете перенаправлены на защищенную страницу оплаты</small>
                 </div>
-
                 <button type="submit" class="btn btn-primary" style="width: 100%;">
                     💳 Перейти к оплате
                 </button>
-
                 <div class="secure-badge">
                     <span>🔒</span>
                     <span>Защищенное соединение SSL. Данные шифруются</span>
                 </div>
-                
                 <p style="text-align: center; margin-top: 1rem; font-size: 0.85rem; color: var(--text-secondary);">
                     © 2026 SSB Core. Все права защищены.
                 </p>
@@ -416,13 +355,11 @@
             <p style="text-align: center; color: var(--text-silver); margin-bottom: 1.5rem;">
                 Индивидуальные условия для крупных организаций
             </p>
-            
             <form id="corporateForm" onsubmit="submitCorporateForm(event)">
                 <div class="form-group">
                     <label for="corpFIO">👤 ФИО *</label>
                     <input type="text" id="corpFIO" name="name" placeholder="Иванов Иван Иванович" required>
                 </div>
-                
                 <div class="form-row">
                     <div class="form-group">
                         <label for="corpEmail">📧 Email *</label>
@@ -433,36 +370,29 @@
                         <input type="tel" id="corpPhone" name="phone" placeholder="+7 (___) ___-__-__" required>
                     </div>
                 </div>
-
                 <div class="form-group">
                     <label for="corpCompany">🏢 Организация *</label>
                     <input type="text" id="corpCompany" name="company" placeholder="Название компании" required>
                 </div>
-
                 <div class="form-group">
                     <label for="corpLicenses">🔑 Количество лицензий *</label>
                     <input type="number" id="corpLicenses" name="licenses" placeholder="Например: 10" min="3" required>
                 </div>
-
                 <div class="form-group">
                     <label for="corpComments">💬 Дополнительные комментарии</label>
                     <textarea id="corpComments" name="comments" placeholder="Особые требования, сроки, интеграции..." style="min-height: 80px;"></textarea>
                 </div>
-
                 <div class="trial-info">
                     <strong>📄 КП будет отправлено на email</strong><br>
                     <small style="color: var(--text-secondary);">Срок подготовки: 1-2 рабочих дня</small>
                 </div>
-
                 <button type="submit" class="btn btn-primary" style="width: 100%; border-color: var(--accent-orange); background: var(--accent-orange);">
                     📤 Отправить запрос на КП
                 </button>
-
                 <div class="secure-badge">
                     <span>🔒</span>
                     <span>Защищенное соединение. Данные передаются по HTTPS</span>
                 </div>
-                
                 <p style="text-align: center; margin-top: 1rem; font-size: 0.85rem; color: var(--text-secondary);">
                     © 2026 SSB Core. Все права защищены.
                 </p>
@@ -493,7 +423,6 @@
                 <h1>SSB Core</h1>
                 <p class="hero-subtitle">Smart System Builder</p>
                 <p class="hero-desc">Профессиональная автоматизация проектирования систем безопасности в nanoCAD.</p>
-                
                 <ul class="hero-features">
                     <li>Автоматическая и полуавтоматическая нумерация</li>
                     <li>Расстановка блоков для структурных схем</li>
@@ -503,19 +432,16 @@
                     <li>Готовые библиотеки: Bolid, Rubezh, Argus-Spektr</li>
                     <li>Полное соответствие нормам РФ</li>
                 </ul>
-                
                 <div class="hero-buttons">
                     <button onclick="openTrialModal()" class="btn btn-primary">🚀 Попробовать бесплатно</button>
                     <a href="#features" class="btn btn-secondary">📖 Подробнее</a>
                 </div>
-                
                 <div class="hero-badges">
                     <span>✓ nanoCAD 2020-2026</span>
                     <span>✓ Лицензия РФ</span>
                     <span>✓ Поддержка</span>
                 </div>
             </div>
-            
             <div class="hero-image">
                 <div class="hero-image-placeholder">[Скриншот меню SSB:MENU]</div>
             </div>
@@ -616,7 +542,6 @@
         <div class="container">
             <h2 class="section-title">Выберите тариф SSB Core</h2>
             <p class="section-subtitle">Гибкие условия для разных задач и масштабов бизнеса</p>
-            
             <div class="pricing-grid">
                 <div class="pricing-card starter">
                     <div class="pricing-badge badge-starter">СТАРТ</div>
@@ -631,7 +556,6 @@
                     </ul>
                     <button onclick="openTariffModal('СТАРТЕР')" class="btn btn-secondary">Выбрать тариф</button>
                 </div>
-
                 <div class="pricing-card popular">
                     <div class="pricing-badge badge-popular">ПОПУЛЯРНЫЙ</div>
                     <div class="pricing-header"><h3>ПРОФЕССИОНАЛ</h3><p>Для проектных организаций</p></div>
@@ -648,7 +572,6 @@
                     <div style="background: rgba(34,197,94,0.1); padding: 0.6rem; border-radius: 6px; margin-bottom: 1rem; border-left: 3px solid var(--success); font-size: 0.85rem; color: var(--success);">📦 Ближайшее обновление: Q2 2026 (апрель-июнь)</div>
                     <button onclick="openTariffModal('ПРОФЕССИОНАЛ')" class="btn btn-primary">Выбрать тариф</button>
                 </div>
-
                 <div class="pricing-card corporate">
                     <div class="pricing-badge badge-corporate">ДЛЯ БИЗНЕСА</div>
                     <div class="pricing-header"><h3>КОРПОРАТИВНЫЙ</h3><p>Для крупных организаций</p></div>
@@ -676,7 +599,6 @@
         <div class="container">
             <h2 class="section-title">Частые вопросы</h2>
             <p class="section-subtitle">Ответы на популярные вопросы о SSB Core</p>
-            
             <div class="faq-container">
                 <div class="faq-item">
                     <div class="faq-question">
@@ -694,7 +616,6 @@
                         </div>
                     </div>
                 </div>
-                
                 <div class="faq-item">
                     <div class="faq-question">
                         <span class="faq-icon">📦</span>
@@ -713,7 +634,6 @@
                         </div>
                     </div>
                 </div>
-                
                 <div class="faq-item">
                     <div class="faq-question">
                         <span class="faq-icon">💳</span>
@@ -736,7 +656,6 @@
                         </div>
                     </div>
                 </div>
-                
                 <div class="faq-item">
                     <div class="faq-question">
                         <span class="faq-icon">🔧</span>
@@ -754,8 +673,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Contact Form -->
             <div class="faq-form" id="questionFormSection">
                 <h3>💬 Не нашли ответ? Задайте вопрос!</h3>
                 <form id="contactForm" onsubmit="submitContactForm(event)">
@@ -816,7 +733,7 @@
     </footer>
 
     <script>
-        // Google Apps Script URL
+        // Google Apps Script URL - ТВОЙ URL
         const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbysQ3J0Xi9nmPKlstPnjY1oed_tm7qwWgG7YajQ8sNZhoiWRbCHIVe5IUxRkn3bUieG/exec';
 
         // Background animation
