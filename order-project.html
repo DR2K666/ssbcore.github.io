@@ -361,7 +361,7 @@
             <p>Заполните форму ниже, и мы свяжемся с вами в течение 24 часов для обсуждения деталей проекта</p>
         </div>
 
-        <form class="order-form" id="projectForm" onsubmit="sendProjectRequest(event)">
+        <form class="order-form" id="projectForm" onsubmit="submitProjectForm(event)">
             
             <!-- 1. Контактная информация -->
             <div class="form-section">
@@ -369,21 +369,21 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label class="required">Ваше имя</label>
-                        <input type="text" id="pName" placeholder="Иванов Иван Иванович" required>
+                        <input type="text" id="pName" name="name" placeholder="Иванов Иван Иванович" required>
                     </div>
                     <div class="form-group">
                         <label class="required">Email</label>
-                        <input type="email" id="pEmail" placeholder="example@mail.ru" required>
+                        <input type="email" id="pEmail" name="email" placeholder="example@mail.ru" required>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
                         <label class="required">Телефон</label>
-                        <input type="tel" id="pPhone" placeholder="+7 (___) ___-__-__" required>
+                        <input type="tel" id="pPhone" name="phone" placeholder="+7 (___) ___-__-__" required>
                     </div>
                     <div class="form-group">
                         <label>Наименование организации</label>
-                        <input type="text" id="pCompany" placeholder="ООО 'Проект'">
+                        <input type="text" id="pCompany" name="company" placeholder="ООО 'Проект'">
                     </div>
                 </div>
             </div>
@@ -393,21 +393,21 @@
                 <h2 class="section-title">🏢 Информация об объекте</h2>
                 <div class="form-group">
                     <label class="required">Адрес объекта</label>
-                    <input type="text" id="pAddress" placeholder="г. Москва, ул. Примерная, д. 1" required>
+                    <input type="text" id="pAddress" name="address" placeholder="г. Москва, ул. Примерная, д. 1" required>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
                         <label class="required">Количество зданий/сооружений</label>
-                        <input type="number" id="pBuildings" min="1" value="1" required>
+                        <input type="number" id="pBuildings" name="buildings" min="1" value="1" required>
                     </div>
                     <div class="form-group">
                         <label>Этажность</label>
-                        <input type="text" id="pFloors" placeholder="Например: 5, или 3+тех.этаж">
+                        <input type="text" id="pFloors" name="floors" placeholder="Например: 5, или 3+тех.этаж">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="required">Общая площадь (м²) согласно планам БТИ</label>
-                    <input type="number" id="pArea" placeholder="1500" min="1" required>
+                    <input type="number" id="pArea" name="area" placeholder="1500" min="1" required>
                 </div>
             </div>
 
@@ -503,7 +503,7 @@
                 <h2 class="section-title">⚠️ Класс функциональной пожарной опасности</h2>
                 <div class="form-group">
                     <label>Выберите класс (если известен)</label>
-                    <select id="pFireClass">
+                    <select id="pFireClass" name="fireClass">
                         <option value="">-- Не выбрано --</option>
                         <option value="Ф1.1">Ф1.1 - Детские сады, больницы</option>
                         <option value="Ф1.2">Ф1.2 - Гостиницы, общежития</option>
@@ -560,7 +560,7 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label class="required">Стадия проекта</label>
-                        <select id="pStage" required onchange="updateEstimateCheckbox()">
+                        <select id="pStage" name="stage" required onchange="updateEstimateCheckbox()">
                             <option value="">-- Выберите стадию --</option>
                             <option value="П">П (Проектная документация)</option>
                             <option value="Р">Р (Рабочая документация)</option>
@@ -570,7 +570,7 @@
                     <div class="form-group">
                         <label>Наличие планов в DWG</label>
                         <div style="display: flex; align-items: center; gap: 1rem; padding: 0.75rem; background: rgba(15,23,42,0.5); border-radius: 6px;">
-                            <input type="checkbox" id="pDWG" style="width: 20px; height: 20px;">
+                            <input type="checkbox" id="pDWG" name="dwg" style="width: 20px; height: 20px;">
                             <span style="color: var(--text-silver);">
                                 <strong>Есть планы в формате DWG</strong>
                                 <br><small style="color: var(--text-secondary);">AutoCAD или nanoCAD</small>
@@ -580,7 +580,7 @@
                 </div>
                 <div class="form-group">
                     <div style="display: flex; align-items: center; gap: 1rem; padding: 0.75rem; background: rgba(15,23,42,0.5); border-radius: 6px;">
-                        <input type="checkbox" id="pEstimate" style="width: 20px; height: 20px;">
+                        <input type="checkbox" id="pEstimate" name="estimate" style="width: 20px; height: 20px;">
                         <span class="checkbox-label">
                             <strong>Требуется сметная документация</strong>
                             <span class="checkbox-hint">
@@ -596,7 +596,7 @@
                 <h2 class="section-title">⏱ Сроки выполнения</h2>
                 <div class="form-group">
                     <label class="required">Желаемый срок завершения проекта</label>
-                    <input type="date" id="pDeadline" required>
+                    <input type="date" id="pDeadline" name="deadline" required>
                 </div>
             </div>
 
@@ -605,7 +605,7 @@
                 <h2 class="section-title">💬 Дополнительная информация</h2>
                 <div class="form-group">
                     <label>Комментарии к проекту (опционально)</label>
-                    <textarea id="pComments" placeholder="Опишите особые требования, пожелания или дополнительную информацию о проекте..."></textarea>
+                    <textarea id="pComments" name="comments" placeholder="Опишите особые требования, пожелания или дополнительную информацию о проекте..."></textarea>
                 </div>
             </div>
 
@@ -625,6 +625,9 @@
     </footer>
 
     <script>
+        // Google Apps Script URL
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbybF6zB6vJ8qVxJ8qVxJ8qVxJ8qVxJ8qVxJ8qVxJ8qVxJ8qVxJ8qVxJ8qVxJ8qVxJ8qVxJ8/exec';
+
         // Background animation
         const bgAnimation = document.getElementById('bg-animation');
         for (let i = 0; i < 30; i++) {
@@ -652,25 +655,9 @@
             }
         }
 
-        // Form submit handler
-        function sendProjectRequest(e) {
+        // Form submission
+        function submitProjectForm(e) {
             e.preventDefault();
-            
-            // Collect form data
-            const name = document.getElementById('pName').value;
-            const email = document.getElementById('pEmail').value;
-            const phone = document.getElementById('pPhone').value;
-            const company = document.getElementById('pCompany').value;
-            const address = document.getElementById('pAddress').value;
-            const buildings = document.getElementById('pBuildings').value;
-            const floors = document.getElementById('pFloors').value;
-            const area = document.getElementById('pArea').value;
-            const fireClass = document.getElementById('pFireClass').value;
-            const stage = document.getElementById('pStage').value;
-            const dwg = document.getElementById('pDWG').checked ? 'Да' : 'Нет';
-            const estimate = document.getElementById('pEstimate').checked ? 'Да' : 'Нет';
-            const deadline = document.getElementById('pDeadline').value;
-            const comments = document.getElementById('pComments').value;
             
             // Collect system types
             const systemTypes = [];
@@ -679,57 +666,44 @@
             });
             
             // Get manufacturer
-            const manufacturer = document.querySelector('input[name="manufacturer"]:checked');
-            const manufacturerText = manufacturer ? manufacturer.value : 'Не указан';
+            const manufacturerRadio = document.querySelector('input[name="manufacturer"]:checked');
+            const manufacturer = manufacturerRadio ? manufacturerRadio.value : 'Не указан';
             
-            // Create email body
-            const subject = encodeURIComponent(`Заказ проекта SSB Core от ${name}`);
-            const body = encodeURIComponent(`
-ЗАЯВКА НА ПРОЕКТИРОВАНИЕ
-========================
-
-КОНТАКТНАЯ ИНФОРМАЦИЯ:
-Имя: ${name}
-Email: ${email}
-Телефон: ${phone}
-Организация: ${company || 'Не указана'}
-
-ИНФОРМАЦИЯ ОБ ОБЪЕКТЕ:
-Адрес: ${address}
-Количество зданий: ${buildings}
-Этажность: ${floors || 'Не указана'}
-Площадь: ${area} м²
-
-ТИП СИСТЕМЫ:
-${systemTypes.join(', ') || 'Не выбрано'}
-
-ПРОИЗВОДИТЕЛЬ ОБОРУДОВАНИЯ:
-${manufacturerText}
-
-КЛАСС ПОЖАРНОЙ ОПАСНОСТИ:
-${fireClass || 'Не указан'}
-
-СТАДИЯ ПРОЕКТА:
-${stage}
-
-ДОКУМЕНТАЦИЯ:
-Планы в DWG: ${dwg}
-Сметная документация: ${estimate}
-
-СРОКИ:
-Желаемый срок: ${deadline}
-
-ДОПОЛНИТЕЛЬНО:
-${comments || 'Нет комментариев'}
-
-========================
-Отправлено с сайта SSB Core
-            `);
+            const formData = {
+                type: 'Заказ проекта',
+                name: document.getElementById('pName').value,
+                email: document.getElementById('pEmail').value,
+                phone: document.getElementById('pPhone').value,
+                company: document.getElementById('pCompany').value,
+                address: document.getElementById('pAddress').value,
+                buildings: document.getElementById('pBuildings').value,
+                floors: document.getElementById('pFloors').value,
+                area: document.getElementById('pArea').value,
+                systems: systemTypes.join(', '),
+                manufacturer: manufacturer,
+                fireClass: document.getElementById('pFireClass').value,
+                stage: document.getElementById('pStage').value,
+                dwg: document.getElementById('pDWG').checked ? 'Да' : 'Нет',
+                estimate: document.getElementById('pEstimate').checked ? 'Да' : 'Нет',
+                deadline: document.getElementById('pDeadline').value,
+                comments: document.getElementById('pComments').value,
+                message: `Адрес: ${document.getElementById('pAddress').value}\nСистемы: ${systemTypes.join(', ')}\nСтадия: ${document.getElementById('pStage').value}`
+            };
             
-            // Open email client
-            window.location.href = `mailto:pro@ssbcore.ru?subject=${subject}&body=${body}`;
-            
-            alert('✅ Почтовый клиент открыт для отправки заявки на проектирование');
+            fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            })
+            .then(() => {
+                alert('✅ Заявка на проектирование отправлена! Мы свяжемся с вами в течение 24 часов.');
+                document.getElementById('projectForm').reset();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('❌ Ошибка отправки. Попробуйте позже.');
+            });
         }
 
         // Initialize on page load

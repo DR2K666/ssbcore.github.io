@@ -306,19 +306,19 @@
                 Получите полный доступ ко всем функциям SSB Core
             </p>
             
-            <form id="trialForm" onsubmit="submitTrialRequest(event)">
+            <form id="trialForm" onsubmit="submitTrialForm(event)">
                 <div class="form-group">
                     <label for="trialFIO">👤 ФИО *</label>
-                    <input type="text" id="trialFIO" placeholder="Иванов Иван Иванович" required>
+                    <input type="text" id="trialFIO" name="name" placeholder="Иванов Иван Иванович" required>
                 </div>
                 <div class="form-group">
                     <label for="trialEmail">📧 Email *</label>
-                    <input type="email" id="trialEmail" placeholder="your@email.com" required>
+                    <input type="email" id="trialEmail" name="email" placeholder="your@email.com" required>
                 </div>
                 
                 <div class="form-group">
                     <label for="trialRole">💼 Ваша должность *</label>
-                    <select id="trialRole" required>
+                    <select id="trialRole" name="role" required>
                         <option value="">Выберите должность</option>
                         <option value="engineer">Инженер-проектировщик</option>
                         <option value="chief_engineer">Главный инженер проекта (ГИП)</option>
@@ -332,7 +332,7 @@
 
                 <div class="form-group">
                     <label for="trialCompany">🏢 Организация (необязательно)</label>
-                    <input type="text" id="trialCompany" placeholder="Название компании">
+                    <input type="text" id="trialCompany" name="company" placeholder="Название компании">
                 </div>
 
                 <div class="trial-info">
@@ -363,26 +363,28 @@
             <h2>💳 Оформление заказа</h2>
             <p id="selectedTariffName" style="text-align: center; color: var(--accent-blue); font-size: 1.2rem; margin-bottom: 1.5rem;"></p>
             
-            <form id="tariffForm" onsubmit="submitTariffRequest(event)">
+            <form id="tariffForm" onsubmit="submitTariffForm(event)">
+                <input type="hidden" id="tariffNameInput" name="tariff">
+                
                 <div class="form-group">
                     <label for="tariffFIO">👤 ФИО *</label>
-                    <input type="text" id="tariffFIO" placeholder="Иванов Иван Иванович" required>
+                    <input type="text" id="tariffFIO" name="name" placeholder="Иванов Иван Иванович" required>
                 </div>
                 
                 <div class="form-row">
                     <div class="form-group">
                         <label for="tariffEmail">📧 Email *</label>
-                        <input type="email" id="tariffEmail" placeholder="your@email.com" required>
+                        <input type="email" id="tariffEmail" name="email" placeholder="your@email.com" required>
                     </div>
                     <div class="form-group">
                         <label for="tariffPhone">📱 Телефон *</label>
-                        <input type="tel" id="tariffPhone" placeholder="+7 (___) ___-__-__" required>
+                        <input type="tel" id="tariffPhone" name="phone" placeholder="+7 (___) ___-__-__" required>
                     </div>
                 </div>
 
                 <div class="form-group" id="tariffCompanyGroup">
                     <label for="tariffCompany">🏢 Организация</label>
-                    <input type="text" id="tariffCompany" placeholder="Название компании">
+                    <input type="text" id="tariffCompany" name="company" placeholder="Название компании">
                 </div>
 
                 <div class="trial-info">
@@ -415,36 +417,36 @@
                 Индивидуальные условия для крупных организаций
             </p>
             
-            <form id="corporateForm" onsubmit="submitCorporateRequest(event)">
+            <form id="corporateForm" onsubmit="submitCorporateForm(event)">
                 <div class="form-group">
                     <label for="corpFIO">👤 ФИО *</label>
-                    <input type="text" id="corpFIO" placeholder="Иванов Иван Иванович" required>
+                    <input type="text" id="corpFIO" name="name" placeholder="Иванов Иван Иванович" required>
                 </div>
                 
                 <div class="form-row">
                     <div class="form-group">
                         <label for="corpEmail">📧 Email *</label>
-                        <input type="email" id="corpEmail" placeholder="your@email.com" required>
+                        <input type="email" id="corpEmail" name="email" placeholder="your@email.com" required>
                     </div>
                     <div class="form-group">
                         <label for="corpPhone">📱 Телефон *</label>
-                        <input type="tel" id="corpPhone" placeholder="+7 (___) ___-__-__" required>
+                        <input type="tel" id="corpPhone" name="phone" placeholder="+7 (___) ___-__-__" required>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="corpCompany">🏢 Организация *</label>
-                    <input type="text" id="corpCompany" placeholder="Название компании" required>
+                    <input type="text" id="corpCompany" name="company" placeholder="Название компании" required>
                 </div>
 
                 <div class="form-group">
                     <label for="corpLicenses">🔑 Количество лицензий *</label>
-                    <input type="number" id="corpLicenses" placeholder="Например: 10" min="3" required>
+                    <input type="number" id="corpLicenses" name="licenses" placeholder="Например: 10" min="3" required>
                 </div>
 
                 <div class="form-group">
                     <label for="corpComments">💬 Дополнительные комментарии</label>
-                    <textarea id="corpComments" placeholder="Особые требования, сроки, интеграции..." style="min-height: 80px;"></textarea>
+                    <textarea id="corpComments" name="comments" placeholder="Особые требования, сроки, интеграции..." style="min-height: 80px;"></textarea>
                 </div>
 
                 <div class="trial-info">
@@ -478,9 +480,8 @@
                 <a href="#pricing">Тарифы</a>
                 <a href="#faq">FAQ</a>
                 <a href="#contacts">Контакты</a>
-                <!-- Swapped Order: Project first, Buy second -->
-				<a href="#pricing" class="btn btn-primary">Купить</a>
                 <a href="order-project.html" class="btn btn-secondary" style="margin-left: 0.5rem; padding: 0.6rem 1.2rem;">📋 Заказать проект</a>
+                <a href="#pricing" class="btn btn-primary">Купить</a>
             </div>
         </div>
     </nav>
@@ -565,7 +566,7 @@
 
     <div class="section-divider"></div>
 
-    <!-- Libraries Section (Updated with PDF Data) -->
+    <!-- Libraries Section -->
     <section class="libraries" id="libraries">
         <div class="container">
             <h2 class="section-title">Библиотеки оборудования</h2>
@@ -670,7 +671,7 @@
 
     <div class="section-divider"></div>
 
-    <!-- FAQ Section (Improved Design) -->
+    <!-- FAQ Section -->
     <section class="faq-section" id="faq">
         <div class="container">
             <h2 class="section-title">Частые вопросы</h2>
@@ -722,9 +723,9 @@
                         <div class="faq-answer-content">
                             <strong style="color: var(--accent-blue); display: block; margin-bottom: 0.5rem;">ПРОЦЕСС ПОКУПКИ:</strong>
                             <ol style="padding-left: 1.2rem; display: grid; gap: 0.3rem; margin: 0;">
-                                <li>Выбираете подходящий тариф или оставляете заявку</li>
-                                <li>Если Вы - юрлицо - Мы выставляем счёт.</li>
-                                <li>После оплаты вы получаете:</li>
+                                <li>Выбираете подходящий тариф и оставляете заявку</li>
+                                <li>Мы выставляем счёт (для юрлиц с НДС или для физлиц)</li>
+                                <li>После оплаты вы автоматически получаете:</li>
                                 <ul style="list-style: none; padding-left: 1.5rem; margin-top: 0.3rem;">
                                     <li>• Лицензионный ключ на email</li>
                                     <li>• Инструкцию по активации</li>
@@ -739,7 +740,7 @@
                 <div class="faq-item">
                     <div class="faq-question">
                         <span class="faq-icon">🔧</span>
-                        <span class="faq-text">Отличия в технической поддержке?</span>
+                        <span class="faq-text">Нужна ли техническая поддержка?</span>
                     </div>
                     <div class="faq-answer">
                         <div class="faq-answer-content">
@@ -754,15 +755,15 @@
                 </div>
             </div>
 
-            <!-- Форма вопроса -->
+            <!-- Contact Form -->
             <div class="faq-form" id="questionFormSection">
                 <h3>💬 Не нашли ответ? Задайте вопрос!</h3>
-                <form id="contactForm" onsubmit="sendQuestion(event)">
+                <form id="contactForm" onsubmit="submitContactForm(event)">
                     <div class="form-row">
-                        <input type="text" id="qName" placeholder="Ваше имя" class="form-input" required>
-                        <input type="email" id="qEmail" placeholder="Ваш email" class="form-input" required>
+                        <input type="text" id="qName" name="name" placeholder="Ваше имя" class="form-input" required>
+                        <input type="email" id="qEmail" name="email" placeholder="Ваш email" class="form-input" required>
                     </div>
-                    <textarea id="qText" placeholder="Ваш вопрос..." class="form-textarea" required></textarea>
+                    <textarea id="qText" name="message" placeholder="Ваш вопрос..." class="form-textarea" required></textarea>
                     <button type="submit" class="btn btn-primary">📩 Отправить вопрос</button>
                 </form>
             </div>
@@ -815,6 +816,9 @@
     </footer>
 
     <script>
+        // Google Apps Script URL
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbybF6zB6vJ8qVxJ8qVxJ8qVxJ8qVxJ8qVxJ8qVxJ8qVxJ8qVxJ8qVxJ8qVxJ8qVxJ8qVxJ8/exec';
+
         // Background animation
         const bgAnimation = document.getElementById('bg-animation');
         for (let i = 0; i < 30; i++) {
@@ -861,8 +865,8 @@
         
         function openTariffModal(tariffName) {
             document.getElementById('selectedTariffName').textContent = `Тариф: ${tariffName}`;
+            document.getElementById('tariffNameInput').value = tariffName;
             
-            // Show/Hide Organization field based on tariff
             const companyGroup = document.getElementById('tariffCompanyGroup');
             if (tariffName === 'СТАРТЕР') {
                 companyGroup.style.display = 'none';
@@ -885,75 +889,120 @@
             }
         }
 
-        // Trial Form Submit
-        function submitTrialRequest(e) {
+        // Form Submission Functions
+        function submitTrialForm(e) {
             e.preventDefault();
-            const fio = document.getElementById('trialFIO').value;
-            const email = document.getElementById('trialEmail').value;
-            const role = document.getElementById('trialRole').value;
-            const company = document.getElementById('trialCompany').value;
             
-            const roleText = {'engineer':'Инженер-проектировщик','chief_engineer':'ГИП','manager':'Руководитель отдела','director':'Тех. директор','freelance':'Фрилансер','student':'Студент/Аспирант','other':'Другое'}[role];
-
-            const subject = encodeURIComponent(`Запрос пробной версии SSB Core от ${fio}`);
-            const body = encodeURIComponent(`Запрос на пробную версию (7 дней)\n\nФИО: ${fio}\nEmail: ${email}\nДолжность: ${roleText}\nОрганизация: ${company || 'Не указана'}\n\nПрошу выдать пробную лицензию.`);
+            const formData = {
+                type: 'Пробная версия',
+                name: document.getElementById('trialFIO').value,
+                email: document.getElementById('trialEmail').value,
+                role: document.getElementById('trialRole').value,
+                company: document.getElementById('trialCompany').value,
+                message: `Должность: ${document.getElementById('trialRole').options[document.getElementById('trialRole').selectedIndex].text}`
+            };
             
-            window.location.href = `mailto:pro@ssbcore.ru?subject=${subject}&body=${body}`;
-            alert('✅ Почтовый клиент открыт для отправки запроса');
-            closeTrialModal(); document.getElementById('trialForm').reset();
+            fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            })
+            .then(() => {
+                alert('✅ Заявка на пробную версию отправлена! Мы свяжемся с вами.');
+                closeTrialModal();
+                document.getElementById('trialForm').reset();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('❌ Ошибка отправки. Попробуйте позже.');
+            });
         }
 
-        // Tariff Form Submit
-        function submitTariffRequest(e) {
+        function submitTariffForm(e) {
             e.preventDefault();
-            const fio = document.getElementById('tariffFIO').value;
-            const email = document.getElementById('tariffEmail').value;
-            const phone = document.getElementById('tariffPhone').value;
-            const tariffName = document.getElementById('selectedTariffName').textContent.replace('Тариф: ', '');
             
-            // Check if organization field is visible
-            const companyGroup = document.getElementById('tariffCompanyGroup');
-            const company = companyGroup.style.display !== 'none' ? document.getElementById('tariffCompany').value : 'Не требуется';
+            const formData = {
+                type: 'Заказ тарифа',
+                name: document.getElementById('tariffFIO').value,
+                email: document.getElementById('tariffEmail').value,
+                phone: document.getElementById('tariffPhone').value,
+                company: document.getElementById('tariffCompany').value,
+                tariff: document.getElementById('tariffNameInput').value,
+                message: `Тариф: ${document.getElementById('tariffNameInput').value}`
+            };
             
-            const subject = encodeURIComponent(`Покупка тарифа ${tariffName} - ${fio}`);
-            const body = encodeURIComponent(`Заказ лицензии SSB Core\n\nФИО: ${fio}\nEmail: ${email}\nТелефон: ${phone}\nОрганизация: ${company}\nТариф: ${tariffName}\n\nПрошу выставить счет.`);
-            
-            window.location.href = `mailto:pro@ssbcore.ru?subject=${subject}&body=${body}`;
-            alert('✅ Почтовый клиент открыт для оформления заказа');
-            closeTariffModal(); document.getElementById('tariffForm').reset();
+            fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            })
+            .then(() => {
+                alert('✅ Заявка на покупку отправлена! Мы свяжемся с вами для оплаты.');
+                closeTariffModal();
+                document.getElementById('tariffForm').reset();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('❌ Ошибка отправки. Попробуйте позже.');
+            });
         }
 
-        // Corporate Form Submit
-        function submitCorporateRequest(e) {
+        function submitCorporateForm(e) {
             e.preventDefault();
-            const fio = document.getElementById('corpFIO').value;
-            const email = document.getElementById('corpEmail').value;
-            const phone = document.getElementById('corpPhone').value;
-            const company = document.getElementById('corpCompany').value;
-            const licenses = document.getElementById('corpLicenses').value;
-            const comments = document.getElementById('corpComments').value;
             
-            const subject = encodeURIComponent(`Запрос КП (Корпоративный) - ${company}`);
-            const body = encodeURIComponent(`Запрос коммерческого предложения\n\nФИО: ${fio}\nEmail: ${email}\nТелефон: ${phone}\nОрганизация: ${company}\nКоличество лицензий: ${licenses}\n\nКомментарии:\n${comments || 'Нет'}`);
+            const formData = {
+                type: 'Корпоративный запрос',
+                name: document.getElementById('corpFIO').value,
+                email: document.getElementById('corpEmail').value,
+                phone: document.getElementById('corpPhone').value,
+                company: document.getElementById('corpCompany').value,
+                licenses: document.getElementById('corpLicenses').value,
+                message: `Количество лицензий: ${document.getElementById('corpLicenses').value}\nКомментарии: ${document.getElementById('corpComments').value}`
+            };
             
-            window.location.href = `mailto:pro@ssbcore.ru?subject=${subject}&body=${body}`;
-            alert('✅ Запрос на КП отправлен! Ожидайте ответ на email.');
-            closeCorporateModal(); document.getElementById('corporateForm').reset();
+            fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            })
+            .then(() => {
+                alert('✅ Запрос на КП отправлен! Ожидайте ответ на email.');
+                closeCorporateModal();
+                document.getElementById('corporateForm').reset();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('❌ Ошибка отправки. Попробуйте позже.');
+            });
         }
 
-        // Contact Form Submit
-        function sendQuestion(e) {
+        function submitContactForm(e) {
             e.preventDefault();
-            const name = document.getElementById('qName').value;
-            const email = document.getElementById('qEmail').value;
-            const text = document.getElementById('qText').value;
             
-            const subject = encodeURIComponent(`Вопрос с сайта SSB Core от ${name}`);
-            const body = encodeURIComponent(`Имя: ${name}\nEmail: ${email}\n\nВопрос:\n${text}`);
+            const formData = {
+                type: 'Вопрос с сайта',
+                name: document.getElementById('qName').value,
+                email: document.getElementById('qEmail').value,
+                message: document.getElementById('qText').value
+            };
             
-            window.location.href = `mailto:pro@ssbcore.ru?subject=${subject}&body=${body}`;
-            alert('✅ Почтовый клиент открыт для отправки вопроса');
-            document.getElementById('contactForm').reset();
+            fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            })
+            .then(() => {
+                alert('✅ Вопрос отправлен! Мы ответим вам на email.');
+                document.getElementById('contactForm').reset();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('❌ Ошибка отправки. Попробуйте позже.');
+            });
         }
     </script>
 </body>
