@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор падения напряжения | SSB Core</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0F172A;
+            --bg-card: #1E293B;
+            --bg-input: #0F172A;
+            --accent-blue: #3B82F6;
+            --accent-orange: #F97316;
+            --text-primary: #F1F5F9;
+            --text-secondary: #94A3B8;
+            --success: #22C55E;
+            --error: #EF4444;
+            --border: rgba(255,255,255,0.08);
+            --border-blue: rgba(59, 130, 246, 0.3);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+        #bg-canvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none;
+        }
+        nav {
+            position: fixed; top: 0; width: 100%; padding: 1rem 5%;
+            background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-blue);
+            display: flex; justify-content: space-between; align-items: center; z-index: 100;
+        }
+        .logo {
+            font-size: 1.5rem; font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-orange));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none;
+        }
+        .back-btn {
+            color: var(--text-secondary); text-decoration: none; font-weight: 500;
+            transition: 0.3s; display: flex; align-items: center; gap: 0.5rem;
+            padding: 0.5rem 1rem; border-radius: 8px; border: 1px solid var(--border);
+        }
+        .back-btn:hover { color: var(--accent-blue); border-color: var(--accent-blue); background: rgba(59, 130, 246, 0.1); }
+        
+        .container {
+            margin-top: 90px; padding: 1.5rem; width: 100%; max-width: 1200px; z-index: 10; position: relative;
+        }
+        .calc-header { 
+            text-align: center; margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border);
+        }
+        .calc-header h1 { font-size: 1.6rem; margin-bottom: 0.3rem; }
+        .calc-header p { color: var(--text-secondary); font-size: 0.9rem; }
+        
+        /* ===== ДВУХКОЛОНОЧНЫЙ МАКЕТ ===== */
+        .calc-layout {
+            display: grid;
+            grid-template-columns: 1fr 360px;
+            gap: 2rem;
+            align-items: start;
+        }
+        .calc-main { display: flex; flex-direction: column; gap: 1.5rem; }
+        .calc-sidebar {
+            position: sticky; top: 100px;
+            background: rgba(15, 23, 42, 0.6); border-radius: 16px; padding: 1.5rem;
+            border: 1px solid var(--border);
+        }
+        
+        .line-settings {
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 1rem; 
+        }
+        .form-group { margin-bottom: 0; }
+        .form-group label { 
+            display: block; margin-bottom: 0.5rem; color: var(--text-secondary); 
+            font-weight: 500; font-size: 0.85rem;
+        }
+        .form-group input, .form-group select {
+            width: 100%; padding: 0.75rem 0.9rem; border-radius: 10px;
+            border: 1px solid var(--border); background: var(--bg-input);
+            color: var(--text-primary); font-size: 0.95rem; transition: all 0.3s;
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline: none; border-color: var(--accent-blue); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+        .form-group select {
+            cursor: pointer; appearance: none;
+            background-image: url("image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394A3B8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 0.9rem center; padding-right: 2.2rem;
+        }
+
+        /* Таблица */
+        .table-container { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); }
+        .speakers-table { width: 100%; border-collapse: collapse; min-width: 500px; }
+        .speakers-table thead th { 
+            text-align: left; padding: 0.8rem 1rem; color: var(--text-secondary);
+            font-weight: 500; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em;
+            background: rgba(30, 41, 59, 0.5); border-bottom: 1px solid var(--border);
+        }
+        .speakers-table td { padding: 0.6rem 0.8rem; vertical-align: middle; border-bottom: 1px solid var(--border); }
+        .speakers-table td input { 
+            padding: 0.5rem 0.7rem; border-radius: 6px; border: 1px solid var(--border);
+            background: var(--bg-input); color: var(--text-primary); font-size: 0.9rem; width: 100%;
+        }
+        .speakers-table td input:focus { outline: none; border-color: var(--accent-blue); }
+        .sensitivity-val { font-family: 'Inter', monospace; color: var(--accent-orange); font-weight: 600; font-size: 0.95rem; text-align: right; }
+        
+        .btn {
+            padding: 0.6rem 1rem; border-radius: 8px; border: none; cursor: pointer;
+            font-weight: 600; transition: all 0.3s; display: inline-flex; align-items: center;
+            gap: 0.4rem; font-size: 0.9rem;
+        }
+        .btn-add { background: transparent; color: var(--accent-blue); border: 1px dashed var(--border-blue); }
+        .btn-add:hover { background: rgba(59, 130, 246, 0.1); border-style: solid; }
+        .btn-delete { background: transparent; color: var(--error); padding: 0.4rem; font-size: 1rem; opacity: 0.6; }
+        .btn-delete:hover { opacity: 1; background: rgba(239, 68, 68, 0.1); border-radius: 4px; }
+        .btn-calc {
+            background: linear-gradient(135deg, var(--accent-blue), #2563EB); color: white;
+            width: 100%; justify-content: center; padding: 0.8rem; font-size: 1rem; border-radius: 10px;
+            margin-top: 1rem;
+        }
+        .btn-calc:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3); }
+        .btn-export { background: var(--success); color: white; width: 100%; justify-content: center; padding: 0.8rem; font-size: 0.95rem; border-radius: 10px; margin-top: 1rem; }
+        .btn-export:hover { filter: brightness(1.1); }
+
+        /* Результаты */
+        .result-row { display: flex; justify-content: space-between; align-items: center; padding: 0.7rem 0; border-bottom: 1px solid var(--border); }
+        .result-row:last-of-type { border-bottom: none; }
+        .result-label { color: var(--text-secondary); font-size: 0.9rem; }
+        .result-value { font-weight: 700; color: var(--accent-blue); font-size: 1rem; font-family: 'Inter', monospace; }
+        .verdict { margin-top: 1rem; padding: 0.9rem; border-radius: 8px; text-align: center; font-weight: 600; font-size: 0.9rem; display: none; }
+        .verdict.ok { background: rgba(34, 197, 94, 0.1); color: var(--success); border: 1px solid rgba(34, 197, 94, 0.3); }
+        .verdict.bad { background: rgba(239, 68, 68, 0.1); color: var(--error); border: 1px solid rgba(239, 68, 68, 0.3); }
+
+        @media (max-width: 1000px) {
+            .calc-layout { grid-template-columns: 1fr; }
+            .calc-sidebar { position: static; }
+            .line-settings { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 600px) {
+            .line-settings { grid-template-columns: 1fr; }
+            .container { margin-top: 80px; padding: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="bg-canvas"></canvas>
+    <nav>
+        <a href="index.html" class="logo">SSB Core</a>
+        <a href="index.html#features" class="back-btn">← На главную</a>
+    </nav>
+
+    <div class="container">
+        <div class="calc-header">
+            <h1>⚡ Калькулятор падения напряжения</h1>
+            <p>Расчет для слаботочных систем по СП 31-110-2003</p>
+        </div>
+
+        <div class="calc-layout">
+            <!-- ЛЕВАЯ ЧАСТЬ: ВВОД И ТАБЛИЦА -->
+            <div class="calc-main">
+                <div class="line-settings">
+                    <div class="form-group">
+                        <label>Напряжение источника (В)</label>
+                        <input type="number" id="voltage" value="24" step="0.1" oninput="calculate()">
+                    </div>
+                    <div class="form-group">
+                        <label>Мин. напряжение прибора (В)</label>
+                        <input type="number" id="minVoltage" value="21" step="0.1" oninput="calculate()">
+                    </div>
+                    <div class="form-group">
+                        <label>Длина линии (м)</label>
+                        <input type="number" id="length" placeholder="Общая длина" oninput="calculate()">
+                    </div>
+                    <div class="form-group">
+                        <label>Сечение кабеля (мм²)</label>
+                        <select id="section" onchange="calculate()">
+                            <option value="0.5">0.5 мм²</option>
+                            <option value="0.75">0.75 мм²</option>
+                            <option value="1.0">1.0 мм²</option>
+                            <option value="1.5" selected>1.5 мм²</option>
+                            <option value="2.5">2.5 мм²</option>
+                            <option value="4.0">4.0 мм²</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Ток нагрузки (А)</label>
+                        <input type="number" id="current" placeholder="Суммарный ток" step="0.01" oninput="calculate()">
+                    </div>
+                    <div class="form-group">
+                        <label>Материал проводника</label>
+                        <select id="material" onchange="calculate()">
+                            <option value="0.0175">Медь (Cu)</option>
+                            <option value="0.028">Алюминий (Al)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="btn btn-calc" onclick="calculate()">⚡ Рассчитать</button>
+
+                <div class="table-container">
+                    <table class="speakers-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 10%">№</th>
+                                <th style="width: 35%">Участок / Описание</th>
+                                <th style="width: 20%">Длина, м</th>
+                                <th style="width: 20%">Ток, А</th>
+                                <th style="width: 15%">Падение</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <!-- Строки генерируются JS -->
+                        </tbody>
+                    </table>
+                </div>
+                <button class="btn btn-add" onclick="addSegment()" style="width: 100%; justify-content: center; margin-top: 0.5rem;">+ Добавить участок</button>
+            </div>
+
+            <!-- ПРАВАЯ ЧАСТЬ: РЕЗУЛЬТАТЫ -->
+            <div class="calc-sidebar">
+                <h3 style="margin-bottom: 1rem; font-size: 1.1rem;">📊 Итоги расчёта</h3>
+                <div class="result-row">
+                    <span class="result-label">Падение напряжения:</span>
+                    <span class="result-value" id="resVolts">0.00 В</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Потеря в процентах:</span>
+                    <span class="result-value" id="resPercent">0.00 %</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Напряжение в конце:</span>
+                    <span class="result-value" id="resEndVoltage">24.00 В</span>
+                </div>
+                <div id="verdictBox" class="verdict"></div>
+                <button class="btn btn-export" onclick="exportToWord()">📄 Экспорт в Word</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Анимация фона (без изменений)
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let width = window.innerWidth, height = window.innerHeight;
+        canvas.width = width; canvas.height = height;
+        const CYCLE_DURATION = 12000, FADE_DURATION = 3000, CHIP_SIZE = 40, MIN_CHIP_DIST = 120, CHIP_APPEAR_DURATION = 1500;
+        class Chip { constructor(x,y,d=0){this.x=x;this.y=y;this.connections=[];this.appearDelay=d;this.opacity=0;this.isAppeared=false;} update(t,cs){const e=t-cs-this.appearDelay;if(e<0){this.opacity=0;return;}if(!this.isAppeared){const p=Math.min(1,e/CHIP_APPEAR_DURATION);this.opacity=1-Math.pow(1-p,3);if(p>=1){this.isAppeared=true;this.opacity=1;}}}}
+        class Connection { constructor(f,t,d=0){this.from=f;this.to=t;this.pathPoints=[];this.length=0;this.drawnLength=0;this.isDrawn=false;this.isPulsing=false;this.startTime=d;this.pulseStartTime=0;this.pulsePos={x:0,y:0};this.currentPulseProgress=0;}}
+        class Network { constructor(){this.chips=[];this.connections=[];this.opacity=1;this.fadeOut=false;this.fadeIn=false;} generate(){const ch=[],bp=[{x:width*0.12,y:height*0.12},{x:width*0.88,y:height*0.12},{x:width*0.12,y:height*0.88},{x:width*0.88,y:height*0.88},{x:width*0.5,y:height*0.5},{x:width*0.3,y:height*0.15},{x:width*0.7,y:height*0.15},{x:width*0.15,y:height*0.5},{x:width*0.85,y:height*0.5},{x:width*0.3,y:height*0.85},{x:width*0.7,y:height*0.85},{x:width*0.5,y:height*0.12}];bp.forEach((p,i)=>{let v=true;const x=p.x+(Math.random()-0.5)*50,y=p.y+(Math.random()-0.5)*50;for(const c of ch){if(Math.hypot(c.x-x,c.y-y)<MIN_CHIP_DIST){v=false;break;}}if(v)ch.push(new Chip(x,y,200+(i*80)+Math.random()*100));});return ch;} initConnections(cs){const cn=[];this.chips.forEach((chip,i)=>{const nb=this.chips.map((o,j)=>({c:o,j:j,d:Math.hypot(o.x-chip.x,o.y-chip.y)})).filter(n=>n.j!==i&&n.d>MIN_CHIP_DIST).sort((a,b)=>a.d-b.d);for(let k=0;k<Math.min(3,nb.length);k++){const n=nb[k];if(n.d>Math.max(width,height)*0.35)continue;const ex=cn.some(c=>(c.from===chip&&c.to===n.c)||(c.from===n.c&&c.to===chip));if(!ex){const ld=Math.max(chip.appearDelay,n.c.appearDelay)+CHIP_APPEAR_DURATION+300+(k*150);const co=new Connection(chip,n.c,cs+ld);co.pathPoints=getPP(chip,n.c);co.length=getPL(co.pathPoints);cn.push(co);chip.connections.push(co);n.c.connections.push(co);}}});this.connections=cn;} update(t,cs){if(this.fadeOut){this.opacity-=0.016;if(this.opacity<=0)this.opacity=0;}if(this.fadeIn){this.opacity+=0.016;if(this.opacity>=1){this.opacity=1;this.fadeIn=false;}}this.chips.forEach(c=>c.update(t,cs));this.connections.forEach(co=>{if(!co.isDrawn){const e=t-co.startTime;const p=Math.min(1,e/2000);co.drawnLength=co.length*p;if(p>=1){co.isDrawn=true;co.isPulsing=true;co.pulseStartTime=t;}}if(co.isPulsing){const pe=t-co.pulseStartTime;const pp=Math.min(1,pe/2500);if(pp<=1){co.pulsePos=getPOP(co.pathPoints,co.length*pp);co.currentPulseProgress=pp;}else{co.isPulsing=false;co.currentPulseProgress=0;}}});} draw(ctx){if(this.opacity<=0)return;ctx.globalAlpha=this.opacity;this.connections.forEach(co=>{ctx.strokeStyle='rgba(59,130,246,0.4)';ctx.lineWidth=2;ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();ctx.moveTo(co.pathPoints[0].x,co.pathPoints[0].y);let tr=0;for(let i=0;i<co.pathPoints.length-1;i++){const sl=Math.hypot(co.pathPoints[i+1].x-co.pathPoints[i].x,co.pathPoints[i+1].y-co.pathPoints[i].y);if(tr+sl<=co.drawnLength){ctx.lineTo(co.pathPoints[i+1].x,co.pathPoints[i+1].y);tr+=sl;}else{const r=(co.drawnLength-tr)/sl;ctx.lineTo(co.pathPoints[i].x+(co.pathPoints[i+1].x-co.pathPoints[i].x)*r,co.pathPoints[i].y+(co.pathPoints[i+1].y-co.pathPoints[i].y)*r);break;}}ctx.stroke();if(co.isPulsing&&co.currentPulseProgress>0){ctx.shadowColor='#3B82F6';ctx.shadowBlur=15;ctx.fillStyle='#60A5FA';ctx.beginPath();ctx.arc(co.pulsePos.x,co.pulsePos.y,4,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;}});this.chips.forEach(chip=>{if(chip.opacity<=0)return;const s=CHIP_SIZE;ctx.shadowColor=`rgba(59,130,246,${0.4*chip.opacity})`;ctx.shadowBlur=20;ctx.fillStyle=`rgba(30,41,59,${0.9*chip.opacity})`;ctx.strokeStyle=`rgba(59,130,246,${0.8*chip.opacity})`;ctx.lineWidth=2;ctx.beginPath();ctx.roundRect(chip.x-s,chip.y-s,s*2,s*2,8);ctx.fill();ctx.stroke();ctx.fillStyle=`rgba(59,130,246,${0.15*chip.opacity})`;ctx.beginPath();ctx.roundRect(chip.x-s+6,chip.y-s+6,(s-6)*2,(s-6)*2,4);ctx.fill();ctx.shadowBlur=0;ctx.fillStyle=`rgba(96,165,250,${chip.opacity})`;ctx.font='bold 16px Inter,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('SSB',chip.x,chip.y);ctx.fillStyle=`rgba(59,130,246,${0.5*chip.opacity})`;const ps=6,po=s+2;ctx.fillRect(chip.x-ps,chip.y-po,ps*2,ps);ctx.fillRect(chip.x-ps,chip.y+po-ps,ps*2,ps);ctx.fillRect(chip.x-po,chip.y-ps,ps,ps*2);ctx.fillRect(chip.x+po-ps,chip.y-ps,ps,ps*2);ctx.shadowBlur=0;});ctx.globalAlpha=1;}}
+        function getPP(f,t){const mx=(f.x+t.x)/2,my=(f.y+t.y)/2;return[{x:f.x,y:f.y},{x:mx,y:f.y},{x:mx,y:my},{x:mx,y:t.y},{x:t.x,y:t.y}];}
+        function getPL(p){let l=0;for(let i=0;i<p.length-1;i++)l+=Math.hypot(p[i+1].x-p[i].x,p[i+1].y-p[i].y);return l;}
+        function getPOP(p,d){let tr=0;for(let i=0;i<p.length-1;i++){const sl=Math.hypot(p[i+1].x-p[i].x,p[i+1].y-p[i].y);if(tr+sl>=d){const r=(d-tr)/sl;return{x:p[i].x+(p[i+1].x-p[i].x)*r,y:p[i].y+(p[i+1].y-p[i].y)*r};}tr+=sl;}return p[p.length-1];}
+        let activeNetwork=null,nextNetwork=null,cycleStartTime=0,nextCycleStartTime=0,lastTime=0;
+        function initCycle(){activeNetwork=new Network();activeNetwork.chips=activeNetwork.generate();activeNetwork.initConnections(cycleStartTime);activeNetwork.fadeIn=true;activeNetwork.opacity=0;}
+        function startNextCycle(){nextNetwork=new Network();nextNetwork.chips=nextNetwork.generate();nextNetwork.initConnections(nextCycleStartTime);nextNetwork.fadeIn=true;nextNetwork.opacity=0;}
+        function animate(ts){if(!lastTime){lastTime=ts;cycleStartTime=ts;initCycle();}const elapsed=ts-cycleStartTime,dt=ts-lastTime;lastTime=ts;ctx.clearRect(0,0,width,height);if(!nextNetwork&&elapsed>CYCLE_DURATION-FADE_DURATION){nextCycleStartTime=ts;startNextCycle();if(activeNetwork)activeNetwork.fadeOut=true;}if(nextNetwork&&activeNetwork&&activeNetwork.fadeOut){nextNetwork.update(ts,nextCycleStartTime);nextNetwork.draw(ctx);activeNetwork.update(ts,cycleStartTime);activeNetwork.draw(ctx);if(activeNetwork.opacity<=0){activeNetwork=nextNetwork;cycleStartTime=nextCycleStartTime;nextNetwork=null;}}else if(activeNetwork){activeNetwork.update(ts,cycleStartTime);activeNetwork.draw(ctx);}requestAnimationFrame(animate);}
+        requestAnimationFrame(animate);
+        window.addEventListener('resize',()=>{width=window.innerWidth;height=window.innerHeight;canvas.width=width;canvas.height=height;activeNetwork=null;nextNetwork=null;cycleStartTime=performance.now();lastTime=0;});
+
+        // ==========================================
+        // ЛОГИКА КАЛЬКУЛЯТОРА
+        // ==========================================
+        let segments = [{ name: 'Основная линия', length: 100, current: 1 }];
+
+        function renderTable() {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+            segments.forEach((seg, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><span style="color:var(--text-secondary)">${index + 1}</span></td>
+                    <td><input type="text" value="${seg.name}" placeholder="Описание" oninput="updateSegment(${index}, 'name', this.value)"></td>
+                    <td><input type="number" value="${seg.length}" step="0.1" placeholder="0" oninput="updateSegment(${index}, 'length', this.value)"></td>
+                    <td><input type="number" value="${seg.current}" step="0.01" placeholder="0" oninput="updateSegment(${index}, 'current', this.value)"></td>
+                    <td class="sensitivity-val" id="drop-${index}">0.00 В</td>
+                `;
+                tbody.appendChild(tr);
+            });
+            calculate();
+        }
+
+        function addSegment() {
+            segments.push({ name: '', length: 0, current: 0 });
+            renderTable();
+        }
+
+        function updateSegment(index, field, value) {
+            segments[index][field] = field === 'name' ? value : (parseFloat(value) || 0);
+            calculate();
+        }
+
+        function calculate() {
+            const U_source = parseFloat(document.getElementById('voltage').value) || 0;
+            const U_min = parseFloat(document.getElementById('minVoltage').value) || 0;
+            const S = parseFloat(document.getElementById('section').value) || 1;
+            const rho = parseFloat(document.getElementById('material').value) || 0.0175;
+
+            let totalDrop = 0;
+            segments.forEach((seg, index) => {
+                const drop = (2 * rho * seg.length * seg.current) / S;
+                totalDrop += drop;
+                const dropEl = document.getElementById(`drop-${index}`);
+                if(dropEl) dropEl.textContent = drop.toFixed(2) + ' В';
+            });
+
+            const endVoltage = U_source - totalDrop;
+            const percentDrop = (U_source > 0) ? (totalDrop / U_source) * 100 : 0;
+
+            document.getElementById('resVolts').textContent = totalDrop.toFixed(2) + ' В';
+            document.getElementById('resPercent').textContent = percentDrop.toFixed(2) + ' %';
+            document.getElementById('resEndVoltage').textContent = endVoltage.toFixed(2) + ' В';
+
+            const verdict = document.getElementById('verdictBox');
+            verdict.style.display = 'block';
+            if (endVoltage >= U_min) {
+                verdict.className = 'verdict ok';
+                verdict.innerHTML = `✅ Норма! Запас: +${(endVoltage - U_min).toFixed(2)} В`;
+            } else {
+                verdict.className = 'verdict bad';
+                verdict.innerHTML = `❌ Критично! Нужно ≥ ${U_min}В`;
+            }
+        }
+
+        function exportToWord() {
+            const U_source = document.getElementById('voltage').value;
+            const S = document.getElementById('section').value;
+            const matText = document.getElementById('material').options[document.getElementById('material').selectedIndex].text;
+            let tableRows = '';
+            let totalDrop = 0;
+            const rho = parseFloat(document.getElementById('material').value);
+            const section = parseFloat(document.getElementById('section').value);
+            segments.forEach((seg, i) => {
+                const drop = (2 * rho * seg.length * seg.current) / section;
+                totalDrop += drop;
+                tableRows += `<tr><td style="border:1px solid #000;padding:5px;">${i+1}</td><td style="border:1px solid #000;padding:5px;">${seg.name||'-'}</td><td style="border:1px solid #000;padding:5px;text-align:center;">${seg.length}</td><td style="border:1px solid #000;padding:5px;text-align:center;">${seg.current}</td><td style="border:1px solid #000;padding:5px;text-align:center;">${drop.toFixed(2)}</td></tr>`;
+            });
+            const content = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Расчет падения напряжения</title></head><body style="font-family: Arial, sans-serif;"><h2 style="text-align:center;">Расчет падения напряжения (SSB Core)</h2><p><b>Дата:</b> ${new Date().toLocaleDateString()}<br>Напряжение: ${U_source} В | Сечение: ${S} мм² (${matText})</p><table style="border-collapse:collapse;width:100%;margin-top:20px;"><thead><tr style="background-color:#eee;"><th style="border:1px solid #000;padding:5px;">№</th><th style="border:1px solid #000;padding:5px;">Участок</th><th style="border:1px solid #000;padding:5px;">Длина (м)</th><th style="border:1px solid #000;padding:5px;">Ток (А)</th><th style="border:1px solid #000;padding:5px;">Падение (В)</th></tr></thead><tbody>${tableRows}</tbody></table><p style="margin-top:20px;"><b>Итоговое падение:</b> ${totalDrop.toFixed(2)} В</p><p style="margin-top:50px;font-size:12px;color:gray;">Сформировано в SSB Core Calculator</p></body></html>`;
+            const blob = new Blob(['\ufeff', content], { type: 'application/msword' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a'); link.href = url; link.download = 'Raschet_Napryazheniya_SSB.doc';
+            document.body.appendChild(link); link.click(); document.body.removeChild(link);
+        }
+
+        renderTable();
+    </script>
+</body>
+</html>

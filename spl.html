@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор звукового давления (SPL) | SSB Core</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0F172A;
+            --bg-card: rgba(30, 41, 59, 0.88);
+            --bg-card-solid: #1E293B;
+            --bg-input: rgba(15, 23, 42, 0.7);
+            --accent-blue: #3B82F6;
+            --accent-orange: #F97316;
+            --text-primary: #F1F5F9;
+            --text-secondary: #94A3B8;
+            --success: #22C55E;
+            --error: #EF4444;
+            --border: rgba(255,255,255,0.08);
+            --border-blue: rgba(59, 130, 246, 0.3);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+        #bg-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0; pointer-events: none;
+        }
+        nav {
+            position: fixed; top: 0; width: 100%; padding: 1rem 5%;
+            background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-blue);
+            display: flex; justify-content: space-between; align-items: center; z-index: 100;
+        }
+        .logo {
+            font-size: 1.5rem; font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-orange));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none;
+        }
+        .back-btn {
+            color: var(--text-secondary); text-decoration: none; font-weight: 500;
+            transition: 0.3s; display: flex; align-items: center; gap: 0.5rem;
+            padding: 0.5rem 1rem; border-radius: 8px; border: 1px solid var(--border);
+        }
+        .back-btn:hover { color: var(--accent-blue); border-color: var(--accent-blue); background: rgba(59, 130, 246, 0.1); }
+
+        .container {
+            margin-top: 100px; padding: 2rem; width: 100%; max-width: 1200px; z-index: 10; position: relative;
+        }
+
+        /* ====== ПЕРЕДАЧА: главный оверлей ====== */
+        .calc-overlay {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(24px) saturate(120%);
+            -webkit-backdrop-filter: blur(24px) saturate(120%);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow:
+                0 25px 60px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(255, 255, 255, 0.03) inset,
+                0 1px 0 rgba(255, 255, 255, 0.05) inset;
+        }
+
+        .calc-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .calc-header h1 {
+            font-size: 1.6rem;
+            margin-bottom: 0.4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .calc-header p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Двухколоночный макет */
+        .calc-layout {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 2rem;
+            align-items: start;
+        }
+        .calc-main { display: flex; flex-direction: column; gap: 1.5rem; }
+        .calc-sidebar {
+            position: sticky;
+            top: 110px;
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.06);
+            backdrop-filter: blur(8px);
+        }
+
+        .line-settings {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        .form-group { margin-bottom: 0; }
+        .form-group label {
+            display: block; margin-bottom: 0.5rem; color: var(--text-secondary);
+            font-weight: 500; font-size: 0.85rem;
+        }
+        .form-group input, .form-group select {
+            width: 100%; padding: 0.75rem 0.9rem; border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: var(--bg-input);
+            color: var(--text-primary); font-size: 0.95rem; transition: all 0.3s;
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline: none; border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+            background: rgba(15, 23, 42, 0.9);
+        }
+        .form-group select {
+            cursor: pointer; appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394A3B8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 0.9rem center; padding-right: 2.2rem;
+        }
+
+        /* Таблица */
+        .table-container {
+            overflow-x: auto; border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.06);
+            background: rgba(15, 23, 42, 0.3);
+        }
+        .speakers-table { width: 100%; border-collapse: collapse; min-width: 500px; }
+        .speakers-table thead th {
+            text-align: left; padding: 0.8rem 1rem; color: var(--text-secondary);
+            font-weight: 500; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;
+            background: rgba(15, 23, 42, 0.6); border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .speakers-table td { padding: 0.6rem 0.8rem; vertical-align: middle; border-bottom: 1px solid rgba(255,255,255,0.04); }
+        .speakers-table td input {
+            padding: 0.6rem 0.7rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08);
+            background: var(--bg-input); color: var(--text-primary); font-size: 0.9rem; width: 100%;
+        }
+        .speakers-table td input:focus { outline: none; border-color: var(--accent-blue); }
+        .sensitivity-val {
+            font-family: 'Inter', monospace; color: var(--accent-orange);
+            font-weight: 600; font-size: 0.9rem; text-align: right; white-space: nowrap;
+        }
+
+        .btn {
+            padding: 0.6rem 1rem; border-radius: 10px; border: none; cursor: pointer;
+            font-weight: 600; transition: all 0.3s; display: inline-flex; align-items: center;
+            gap: 0.4rem; font-size: 0.9rem; font-family: inherit;
+        }
+        .btn-add {
+            background: transparent; color: var(--accent-blue);
+            border: 1px dashed var(--border-blue); padding: 0.5rem 1rem; width: 100%; justify-content: center;
+        }
+        .btn-add:hover { background: rgba(59, 130, 246, 0.1); border-style: solid; }
+        .btn-delete {
+            background: transparent; color: var(--error); padding: 0.4rem; font-size: 1rem; opacity: 0.5;
+        }
+        .btn-delete:hover { opacity: 1; background: rgba(239, 68, 68, 0.1); border-radius: 6px; }
+        .btn-calc {
+            background: linear-gradient(135deg, var(--accent-blue), #2563EB); color: white;
+            width: 100%; justify-content: center; padding: 0.9rem; font-size: 1rem; border-radius: 12px;
+        }
+        .btn-calc:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(59, 130, 246, 0.35); }
+        .btn-export {
+            background: var(--success); color: white; width: 100%;
+            justify-content: center; padding: 0.8rem; font-size: 0.95rem; border-radius: 10px; margin-top: 1rem;
+        }
+        .btn-export:hover { filter: brightness(1.1); transform: translateY(-1px); }
+
+        /* Результаты */
+        .result-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0.7rem 0; border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .result-row:last-of-type { border-bottom: none; }
+        .result-label { color: var(--text-secondary); font-size: 0.85rem; }
+        .result-value {
+            font-weight: 700; color: var(--accent-blue); font-size: 1rem;
+            font-family: 'Inter', monospace;
+        }
+        .sp-check {
+            display: flex; align-items: center; gap: 0.4rem;
+            margin-top: 0.5rem; padding: 0.6rem 0.8rem; border-radius: 8px;
+            font-size: 0.85rem; font-weight: 600;
+        }
+        .sp-check.ok { background: rgba(34, 197, 94, 0.1); color: var(--success); border: 1px solid rgba(34, 197, 94, 0.2); }
+        .sp-check.bad { background: rgba(239, 68, 68, 0.1); color: var(--error); border: 1px solid rgba(239, 68, 68, 0.2); }
+
+        .verdict {
+            margin-top: 1rem; padding: 0.8rem; border-radius: 10px;
+            text-align: center; font-weight: 600; font-size: 0.85rem; display: none;
+        }
+        .verdict.ok {
+            background: rgba(34, 197, 94, 0.12); color: var(--success);
+            border: 1px solid rgba(34, 197, 94, 0.25);
+        }
+        .verdict.bad {
+            background: rgba(239, 68, 68, 0.12); color: var(--error);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+        }
+
+        @media (max-width: 1000px) {
+            .calc-layout { grid-template-columns: 1fr; }
+            .calc-sidebar { position: static; }
+        }
+        @media (max-width: 600px) {
+            .line-settings { grid-template-columns: 1fr; }
+            .container { margin-top: 80px; padding: 1rem; }
+            .calc-overlay { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="bg-canvas"></canvas>
+    <nav>
+        <a href="index.html" class="logo">SSB Core</a>
+        <a href="index.html#features" class="back-btn">← На главную</a>
+    </nav>
+
+    <div class="container">
+        <div class="calc-overlay">
+            <div class="calc-header">
+                <h1>🔊 Калькулятор звукового давления</h1>
+                <p>Расчет по СП 3.13130.2009 и СП 51.13330.2011</p>
+            </div>
+
+            <div class="calc-layout">
+                <!-- ЛЕВАЯ ЧАСТЬ -->
+                <div class="calc-main">
+                    <div class="line-settings">
+                        <div class="form-group">
+                            <label>Тип помещения (СП 51.13330)</label>
+                            <select id="roomType" onchange="setNoiseLevel()">
+                                <option value="60">Рабочие пом. АУП, лаборатории</option>
+                                <option value="65">Диспетчерские, кабины связи</option>
+                                <option value="75">Пом. лабораторий, производство</option>
+                                <option value="80">Пом. с пост. раб. местами</option>
+                                <option value="35">Палаты больниц, операционные</option>
+                                <option value="35">Кабинеты врачей</option>
+                                <option value="40" selected>Классы, аудитории, конференц-залы</option>
+                                <option value="40">Жилые комнаты квартир</option>
+                                <option value="45">Жилые комнаты общежитий</option>
+                                <option value="45">Номера гостиниц</option>
+                                <option value="40">Дома отдыха, пансионаты</option>
+                                <option value="50">Офисы, рабочие кабинеты</option>
+                                <option value="55">Залы кафе, ресторанов</option>
+                                <option value="45">Фойе театров и концертных залов</option>
+                                <option value="30">Зрительные залы театров</option>
+                                <option value="35">Многоцелевые залы</option>
+                                <option value="30">Кинотеатры</option>
+                                <option value="45">Спортивные залы</option>
+                                <option value="60">Торговые залы, вокзалы</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Допустимый уровень шума La (дБ)</label>
+                            <input type="number" id="noiseLevel" value="40" step="1" oninput="calculate()">
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>Расстояние до расчётной точки R (м)</label>
+                            <input type="number" id="distance" value="5" step="0.1" placeholder="Например: 5" oninput="calculate()">
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="speakers-table">
+                            <thead>
+                                <tr>
+                                    <th style="width:8%">№</th>
+                                    <th style="width:40%">Модель оповещателя</th>
+                                    <th style="width:20%">Чувств., дБ (на 1м)</th>
+                                    <th style="width:18%">Кол-во</th>
+                                    <th style="width:14%"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="speakersBody"></tbody>
+                        </table>
+                    </div>
+                    <button class="btn btn-add" onclick="addSpeaker()">+ Добавить оповещатель</button>
+                    <button class="btn btn-calc" onclick="calculate()">🔊 Рассчитать</button>
+                </div>
+
+                <!-- ПРАВАЯ ЧАСТЬ — ИТОГИ -->
+                <div class="calc-sidebar">
+                    <h3 style="margin-bottom:1rem; font-size:1.05rem; display:flex; align-items:center; gap:0.5rem;">
+                        <span style="color:var(--accent-blue)">📊</span> Итоги расчёта
+                    </h3>
+                    <div class="result-row">
+                        <span class="result-label">Требуемый уровень (La + 15):</span>
+                        <span class="result-value" id="resRequired">55.0 дБ</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-label">Фактический уровень в точке:</span>
+                        <span class="result-value" id="resActual">0.0 дБ</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-label">Запас звукового давления:</span>
+                        <span class="result-value" id="resMargin">0.0 дБ</span>
+                    </div>
+                    <div class="sp-check ok" id="spCheck">
+                        <span>✅</span>
+                        <span>Проверка СП 3.13130 (≥75 дБ на 3м): Соответствует</span>
+                    </div>
+                    <div id="verdictBox" class="verdict"></div>
+                    <button class="btn btn-export" onclick="exportToWord()">📄 Экспорт в Word</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== АНИМАЦИЯ ФОНА =====
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let width = window.innerWidth, height = window.innerHeight;
+        canvas.width = width; canvas.height = height;
+        const CYCLE_DURATION = 12000, FADE_DURATION = 3000, CHIP_SIZE = 40, MIN_CHIP_DIST = 120, CHIP_APPEAR_DURATION = 1500;
+        class Chip { constructor(x,y,d=0){this.x=x;this.y=y;this.connections=[];this.appearDelay=d;this.opacity=0;this.isAppeared=false;} update(t,cs){const e=t-cs-this.appearDelay;if(e<0){this.opacity=0;return;}if(!this.isAppeared){const p=Math.min(1,e/CHIP_APPEAR_DURATION);this.opacity=1-Math.pow(1-p,3);if(p>=1){this.isAppeared=true;this.opacity=1;}}}}
+        class Connection { constructor(f,t,d=0){this.from=f;this.to=t;this.pathPoints=[];this.length=0;this.drawnLength=0;this.isDrawn=false;this.isPulsing=false;this.startTime=d;this.pulseStartTime=0;this.pulsePos={x:0,y:0};this.currentPulseProgress=0;}}
+        class Network { constructor(){this.chips=[];this.connections=[];this.opacity=1;this.fadeOut=false;this.fadeIn=false;} generate(){const ch=[],bp=[{x:width*0.12,y:height*0.12},{x:width*0.88,y:height*0.12},{x:width*0.12,y:height*0.88},{x:width*0.88,y:height*0.88},{x:width*0.5,y:height*0.5},{x:width*0.3,y:height*0.15},{x:width*0.7,y:height*0.15},{x:width*0.15,y:height*0.5},{x:width*0.85,y:height*0.5},{x:width*0.3,y:height*0.85},{x:width*0.7,y:height*0.85},{x:width*0.5,y:height*0.12}];bp.forEach((p,i)=>{let v=true;const x=p.x+(Math.random()-0.5)*50,y=p.y+(Math.random()-0.5)*50;for(const c of ch){if(Math.hypot(c.x-x,c.y-y)<MIN_CHIP_DIST){v=false;break;}}if(v)ch.push(new Chip(x,y,200+(i*80)+Math.random()*100));});return ch;} initConnections(cs){const cn=[];this.chips.forEach((chip,i)=>{const nb=this.chips.map((o,j)=>({c:o,j:j,d:Math.hypot(o.x-chip.x,o.y-chip.y)})).filter(n=>n.j!==i&&n.d>MIN_CHIP_DIST).sort((a,b)=>a.d-b.d);for(let k=0;k<Math.min(3,nb.length);k++){const n=nb[k];if(n.d>Math.max(width,height)*0.35)continue;const ex=cn.some(c=>(c.from===chip&&c.to===n.c)||(c.from===n.c&&c.to===chip));if(!ex){const ld=Math.max(chip.appearDelay,n.c.appearDelay)+CHIP_APPEAR_DURATION+300+(k*150);const co=new Connection(chip,n.c,cs+ld);co.pathPoints=getPP(chip,n.c);co.length=getPL(co.pathPoints);cn.push(co);chip.connections.push(co);n.c.connections.push(co);}}});this.connections=cn;} update(t,cs){if(this.fadeOut){this.opacity-=0.016;if(this.opacity<=0)this.opacity=0;}if(this.fadeIn){this.opacity+=0.016;if(this.opacity>=1){this.opacity=1;this.fadeIn=false;}}this.chips.forEach(c=>c.update(t,cs));this.connections.forEach(co=>{if(!co.isDrawn){const e=t-co.startTime;const p=Math.min(1,e/2000);co.drawnLength=co.length*p;if(p>=1){co.isDrawn=true;co.isPulsing=true;co.pulseStartTime=t;}}if(co.isPulsing){const pe=t-co.pulseStartTime;const pp=Math.min(1,pe/2500);if(pp<=1){co.pulsePos=getPOP(co.pathPoints,co.length*pp);co.currentPulseProgress=pp;}else{co.isPulsing=false;co.currentPulseProgress=0;}}});} draw(ctx){if(this.opacity<=0)return;ctx.globalAlpha=this.opacity;this.connections.forEach(co=>{ctx.strokeStyle='rgba(59,130,246,0.4)';ctx.lineWidth=2;ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();ctx.moveTo(co.pathPoints[0].x,co.pathPoints[0].y);let tr=0;for(let i=0;i<co.pathPoints.length-1;i++){const sl=Math.hypot(co.pathPoints[i+1].x-co.pathPoints[i].x,co.pathPoints[i+1].y-co.pathPoints[i].y);if(tr+sl<=co.drawnLength){ctx.lineTo(co.pathPoints[i+1].x,co.pathPoints[i+1].y);tr+=sl;}else{const r=(co.drawnLength-tr)/sl;ctx.lineTo(co.pathPoints[i].x+(co.pathPoints[i+1].x-co.pathPoints[i].x)*r,co.pathPoints[i].y+(co.pathPoints[i+1].y-co.pathPoints[i].y)*r);break;}}ctx.stroke();if(co.isPulsing&&co.currentPulseProgress>0){ctx.shadowColor='#3B82F6';ctx.shadowBlur=15;ctx.fillStyle='#60A5FA';ctx.beginPath();ctx.arc(co.pulsePos.x,co.pulsePos.y,4,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;}});this.chips.forEach(chip=>{if(chip.opacity<=0)return;const s=CHIP_SIZE;ctx.shadowColor=`rgba(59,130,246,${0.4*chip.opacity})`;ctx.shadowBlur=20;ctx.fillStyle=`rgba(30,41,59,${0.9*chip.opacity})`;ctx.strokeStyle=`rgba(59,130,246,${0.8*chip.opacity})`;ctx.lineWidth=2;ctx.beginPath();ctx.roundRect(chip.x-s,chip.y-s,s*2,s*2,8);ctx.fill();ctx.stroke();ctx.fillStyle=`rgba(59,130,246,${0.15*chip.opacity})`;ctx.beginPath();ctx.roundRect(chip.x-s+6,chip.y-s+6,(s-6)*2,(s-6)*2,4);ctx.fill();ctx.shadowBlur=0;ctx.fillStyle=`rgba(96,165,250,${chip.opacity})`;ctx.font='bold 16px Inter,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('SSB',chip.x,chip.y);ctx.fillStyle=`rgba(59,130,246,${0.5*chip.opacity})`;const ps=6,po=s+2;ctx.fillRect(chip.x-ps,chip.y-po,ps*2,ps);ctx.fillRect(chip.x-ps,chip.y+po-ps,ps*2,ps);ctx.fillRect(chip.x-po,chip.y-ps,ps,ps*2);ctx.fillRect(chip.x+po-ps,chip.y-ps,ps,ps*2);ctx.shadowBlur=0;});ctx.globalAlpha=1;}}
+        function getPP(f,t){const mx=(f.x+t.x)/2,my=(f.y+t.y)/2;return[{x:f.x,y:f.y},{x:mx,y:f.y},{x:mx,y:my},{x:mx,y:t.y},{x:t.x,y:t.y}];}
+        function getPL(p){let l=0;for(let i=0;i<p.length-1;i++)l+=Math.hypot(p[i+1].x-p[i].x,p[i+1].y-p[i].y);return l;}
+        function getPOP(p,d){let tr=0;for(let i=0;i<p.length-1;i++){const sl=Math.hypot(p[i+1].x-p[i].x,p[i+1].y-p[i].y);if(tr+sl>=d){const r=(d-tr)/sl;return{x:p[i].x+(p[i+1].x-p[i].x)*r,y:p[i].y+(p[i+1].y-p[i].y)*r};}tr+=sl;}return p[p.length-1];}
+        let activeNetwork=null,nextNetwork=null,cycleStartTime=0,nextCycleStartTime=0,lastTime=0;
+        function initCycle(){activeNetwork=new Network();activeNetwork.chips=activeNetwork.generate();activeNetwork.initConnections(cycleStartTime);activeNetwork.fadeIn=true;activeNetwork.opacity=0;}
+        function startNextCycle(){nextNetwork=new Network();nextNetwork.chips=nextNetwork.generate();nextNetwork.initConnections(nextCycleStartTime);nextNetwork.fadeIn=true;nextNetwork.opacity=0;}
+        function animate(ts){if(!lastTime){lastTime=ts;cycleStartTime=ts;initCycle();}const elapsed=ts-cycleStartTime,dt=ts-lastTime;lastTime=ts;ctx.clearRect(0,0,width,height);if(!nextNetwork&&elapsed>CYCLE_DURATION-FADE_DURATION){nextCycleStartTime=ts;startNextCycle();if(activeNetwork)activeNetwork.fadeOut=true;}if(nextNetwork&&activeNetwork&&activeNetwork.fadeOut){nextNetwork.update(ts,nextCycleStartTime);nextNetwork.draw(ctx);activeNetwork.update(ts,cycleStartTime);activeNetwork.draw(ctx);if(activeNetwork.opacity<=0){activeNetwork=nextNetwork;cycleStartTime=nextCycleStartTime;nextNetwork=null;}}else if(activeNetwork){activeNetwork.update(ts,cycleStartTime);activeNetwork.draw(ctx);}requestAnimationFrame(animate);}
+        requestAnimationFrame(animate);
+        window.addEventListener('resize',()=>{width=window.innerWidth;height=window.innerHeight;canvas.width=width;canvas.height=height;activeNetwork=null;nextNetwork=null;cycleStartTime=performance.now();lastTime=0;});
+
+        // ===== ЛОГИКА КАЛЬКУЛЯТОРА =====
+        let speakers = [{ model: 'Маяк-24-3М', sensitivity: 105, qty: 1 }];
+
+        function setNoiseLevel() {
+            const noiseInput = document.getElementById('noiseLevel');
+            noiseInput.value = document.getElementById('roomType').value;
+            calculate();
+        }
+
+        function renderSpeakers() {
+            const tbody = document.getElementById('speakersBody');
+            tbody.innerHTML = '';
+            speakers.forEach((sp, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><span style="color:var(--text-secondary);font-size:0.9rem">${index + 1}</span></td>
+                    <td><input type="text" value="${sp.model}" placeholder="Название модели" oninput="updateSpeaker(${index}, 'model', this.value)"></td>
+                    <td><input type="number" value="${sp.sensitivity}" step="0.1" placeholder="105" oninput="updateSpeaker(${index}, 'sensitivity', this.value)"></td>
+                    <td><input type="number" value="${sp.qty}" min="1" step="1" placeholder="1" oninput="updateSpeaker(${index}, 'qty', this.value)"></td>
+                    <td style="text-align:center;">
+                        ${speakers.length > 1 ? `<button class="btn btn-delete" onclick="removeSpeaker(${index})" title="Удалить">×</button>` : ''}
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+            calculate();
+        }
+
+        function addSpeaker() {
+            speakers.push({ model: '', sensitivity: 100, qty: 1 });
+            renderSpeakers();
+        }
+        function removeSpeaker(index) {
+            speakers.splice(index, 1);
+            renderSpeakers();
+        }
+        function updateSpeaker(index, field, value) {
+            speakers[index][field] = field === 'model' ? value : (parseFloat(value) || 0);
+            calculate();
+        }
+
+        function calculate() {
+            const noise = parseFloat(document.getElementById('noiseLevel').value) || 0;
+            const dist = parseFloat(document.getElementById('distance').value) || 0.1;
+            const required = noise + 15;
+
+            // Затухание: 20 * log10(R)
+            const loss = dist > 1 ? 20 * Math.log10(dist) : 0;
+
+            // Фактический уровень в точке: Sensitivity - Loss + 10*log10(N)
+            let actual = 0;
+            speakers.forEach(sp => {
+                if (sp.qty > 0 && sp.sensitivity > 0) {
+                    const lp = sp.sensitivity - loss + 10 * Math.log10(sp.qty);
+                    actual += Math.pow(10, lp / 10);
+                }
+            });
+            actual = actual > 0 ? 10 * Math.log10(actual) : 0;
+
+            const margin = actual - required;
+
+            // Проверка СП 3.13130 п.4.1 (≥75 дБ на 3м)
+            const splAt3m = actual + (loss - (dist > 3 ? 20 * Math.log10(dist / 3) : -(dist < 3 && dist > 0 ? 20 * Math.log10(3 / dist) : 0)));
+            // Упрощённо: SPL на 3м = Sensitivity - 20*log10(3) + 10*log10(N)
+            let spl3 = 0;
+            speakers.forEach(sp => {
+                if (sp.qty > 0 && sp.sensitivity > 0) {
+                    const lp3 = sp.sensitivity - 20 * Math.log10(3) + 10 * Math.log10(sp.qty);
+                    spl3 += Math.pow(10, lp3 / 10);
+                }
+            });
+            spl3 = spl3 > 0 ? 10 * Math.log10(spl3) : 0;
+            const spOk = spl3 >= 75 && actual <= 120;
+
+            document.getElementById('resRequired').textContent = required.toFixed(1) + ' дБ';
+            document.getElementById('resActual').textContent = actual.toFixed(1) + ' дБ';
+            document.getElementById('resMargin').textContent = (margin >= 0 ? '+' : '') + margin.toFixed(1) + ' дБ';
+
+            const spCheckEl = document.getElementById('spCheck');
+            if (spOk) {
+                spCheckEl.className = 'sp-check ok';
+                spCheckEl.innerHTML = `<span>✅</span><span>Проверка СП 3.13130 (≥75 дБ на 3м): Соответствует</span>`;
+            } else {
+                spCheckEl.className = 'sp-check bad';
+                spCheckEl.innerHTML = `<span>❌</span><span>Не соответствует (SPL на 3м = ${spl3.toFixed(1)} дБ, макс. = ${actual.toFixed(1)} дБ)</span>`;
+            }
+
+            const verdict = document.getElementById('verdictBox');
+            verdict.style.display = 'block';
+            if (actual >= required && actual <= 120 && spOk) {
+                verdict.className = 'verdict ok';
+                verdict.innerHTML = `✅ Норма! Запас: +${margin.toFixed(1)} дБ. Требования СП 3.13130.2009 выполнены.`;
+            } else if (actual > 120) {
+                verdict.className = 'verdict bad';
+                verdict.innerHTML = `❌ Превышение максимума (120 дБ). Уменьшите мощность или кол-во.`;
+            } else if (!spOk) {
+                verdict.className = 'verdict bad';
+                verdict.innerHTML = `❌ SPL на 3м = ${spl3.toFixed(1)} дБ (нужно ≥75 дБ). Добавьте оповещатели.`;
+            } else if (margin > -10) {
+                verdict.className = 'verdict bad';
+                verdict.innerHTML = `⚠️ Недостаточно. Требуется ещё ${Math.abs(margin).toFixed(1)} дБ. Добавьте оповещатели.`;
+            } else {
+                verdict.className = 'verdict bad';
+                verdict.innerHTML = `❌ Критично! Не хватает ${Math.abs(margin).toFixed(1)} дБ. Пересмотрите расстановку.`;
+            }
+        }
+
+        function exportToWord() {
+            const noise = document.getElementById('noiseLevel').value;
+            const dist = document.getElementById('distance').value;
+            const required = (parseFloat(noise) + 15).toFixed(1);
+            let rows = '';
+            speakers.forEach((sp, i) => {
+                rows += `<tr><td style="border:1px solid #000;padding:5px;">${i+1}</td><td style="border:1px solid #000;padding:5px;">${sp.model||'-'}</td><td style="border:1px solid #000;padding:5px;text-align:center;">${sp.sensitivity}</td><td style="border:1px solid #000;padding:5px;text-align:center;">${sp.qty}</td></tr>`;
+            });
+            const content = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Расчет SPL</title></head><body style="font-family:Arial,sans-serif;"><h2 style="text-align:center;">Расчет звукового давления (SPL) — SSB Core</h2><p><b>Дата:</b> ${new Date().toLocaleDateString()}<br>Расстояние до точки: ${dist} м | Шум помещения: ${noise} дБ | Требуемый: ${required} дБ</p><table style="border-collapse:collapse;width:100%;margin-top:20px;"><thead><tr style="background-color:#eee;"><th style="border:1px solid #000;padding:5px;">№</th><th style="border:1px solid #000;padding:5px;">Модель</th><th style="border:1px solid #000;padding:5px;">Чувств., дБ</th><th style="border:1px solid #000;padding:5px;">Кол-во</th></tr></thead><tbody>${rows}</tbody></table><p style="margin-top:20px;"><b>Результат:</b> ${document.getElementById('resActual').textContent} (Запас: ${document.getElementById('resMargin').textContent})</p><p style="margin-top:50px;font-size:12px;color:gray;">Сформировано в SSB Core Calculator</p></body></html>`;
+            const blob = new Blob(['\ufeff', content], { type: 'application/msword' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a'); link.href = url; link.download = 'Raschet_SPL_SSB.doc';
+            document.body.appendChild(link); link.click(); document.body.removeChild(link);
+        }
+
+        renderSpeakers();
+    </script>
+</body>
+</html>
